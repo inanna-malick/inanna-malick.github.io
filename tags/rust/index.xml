@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rust on [ recursion.wtf ]</title>
+    <link>/tags/rust/</link>
+    <description>Recent content in rust on [ recursion.wtf ]</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 30 Dec 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Transitive Frontier</title>
+      <link>/posts/transitive-frontier/</link>
+      <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/transitive-frontier/</guid>
+      <description>Querying Cargo Build DAGs with Guppy guppy is a rust crate that provides tools for working with cargo build graphs using the full power of the petgraph graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for their digital currency, Diem (formerly Libra). Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.</description>
+    </item>
+    
+  </channel>
+</rss>

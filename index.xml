@@ -17,7 +17,7 @@
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/transitive-frontier/</guid>
-      <description>Querying Cargo Build DAGs with Guppy guppy is a rust crate that provides tools for working with cargo build graphs using the full power of the petgraph graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for their digital currency, Diem (formerly Libra). Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.</description>
+      <description>Querying Cargo Build DAGs with Guppy guppy is a rust crate that provides tools for working with cargo build graphs using the full power of the petgraph graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.</description>
     </item>
     
     <item>

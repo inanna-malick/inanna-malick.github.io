@@ -6,7 +6,7 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Querying Cargo Build DAGs with Guppy guppy is a rust crate that provides tools for working with cargo build graphs using the full power of the petgraph graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for their digital currency, Diem (formerly Libra). Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives." />
+<meta name="description" content="Querying Cargo Build DAGs with Guppy guppy is a rust crate that provides tools for working with cargo build graphs using the full power of the petgraph graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives." />
 <meta name="keywords" content="rust, guppy" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/posts/transitive-frontier/" />
@@ -41,7 +41,7 @@
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Transitive Frontier">
-<meta property="og:description" content="[`guppy`](https://crates.io/crates/guppy) is a rust crate that provides tools for working with cargo build graphs using the full power of the [`petgraph`](https://crates.io/crates/petgraph) graph data structure crate. It&#39;s used by Facebook to audit a high-security subset of the cargo build graph for their digital currency, Diem (formerly Libra). Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives." />
+<meta property="og:description" content="TODO" />
 <meta property="og:url" content="/posts/transitive-frontier/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
 
@@ -153,28 +153,93 @@
 
   <div class="post-content"><div>
         <h2 id="querying-cargo-build-dags-with-guppy">Querying Cargo Build DAGs with Guppy<a href="#querying-cargo-build-dags-with-guppy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p><a href="https://crates.io/crates/guppy"><code>guppy</code></a> is a rust crate that provides tools for working with cargo build graphs using the full power of the <a href="https://crates.io/crates/petgraph"><code>petgraph</code></a> graph data structure crate. It&rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for their digital currency, Diem (formerly Libra). Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.</p>
-<h2 id="transitive-frontier">Transitive Frontier<a href="#transitive-frontier" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>I&rsquo;ve been meaning to find an excuse to build something using <a href="https://crates.io/crates/guppy"><code>guppy</code></a> and tooling to support refactoring large projects moving from <code>futures01</code> to <code>futures03</code> seems like a good place to start. With that in mind, I built a tool to audit the places where some dependency (in this case, <code>futures01</code>) finds its way into a cargo workspace, either directly or transitively. I&rsquo;ve called this tool <code>transitive-frontier</code>, because it finds the places along the workspace frontier where transitive dependencies on some crate are introduced.</p>
-<p>I&rsquo;ve used graphviz to render a simple build graph with dependencies on both <code>futures01</code> and <code>futures03</code> to help visualize the concept. Every edge that introduces a transitive dependency on <code>futures01</code> is highlighted (with the exception of the futures_util compatibility crate, which is intentionally ignored - <code>transitive-futures</code> supports skipping such compat crates)</p>
-<p>The edges along the workspace frontier that introduce a <code>futures01</code> dependency into the workspace have been further highlighted. These edges make up the transitive frontier for that workspace with regard to <code>futures01</code>.</p>
+<!-- raw HTML omitted -->
+<p><a href="https://crates.io/crates/guppy">guppy</a> is a rust crate that provides tools for working with cargo build graphs using the full power of the <a href="https://crates.io/crates/petgraph">petgraph</a> graph data structure crate. It&rsquo;s used by Facebook to audit a high-security subset of the cargo build graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.</p>
+<p>I&rsquo;ve been meaning to find an excuse to build something using <a href="https://crates.io/crates/guppy">guppy</a>, and decided on a simple tool to audit the places where some dependency finds its way into a cargo workspace, either directly or transitively. I&rsquo;ve called this tool <code>transitive-frontier</code>, because it finds the places along the workspace frontier where transitive dependencies on some crate are introduced.</p>
+<p>The use case I had in mind was large projects moving from futures 0.1 to futures 0.3. In practice, it&rsquo;s usually not that hard to write up a list of workspace crates that need to be refactored to not use futures 0.1, but a machine-readable report opens up new possibilities - for example, you could use the output of this tool to build a linter that asserts that no new transitive dependencies on futures 0.1 have been introduced into a workspace. This project has also been a great way to familiarize myself with guppy. You can find the project <a href="https://github.com/inanna-malick/transitive-frontier">here</a>, if you&rsquo;d like to follow along (currently private, will publish after review).</p>
+<h2 id="using-guppy">Using Guppy<a href="#using-guppy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Before describing the <code>transitive_frontier</code> tool, I&rsquo;m going to go over how I use guppy: these examples are run against some simple strawman workspaces, which you can find in the <code>example_workspaces</code> directory in the <code>transitive_frontier</code> repo. Here&rsquo;s a simplified representation of the dependency graph for the first workspace:</p>
 
-  <img src="/img/transitive_frontier.svg"  alt="build dag for a simple workspace"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/project.svg"  alt="TODO"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>Given the above build DAG, this invocation of <code>transitive_frontier</code> can be used to find the edges that introduce a <code>futures01</code> dependency into the workspace</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">transitive_frontier.rs ~/dev/my-workspace -p <span style="color:#e6db74">&#39;futures 0.1&#39;</span> -s <span style="color:#e6db74">&#39;futures_util&#39;</span>
-</code></pre></div><p>results in:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">package_id</span> = <span style="color:#e6db74">&#34;futures 0.1.29 (registry+...)&#34;</span>
+<p>The main entry point into guppy is the <code>PackageGraph</code>, which holds information about the dependency graph resulting from a cargo build operation (as generated via <code>cargo metadata</code>). Here&rsquo;s how to construct a <code>PackageGraph</code> instance for your workspace:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> cmd <span style="color:#f92672">=</span> MetadataCommand::new();
+<span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(workspace) <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>opt.workspace {
+    cmd.current_dir(workspace);
+}
+<span style="color:#66d9ef">let</span> package_graph <span style="color:#f92672">=</span> PackageGraph::from_command(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cmd)<span style="color:#f92672">?</span>;
+</code></pre></div><p>Next, let&rsquo;s construct a query to find all the packages that depend on futures 0.1 in this package graph. You can find package ids in the output of <code>cargo metadata</code>, but the <code>transitive_frontier</code> tool supports providing a substring of the target package id for convenience.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> futures <span style="color:#f92672">=</span>
+  <span style="color:#e6db74">&#34;futures 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)&#34;</span>;
+<span style="color:#66d9ef">let</span> package_id <span style="color:#f92672">=</span> PackageId::new(futures);
+<span style="color:#66d9ef">let</span> package_query <span style="color:#f92672">=</span> package_graph.query_reverse(iter::once(id))<span style="color:#f92672">?</span>;
+</code></pre></div><p>After building a query, we resolve it, yielding a <code>PackageSet</code>. It&rsquo;s possible to add filters at this stage, to avoid traversing certain dependency edges.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> package_set <span style="color:#f92672">=</span> package_query.resolve();
+</code></pre></div><p>After we&rsquo;ve constructed the query, we need to resolve it - this step is where we actually traverse edges to build a package set. Here we&rsquo;re just resolving every edge that the query matches, but guppy also supports resolving queries with a filter function, to allow for skipping some edges.</p>
+<p>Here&rsquo;s a visualization of the package set this query produces, with the reverse transitive dependencies of futures 0.1 highlighted:</p>
+
+  <img src="/img/project_with_transitive_deps.svg"  alt="TODO"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>However, we don&rsquo;t want a package set - we want the frontier via which dependencies futures 0.1 are introduced into our workspace, shown further highlighted here:</p>
+
+  <img src="/img/project_with_transitive_frontier.svg"  alt="TODO"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>For this step, we need to traverse the set of edges included in the <code>PackageSet</code>. Since it&rsquo;s a <em>package</em> set, it only tracks packages, so what we&rsquo;re actually doing is iterating over every edge in the package graph for where <code>to</code> and <code>from</code> are members of the package set.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> HashMap::new();
+
+<span style="color:#66d9ef">for</span> link <span style="color:#66d9ef">in</span> package_set.links(DependencyDirection::Reverse) {
+    <span style="color:#75715e">// != implements logical xor
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> link.to().in_workspace() <span style="color:#f92672">!=</span> link.from().in_workspace() {
+        <span style="color:#66d9ef">let</span> entry <span style="color:#f92672">=</span> frontier
+            .entry(link.from().name().to_string())
+            .or_insert_with(Vec::new);
+        entry.push(format<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;{} {}&#34;</span>, link.to().name(), link.to().version()))
+    }
+}
+</code></pre></div><p>This code block iterates over every edge in the <code>PackageSet</code>, taking edges with one end inside the workspace and the other outside it and storing them in a <code>HashMap</code> keyed by the name of the package introducing the dependency, resulting in this output:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">package_id</span> = <span style="color:#e6db74">&#34;futures 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)&#34;</span>
 
 [<span style="color:#a6e22e">frontier</span>]
-<span style="color:#a6e22e">server</span> = [<span style="color:#e6db74">&#34;futures 0.1.0&#34;</span>,]
-<span style="color:#a6e22e">capabilities_old</span> = [<span style="color:#e6db74">&#34;futures 0.1.0&#34;</span>, <span style="color:#e6db74">&#34;library_old 0.1.0&#34;</span>]
-</code></pre></div><h2 id="applications">Applications<a href="#applications" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>In practice, it&rsquo;s usually not that hard to write up a list of workspace crates that need to be refactored to not use futures 01, but a machine-readable report opens up new possibilities - for example, you could use the output of this tool to build a linter that asserts that no new transitive dependencies on <code>futures01</code> have been introduced into a workspace.</p>
-<h2 id="implementation-details">Implementation Details<a href="#implementation-details" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>I used <a href="https://github.com/DanielKeep/cargo-script"><code>cargo-script</code></a> to build a single-file tool, <a href="https://crates.io/crates/structopt"><code>structopt</code></a> to parse arguments and flags, and <a href="https://crates.io/crates/serde"><code>serde</code></a> to serialize the output as JSON or TOML.</p>
-<p>The full <code>transitive_frontier.rs</code> gist can be found <a href="https://gist.github.com/inanna-malick/2c828815eda194c652e2eb0fea74b3d5">here</a>.</p>
+<span style="color:#a6e22e">capabilities_old</span> = [<span style="color:#e6db74">&#34;library_old 0.1.0&#34;</span>, <span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>]
+<span style="color:#a6e22e">server</span> = [<span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>]
+</code></pre></div><p>You can reproduce this by running the following command in the <code>transitive_frontier</code> repo: <code>cargo run -- -p &quot;futures 0.1&quot; -- example_workspaces/project</code>. This example, and those that will follow, highlight snippets of code similar to those used to implement the functionality of the <code>transitive_frontier</code> tool.</p>
+<h3 id="ignoring-packages">Ignoring Packages<a href="#ignoring-packages" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>In a real project with heterogenous futures 0.1/futures 0.3 usage futures 0.3 would likely be compiled with the <code>compat</code> feature enabled, to better support interop. <code>example_packages/project_with_compat</code> provides an example of this. Let&rsquo;s take a look at the transitive frontier for futures 0.1 for that workspace, via <code>cargo run -- -p &quot;futures 0.1&quot; -- example_workspaces/project_with_compat</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">package_id</span> = <span style="color:#e6db74">&#34;futures 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)&#34;</span>
+
+[<span style="color:#a6e22e">frontier</span>]
+<span style="color:#a6e22e">capabilities_old</span> = [<span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>, <span style="color:#e6db74">&#34;library_old 0.1.0&#34;</span>]
+<span style="color:#a6e22e">server</span> = [<span style="color:#e6db74">&#34;futures 0.3.8&#34;</span>, <span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>]
+<span style="color:#a6e22e">capabilities_new</span> = [<span style="color:#e6db74">&#34;library_new 0.1.0&#34;</span>, <span style="color:#e6db74">&#34;futures 0.3.8&#34;</span>]
+</code></pre></div><p>Unfortunately, the <code>compat</code> dependency in <code>futures_util</code> makes futures 0.1 a transitive dependency of futures 0.3, which causes every edge that introduces a dependency on futures 0.3 to be included in the report. This is not the desired behavior. Here&rsquo;s a visualization of the problem, showing the path via which futures 0.3 depends on futures 0.1:</p>
+
+  <img src="/img/project_futures_util_compat.svg"  alt="TODO"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>To solve this issue, we&rsquo;re going to have to skip some edges:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> package_set <span style="color:#f92672">=</span> package_query
+      .resolve_with_fn(<span style="color:#f92672">|</span>_, link<span style="color:#f92672">|</span> <span style="color:#f92672">!</span>opt.skip.iter().any(<span style="color:#f92672">|</span>s<span style="color:#f92672">|</span> link.to().id().repr().contains(s)));
+</code></pre></div><p>This code block takes a provided list of substrings to ignore and skips edges to any package with an id containing an ignored substring. Let&rsquo;s try regenerating the transitive frontier with that enabled, via <code>cargo run -- -p &quot;futures 0.1&quot; --skip &quot;futures-util&quot; -- example_workspaces/project_with_compat</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">package_id</span> = <span style="color:#e6db74">&#34;futures 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)&#34;</span>
+
+[<span style="color:#a6e22e">frontier</span>]
+<span style="color:#a6e22e">capabilities_old</span> = [<span style="color:#e6db74">&#34;library_old 0.1.0&#34;</span>, <span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>]
+<span style="color:#a6e22e">server</span> = [<span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>]
+</code></pre></div><p>That fixes the problem by skipping <code>futures-util</code>, as you can see in this visualization:</p>
+
+  <img src="/img/project_with_compat_transitive_frontier.svg"  alt="TODO"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>Now we have the ability to generate machine-readable reports on where transitive dependencies on futures 0.1 enter the workspace. For this workspace, that doesn&rsquo;t mean that much, but for larger workspaces with tens or even hundreds of crates automating processes like this can be critical.</p>
+<h2 id="other-applications">Other Applications<a href="#other-applications" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>TODO: expand here</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 
       </div></div>
 
@@ -193,7 +258,7 @@
   <div class="footer__inner">
     
       <div class="copyright">
-        <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a></span>
+        <span>© 2021 Powered by <a href="http://gohugo.io">Hugo</a></span>
     
         <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
       </div>

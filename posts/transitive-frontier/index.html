@@ -22,7 +22,7 @@ For my first project using guppy, I decided to build a tool to produce machine-r
 
 
 
-<link rel="stylesheet" href="/style.css">
+
 
 
 <link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
@@ -150,6 +150,7 @@ For my first project using guppy, I decided to build a tool to produce machine-r
   
 
   
+  
 
   
 
@@ -260,9 +261,9 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">transitive_frontier -p <span style="color:#e6db74">&#34;futures 0.1&#34;</span> --skip <span style="color:#e6db74">&#34;futures-util&#34;</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>                    -f html -- ~/target/dir &gt; summary.html
-</code></pre></div><!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+</code></pre></div><!-- snippets: -->
+<!-- ## Implementation -->
+<!-- My initial plan was to output graphviz dot files showing the entire reverse transitive dependency graph, but when run against an IRL project the resulting graph had too many nodes and edges to be readable. To produce a usable artifact I'd have to find a way to reduce the size of the output. I spent some time using different dependency graph combinators in guppy to omit edges and nodes that were less relevant, but the output was still too large to easily visualize. Eventually, I decided to only look at the places in the graph where a dependency on the futures 0.1 was introduced into the cargo workspace - edges with one end inside the workspace and the other outside it. This reduced the size of the report down to something manageable, even for large workspaces with nontrivial complexity. -->
       </div></div>
 
   

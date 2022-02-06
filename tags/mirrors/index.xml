@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>mirrors on [ recursion.wtf ]</title>
-    <link>/tags/mirrors/</link>
+    <link>https://recursion.wtf/tags/mirrors/</link>
     <description>Recent content in mirrors on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 05 Feb 2022 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/mirrors/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://recursion.wtf/tags/mirrors/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Infinity Mirror HYPERCRYSTAL</title>
-      <link>/posts/infinity_mirror_hypercrystal/</link>
+      <link>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>/posts/infinity_mirror_hypercrystal/</guid>
+      <guid>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</guid>
       <description>&lt;h2 id=&#34;infinity-mirror-hypercrystal&#34;&gt;Infinity Mirror HYPERCRYSTAL&lt;/h2&gt;
 
-  &lt;img src=&#34;/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34;  alt=&#34;hypercrystal powered on&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+  &lt;img src=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34;  alt=&#34;hypercrystal powered on&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
 
 
 &lt;p&gt;This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on &lt;a href=&#34;https://twitter.com/inanna_malick/status/1488927590207275010&#34;&gt;twitter&lt;/a&gt;. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:&lt;/p&gt;</description>

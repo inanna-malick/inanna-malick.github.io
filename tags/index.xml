@@ -2,57 +2,57 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on [ recursion.wtf ]</title>
-    <link>/tags/</link>
+    <link>https://recursion.wtf/tags/</link>
     <description>Recent content in Tags on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 05 Feb 2022 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>infinity</title>
-      <link>/tags/infinity/</link>
+      <link>https://recursion.wtf/tags/infinity/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>/tags/infinity/</guid>
+      <guid>https://recursion.wtf/tags/infinity/</guid>
       <description></description>
     </item>
     
     <item>
       <title>meatspace</title>
-      <link>/tags/meatspace/</link>
+      <link>https://recursion.wtf/tags/meatspace/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>/tags/meatspace/</guid>
+      <guid>https://recursion.wtf/tags/meatspace/</guid>
       <description></description>
     </item>
     
     <item>
       <title>mirrors</title>
-      <link>/tags/mirrors/</link>
+      <link>https://recursion.wtf/tags/mirrors/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>/tags/mirrors/</guid>
+      <guid>https://recursion.wtf/tags/mirrors/</guid>
       <description></description>
     </item>
     
     <item>
       <title>guppy</title>
-      <link>/tags/guppy/</link>
+      <link>https://recursion.wtf/tags/guppy/</link>
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/guppy/</guid>
+      <guid>https://recursion.wtf/tags/guppy/</guid>
       <description></description>
     </item>
     
     <item>
       <title>rust</title>
-      <link>/tags/rust/</link>
+      <link>https://recursion.wtf/tags/rust/</link>
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/rust/</guid>
+      <guid>https://recursion.wtf/tags/rust/</guid>
       <description></description>
     </item>
     

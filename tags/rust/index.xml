@@ -19,7 +19,7 @@
       <guid>/posts/transitive-frontier/</guid>
       <description>&lt;h2 id=&#34;querying-cargo-dependency-dags-with-guppy&#34;&gt;Querying Cargo Dependency DAGs with Guppy&lt;/h2&gt;
 
-  &lt;img src=&#34;/img/project_with_compat_transitive_frontier.svg&#34;  alt=&#34;dependency graph&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+  &lt;img src=&#34;/img/transitive_frontier/project_with_compat_transitive_frontier.svg&#34;  alt=&#34;dependency graph&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
 
 
 &lt;p&gt;&lt;a href=&#34;https://crates.io/crates/guppy&#34;&gt;&lt;code&gt;guppy&lt;/code&gt;&lt;/a&gt; is a rust crate that provides tools for working with cargo dependency graphs using the &lt;a href=&#34;https://crates.io/crates/petgraph&#34;&gt;&lt;code&gt;petgraph&lt;/code&gt;&lt;/a&gt; graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo dependency graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.&lt;/p&gt;

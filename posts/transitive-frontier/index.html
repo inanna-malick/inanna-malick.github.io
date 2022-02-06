@@ -22,7 +22,7 @@ For my first project using guppy, I decided to build a tool to produce machine-r
 
 
 
-
+<link rel="stylesheet" href="/style.css">
 
 
 <link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
@@ -156,7 +156,7 @@ For my first project using guppy, I decided to build a tool to produce machine-r
   <div class="post-content"><div>
         <h2 id="querying-cargo-dependency-dags-with-guppy">Querying Cargo Dependency DAGs with Guppy<a href="#querying-cargo-dependency-dags-with-guppy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 
-  <img src="/img/project_with_compat_transitive_frontier.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/transitive_frontier/project_with_compat_transitive_frontier.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
 
 
 <p><a href="https://crates.io/crates/guppy"><code>guppy</code></a> is a rust crate that provides tools for working with cargo dependency graphs using the <a href="https://crates.io/crates/petgraph"><code>petgraph</code></a> graph data structure crate. It&rsquo;s used by Facebook to audit a high-security subset of the cargo dependency graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.</p>
@@ -167,7 +167,7 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
 <h2 id="using-guppy">Using Guppy<a href="#using-guppy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Before describing the <code>transitive_frontier</code> tool, I&rsquo;m going to go over how I use <code>guppy</code>: these examples are run against some simple strawman workspaces, which you can find in the <code>example_workspaces</code> directory in the <code>transitive_frontier</code> repo. Here&rsquo;s a simplified representation of the dependency graph for the first workspace:</p>
 
-  <img src="/img/project.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/transitive_frontier/project.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
 
 
 <p>The main entry point into <code>guppy</code> is the <code>PackageGraph</code>, which holds information about the dependency graph resulting from a cargo build operation (as generated via <code>cargo metadata</code>). Here&rsquo;s how to construct a <code>PackageGraph</code> instance for your workspace:</p>
@@ -186,12 +186,12 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
 </code></pre></div><p>After we&rsquo;ve constructed the query, we need to resolve it - this step is where we actually traverse edges to build a package set. Here we&rsquo;re just resolving every edge that the query matches, but <code>guppy</code> also supports resolving queries with a filter function, to allow for skipping some edges.</p>
 <p>Here&rsquo;s a visualization of the package set this query produces, with the reverse transitive dependencies of <code>futures 0.1</code> highlighted:</p>
 
-  <img src="/img/project_with_transitive_deps.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/transitive_frontier/project_with_transitive_deps.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
 
 
 <p>However, we don&rsquo;t want a package set - we want the frontier via which dependencies <code>futures 0.1</code> are introduced into our workspace, shown further highlighted here:</p>
 
-  <img src="/img/project_with_transitive_frontier.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/transitive_frontier/project_with_transitive_frontier.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
 
 
 <p>For this step, we need to traverse the set of edges included in the <code>PackageSet</code>. Since it&rsquo;s a <em>package</em> set, it only tracks packages, so what we&rsquo;re actually doing is iterating over every edge in the package graph for where <code>to</code> and <code>from</code> are members of the package set.</p>
@@ -223,7 +223,7 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
 <span style="color:#a6e22e">capabilities</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">new</span> = [<span style="color:#e6db74">&#34;library_new 0.1.0&#34;</span>, <span style="color:#e6db74">&#34;futures 0.3.8&#34;</span>]
 </code></pre></div><p>Unfortunately, the <code>compat</code> dependency in <code>futures_util</code> makes <code>futures 0.1</code> a transitive dependency of <code>futures 0.3</code>, which causes every edge that introduces a dependency on <code>futures 0.3</code> to be included in the report. This is not the desired behavior. Here&rsquo;s a visualization of the problem, showing the path via which <code>futures 0.3</code> depends on <code>futures 0.1</code>:</p>
 
-  <img src="/img/project_futures_util_compat.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/transitive_frontier/project_futures_util_compat.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
 
 
 <p>To solve this issue, we&rsquo;re going to have to skip some edges:</p>
@@ -237,7 +237,7 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
 <span style="color:#a6e22e">server</span> = [<span style="color:#e6db74">&#34;futures 0.1.30&#34;</span>]
 </code></pre></div><p>That fixes the problem by skipping <code>futures-util</code>, as you can see in this visualization:</p>
 
-  <img src="/img/project_with_compat_transitive_frontier.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
+  <img src="/img/transitive_frontier/project_with_compat_transitive_frontier.svg"  alt="dependency graph"  class="center"  style="border-radius: 8px;"  />
 
 
 <p>Now we have the ability to generate machine-readable reports on where transitive dependencies on <code>futures 0.1</code> enter the workspace. For this workspace, that doesn&rsquo;t mean that much, but for larger workspaces with tens or even hundreds of crates automating processes like this can be critical.</p>
@@ -267,6 +267,24 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
 
   
   
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/infinity_mirror_hypercrystal/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Infinity Mirror HYPERCRYSTAL</span>
+            </a>
+        </span>
+        
+        
+    </div>
+</div>
+
   
 
   
@@ -280,7 +298,7 @@ I decided to focus on the <em>workspace frontier</em>, which I&rsquo;ve defined 
   <div class="footer__inner">
     
       <div class="copyright">
-        <span>© 2021 Powered by <a href="http://gohugo.io">Hugo</a></span>
+        <span>© 2022 Powered by <a href="http://gohugo.io">Hugo</a></span>
     
         <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
       </div>

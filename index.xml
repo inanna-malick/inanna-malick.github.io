@@ -6,10 +6,24 @@
     <description>Recent content on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Feb 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Infinity Mirror HYPERCRYSTAL</title>
+      <link>/posts/infinity_mirror_hypercrystal/</link>
+      <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/infinity_mirror_hypercrystal/</guid>
+      <description>&lt;h2 id=&#34;infinity-mirror-hypercrystal&#34;&gt;Infinity Mirror HYPERCRYSTAL&lt;/h2&gt;
+
+  &lt;img src=&#34;/img/infinity_mirror_hypercrystal/powered_on_front.jpg&#34;  alt=&#34;hypercrystal powered on&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+
+
+&lt;p&gt;I built a thing. It&amp;rsquo;s weird af. Want to learn how? Or at least see some process details? Check this out:&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Transitive Frontier</title>
@@ -19,7 +33,7 @@
       <guid>/posts/transitive-frontier/</guid>
       <description>&lt;h2 id=&#34;querying-cargo-dependency-dags-with-guppy&#34;&gt;Querying Cargo Dependency DAGs with Guppy&lt;/h2&gt;
 
-  &lt;img src=&#34;/img/project_with_compat_transitive_frontier.svg&#34;  alt=&#34;dependency graph&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+  &lt;img src=&#34;/img/transitive_frontier/project_with_compat_transitive_frontier.svg&#34;  alt=&#34;dependency graph&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
 
 
 &lt;p&gt;&lt;a href=&#34;https://crates.io/crates/guppy&#34;&gt;&lt;code&gt;guppy&lt;/code&gt;&lt;/a&gt; is a rust crate that provides tools for working with cargo dependency graphs using the &lt;a href=&#34;https://crates.io/crates/petgraph&#34;&gt;&lt;code&gt;petgraph&lt;/code&gt;&lt;/a&gt; graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo dependency graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.&lt;/p&gt;

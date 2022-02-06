@@ -4,7 +4,38 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2020-12-30T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/infinity/</loc>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/infinity_mirror_hypercrystal/</loc>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/meatspace/</loc>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mirrors/</loc>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -13,17 +44,7 @@
   </url>
   
   <url>
-    <loc>/posts/</loc>
-    <lastmod>2020-12-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/rust/</loc>
-    <lastmod>2020-12-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-12-30T00:00:00+00:00</lastmod>
   </url>
   

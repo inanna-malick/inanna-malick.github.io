@@ -6,10 +6,37 @@
     <description>Recent content in Tags on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Feb 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>infinity</title>
+      <link>/tags/infinity/</link>
+      <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/infinity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>meatspace</title>
+      <link>/tags/meatspace/</link>
+      <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/meatspace/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mirrors</title>
+      <link>/tags/mirrors/</link>
+      <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mirrors/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>guppy</title>

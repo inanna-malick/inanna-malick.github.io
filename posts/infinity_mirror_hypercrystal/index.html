@@ -6,7 +6,7 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Infinity Mirror HYPERCRYSTAL This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been developing on, on and off, for the last decade. It&amp;rsquo;s been really rewarding to work on, and I was really excited to see my latest build get a lot of attention on twitter. As promised, I&amp;rsquo;ve written up a build log going into much more detail on how I generated and constructed this object:
+<meta name="description" content="Infinity Mirror HYPERCRYSTAL This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on twitter. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:
 " />
 <meta name="keywords" content="infinity, mirrors, meatspace" />
 <meta name="robots" content="noodp" />
@@ -42,7 +42,7 @@
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Infinity Mirror HYPERCRYSTAL">
-<meta property="og:description" content="Infinity Mirror HYPERCRYSTAL This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been developing on, on and off, for the last decade. It&amp;rsquo;s been really rewarding to work on, and I was really excited to see my latest build get a lot of attention on twitter. As promised, I&amp;rsquo;ve written up a build log going into much more detail on how I generated and constructed this object:
+<meta property="og:description" content="Infinity Mirror HYPERCRYSTAL This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on twitter. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:
 " />
 <meta property="og:url" content="/posts/infinity_mirror_hypercrystal/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -164,7 +164,7 @@
   <img src="/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg"  alt="hypercrystal powered on"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>This object is the result of a series of algorithmic/generative art techniques I&rsquo;ve been developing on, on and off, for the last decade. It&rsquo;s been really rewarding to work on, and I was really excited to see my latest build get a lot of attention on <a href="https://twitter.com/inanna_malick/status/1488927590207275010">twitter</a>. As promised, I&rsquo;ve written up a build log going into much more detail on how I generated and constructed this object:</p>
+<p>This object is the result of a series of algorithmic/generative art techniques I&rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on <a href="https://twitter.com/inanna_malick/status/1488927590207275010">twitter</a>. I&rsquo;ve written up a build log with details on how I generated and constructed this object:</p>
 <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe src='https://player.vimeo.com/video/674008248' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
 <h2 id="what">WHAT<a href="#what" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Laser cut generative art. A non-platonic non-symmetrical solid with eight faces, each cut from 30% transparent plastic with each pair of connected faces held together by a plywood joinery system I developed.</p>
@@ -174,7 +174,7 @@
   <img src="/img/infinity_mirror_hypercrystal/components.jpg"  alt="hypercrystal components"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>I combined these pieces with a cardboard cigar box gifted to me by my sister Sean (she&rsquo;s an amazing artist, check out her <a href="https://www.seankinsky.com/">portfolio</a> here). This box holds the electronics and the base of the LED lightbulbs that illuminate the piece, which allows me to maintain the illusion of a crystal sitting on top of a box, with each perceived as a standalone object.</p>
+<p>I combined these pieces with a cardboard cigar box gifted to me by my sister (an amazing artist, check out her <a href="https://www.seankinsky.com/">portfolio</a>). This box holds the electronics and the base of the LED lightbulbs that illuminate the piece, which allows me to maintain the illusion of a crystal sitting on top of a box, with each perceived as a standalone object.</p>
 
   <img src="/img/infinity_mirror_hypercrystal/under_construction.jpg"  alt="hypercrystal under construction"  class="center"  style="border-radius: 8px;"  />
 
@@ -196,12 +196,7 @@
   <img src="/img/infinity_mirror_hypercrystal/3D_model.png"  alt="3D model of hypercrystal"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>Then, I use a command line tool I&rsquo;ve built using rust to generate a series of 2D vector files (it&rsquo;s still very much a work in progress). The tool uses a bunch of parameters stored in a config.toml file to support different materials.</p>
-
-  <img src="/img/infinity_mirror_hypercrystal/rust_interface.png"  alt="rust interface"  class="center"  style="border-radius: 8px;"  />
-
-
-<p>That results in a series of components.</p>
+<p>Then, I use a tool I&rsquo;ve built using rustlang to generate a series of 2D vector drawings of the various physical components that make up the object. These 2D drawings are cut out of sheets of plywood and acrylic using a laser cutter.</p>
 <h3 id="2d-geometry">2D Geometry<a href="#2d-geometry" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <h4 id="faces">Faces<a href="#faces" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <p>Let&rsquo;s start with the faces, each of which corresponds exactly to one of the faces in the original 3D model:</p>

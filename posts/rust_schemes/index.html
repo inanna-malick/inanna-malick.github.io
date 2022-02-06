@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Elegant and performant recursion in Rust :: [ recursion.wtf ]</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.
+We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.
+We&amp;rsquo;re not going to start with that, though.
+" />
+<meta name="keywords" content="recursion schemes, rust, code" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://recursion.wtf/posts/rust_schemes/" />
+
+
+
+
+<link rel="stylesheet" href="https://recursion.wtf/assets/style.css">
+
+  <link rel="stylesheet" href="https://recursion.wtf/assets/blue.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon" href="https://recursion.wtf/img/apple-touch-icon-192x192.png">
+
+  <link rel="shortcut icon" href="https://recursion.wtf/img/favicon/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="inanna_malick" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Elegant and performant recursion in Rust">
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.
+We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.
+We&amp;rsquo;re not going to start with that, though.
+" />
+<meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
+<meta property="og:site_name" content="[ recursion.wtf ]" />
+
+  
+    <meta property="og:image" content="https://recursion.wtf/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2022-07-12 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Inanna Malick
+  </div>
+</a>
+
+    </div>
+    
+      <div class="menu-trigger">menu</div>
+    
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="https://github.com/inanna-malick/">Github</a></li>
+        
+      
+        
+          <li><a href="https://twitter.com/inanna_malick">Twitter</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="https://github.com/inanna-malick/">Github</a></li>
+      
+    
+      
+        <li><a href="https://twitter.com/inanna_malick">Twitter</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Elegant and performant recursion in Rust"/>
+<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that.
+We&rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.
+
+  
+
+
+We&rsquo;re not going to start with that, though."/>
+
+  <meta property="og:title" content="Elegant and performant recursion in Rust" />
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that.
+We&rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.
+
+  
+
+
+We&rsquo;re not going to start with that, though." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
+<meta property="article:published_time" content="2022-07-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-07-12T00:00:00+00:00" /><meta property="og:site_name" content="[ recursion.wtf ]" />
+
+
+
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://recursion.wtf/posts/rust_schemes/">Elegant and performant recursion in Rust</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-07-12 
+      </span>
+    
+    
+    <span class="post-author">:: Inanna Malick</span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
+    
+    #<a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+    
+    #<a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
+    
+  </span>
+  
+
+  
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that.</p>
+<p>We&rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.</p>
+
+  <img src="/img/rust_schemes/rust_schemes_grep.png"  alt="command line output for a simple grep-type tool"  class="center"  style="border-radius: 8px;"  />
+
+
+<p>We&rsquo;re not going to start with that, though.</p>
+<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. This is a naive representation of a recursive expression language that uses boxed pointers to handle the recursive case.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
+<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
+    Add {
+        a: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
+        b: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
+    },
+    Sub {
+        a: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
+        b: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
+    },
+    Mul {
+        a: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
+        b: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
+    },
+    LiteralInt {
+        literal: <span style="color:#66d9ef">i64</span>,
+    },
+}
+</code></pre></div><p>You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic. For example, an expression like <code>1 * 2 - 3</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code> or (actual code) this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">    ExprBoxed::Mul {
+        a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">1</span> }),
+        b: Box::new(ExprBoxed::Sub {
+            a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">2</span> }),
+            b: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">3</span> }),
+        }),
+    }
+</code></pre></div><p>Evaluating expressions is pretty simple - it&rsquo;s just addition, subtraction, and multiplication. This recursive eval function provides an fairly elegant and readable representation of a recursive algorithm:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprBoxed {
+    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(<span style="color:#f92672">&amp;</span>self) -&gt; <span style="color:#66d9ef">i64</span> {
+        <span style="color:#66d9ef">match</span> <span style="color:#f92672">&amp;</span>self {
+            ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> a.eval() <span style="color:#f92672">+</span> b.eval(),
+            ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> a.eval() <span style="color:#f92672">-</span> b.eval(),
+            ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> a.eval() <span style="color:#f92672">*</span> b.eval(),
+            ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> <span style="color:#f92672">*</span>literal,
+        }
+    }
+}
+</code></pre></div><p>It has some issues: if we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures, like file trees or version control repository state. Also, each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can&rsquo;t take advantage of cache locality - there&rsquo;s no guarantee that all these boxed pointers live in the same region of memory.</p>
+<p>We&rsquo;re going to sketch out a more idiomatic and performant expression language, using a Vec of values (guaranteeing memory locality) with boxed pointers replaced with usize indices pointing into our vector.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
+    Add { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
+    Sub { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
+    Mul { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
+    LiteralInt { literal: <span style="color:#66d9ef">i64</span> },
+}
+<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RecursiveExpr</span> {
+    <span style="color:#e6db74">/// nonempty, in topological-sorted order. for every node `n`, all of `n`&#39;s child nodes have vec indices greater than that of n
+</span><span style="color:#e6db74"></span>    elems: Vec<span style="color:#f92672">&lt;</span>Expr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">usize</span><span style="color:#f92672">&gt;&gt;</span>,
+}
+</code></pre></div><p>We&rsquo;re also going to define a function to map from one type of Expr to another, for convenience - nothing complex, it just applies a function to each &lsquo;A&rsquo;, sort of like mapping over an Option or an Iterator. If you&rsquo;re familiar with functional languages, this is basically just <code>fmap</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> Expr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">&lt;</span>B, F: FnMut(A) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> {
+        <span style="color:#66d9ef">match</span> self {
+            Expr::Add { a, b } <span style="color:#f92672">=&gt;</span> Expr::Add { a: <span style="color:#a6e22e">f</span>(a), b: <span style="color:#a6e22e">f</span>(b) },
+            Expr::Sub { a, b } <span style="color:#f92672">=&gt;</span> Expr::Sub { a: <span style="color:#a6e22e">f</span>(a), b: <span style="color:#a6e22e">f</span>(b) },
+            Expr::Mul { a, b } <span style="color:#f92672">=&gt;</span> Expr::Mul { a: <span style="color:#a6e22e">f</span>(a), b: <span style="color:#a6e22e">f</span>(b) },
+            Expr::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> Expr::LiteralInt { literal },
+        }
+    }
+}
+</code></pre></div><p>The problem here is that this is harder to read - we don&rsquo;t want to construct these by hand, because it would be tedious and error prone. Instead, we&rsquo;ll just create them from boxed expressions. Here&rsquo;s how: start with a boxed expression, unfold a single layer of structure from it, then just repeatedly unfold layers until there aren&rsquo;t any more layers to unfold. Feel free to skim this function, it&rsquo;s  only here is to demonstrate what non-elegant recursive code looks like.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_ast</span>(a: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([a]);
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
+
+        <span style="color:#75715e">// unfold to build a vec of elems while preserving topo order
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop_front() {
+            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
+                ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> Expr::Add { a, b },
+                ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> Expr::Sub { a, b },
+                ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> Expr::Mul { a, b },
+                ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> Expr::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
+            };
+
+            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>aa<span style="color:#f92672">|</span> {
+                frontier.push_back(aa);
+                <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
+</span><span style="color:#75715e"></span>                elems.len() <span style="color:#f92672">+</span> frontier.len()
+            });
+
+            elems.push(node);
+        }
+
+        Self { elems }
+    }
+}
+</code></pre></div><p>It&rsquo;s not exactly elegant, right? The <code>let node = match {...}</code> block defines a single recursive step, which builds a single layer of <code>Expr&lt;&amp;ExprBoxed&gt;</code> structure from an <code>&amp;ExprBoxed</code> seed value, but it&rsquo;s surrounded with a bunch of bookkeeping boilerplate that handles combining the layers to build a vec of <code>Expr&lt;usize&gt;</code>.</p>
+<p>Don&rsquo;t worry, we have a fix for this. Before we can get to that, let&rsquo;s look at what evaluating a a <code>RecursiveExpr</code> looks like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results: <span style="color:#a6e22e">HashMap</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">usize</span>, <span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> HashMap::with_capacity(self.elems.len());
+
+        <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
+            <span style="color:#75715e">// each node is only referenced once so just remove it
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> results.remove(<span style="color:#f92672">&amp;</span>x).expect(<span style="color:#e6db74">&#34;node not in result map&#34;</span>));
+            <span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
+                Expr::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
+                Expr::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
+                Expr::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
+                Expr::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
+            };
+            results.insert(idx, alg_res);
+        }
+
+        results.remove(<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0</span>).unwrap()
+    }
+}
+</code></pre></div><p>Here we fold up the expression tree from the leaves to the root, evaluating it one layer at a time and storing the results in a hash map until they are used. Since everything we&rsquo;re folding over is stored in a vec, in one contiguous region of memory, we don&rsquo;t need to worry about the overhead of traversing a bunch of pointers (I have benchmarks over a more optimized version that shows a consistient 20-30% improvement over evaluating boxed <code>ExprAST</code> nodes).</p>
+<p>Unfortunately, it&rsquo;s not elegant. Once again, the logic of <em>how</em> we fold layers of recursive structure (<code>Expr&lt;i64&gt;</code>) into a single value (<code>i64</code>) is interleaved with a bunch of boilerplate that handles the actual mechanics of recursion.</p>
+<p>Let&rsquo;s fix that.</p>
+<h1 id="recursion-schemes">RECURSION SCHEMES<a href="#recursion-schemes" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>The key idea here, which is taken entirely from recursion schemes, is to <em>separate</em> the mechanism of recursion from the logic of recursion. Let&rsquo;s see what that looks like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>A, F: FnMut(Expr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results: <span style="color:#a6e22e">HashMap</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">usize</span>, A<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> HashMap::with_capacity(self.elems.len());
+
+        <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
+            <span style="color:#75715e">// each node is only referenced once so just remove it
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> results.remove(<span style="color:#f92672">&amp;</span>x).expect(<span style="color:#e6db74">&#34;node not in result map&#34;</span>));
+            <span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> fold_layer(node);
+            results.insert(idx, alg_res);
+        }
+
+        results.remove(<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0</span>).unwrap()
+    }
+}
+</code></pre></div><p>First, we have a generic representation of folding some structure into a single value - instead of folding an <code>Expr&lt;i64&gt;</code> into a single <code>i64</code>, we fold some <code>Expr&lt;A&gt;</code> into an <code>A</code>. The code looks pretty much the same as eval_inline, but it lets us factor out the mechanism of recursion.</p>
+<p>Here&rsquo;s what <code>eval</code> looks like using this idiom:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
+        self.fold(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
+            Expr::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
+            Expr::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
+            Expr::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
+            Expr::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
+        })
+    }
+}
+</code></pre></div><p>It&rsquo;s pretty much the same logic as the previous <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. In fact, it actually contains slightly less boilerplate than the eval function we wrote for <code>ExprBoxed::eval</code> because it doesn&rsquo;t have to handle recursively calling itself. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust. I think that&rsquo;s neat.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">unfold</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(a: <span style="color:#a6e22e">A</span>, unfold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([a]);
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
+
+        <span style="color:#75715e">// unfold to build a vec of elems while preserving topo order
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop_front() {
+            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> unfold_layer(seed);
+
+            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>aa<span style="color:#f92672">|</span> {
+                frontier.push_back(aa);
+                <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
+</span><span style="color:#75715e"></span>                elems.len() <span style="color:#f92672">+</span> frontier.len()
+            });
+
+            elems.push(node);
+        }
+
+        Self { elems }
+    }
+}
+</code></pre></div><p>Here we have a generic representation of unfolding some structure from a single value - instead of unfolding a single layer of <code>Expr&lt;&amp;ExprBoxed&gt;</code> structure from an <code>&amp;ExprBoxed</code> seed value, we unfold some <code>A</code> into an <code>Expr&lt;A&gt;</code>. As with <code>fold</code>, the code looks pretty much the same as <code>from_ast</code>, just with the specific unfold logic factored out.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_ast</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+        Self::unfold(ast, <span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> seed {
+            ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> Expr::Add { a, b },
+            ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> Expr::Sub { a, b },
+            ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> Expr::Mul { a, b },
+            ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> Expr::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
+        })
+    }
+}
+</code></pre></div><p>Here&rsquo;s what <code>RecursiveExpr::from_ast</code> looks like as written using <code>unfold</code>. Just as before, there&rsquo;s almost no boilerplate, the body of the function is almost entirely taken up by the logic of unfolding.</p>
+<p>I used proptest to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. (todo: describe this technique in more detail, credit Rain)</p>
+<p>This actually helped me find a bug! In my first implementation of <code>unfold</code>, I used a stack instead of a queue for the frontier, which ended up mangling the order of the expression tree. Since proptest is awesome, it not only found this bug but reduced the failing test case to <code>Add (0, Sub(0, 1))</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// generate a bunch of expression trees and evaluate them via each method
+</span><span style="color:#75715e"></span><span style="color:#75715e">#[cfg(test)]</span>
+proptest<span style="color:#f92672">!</span> {
+    <span style="color:#75715e">#[test]</span>
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expr_eval</span>(boxed_expr <span style="color:#66d9ef">in</span> arb_expr()) {
+        <span style="color:#66d9ef">let</span> eval_boxed <span style="color:#f92672">=</span> boxed_expr.eval();
+        <span style="color:#66d9ef">let</span> eval_via_fold <span style="color:#f92672">=</span> RecursiveExpr::from_ast(<span style="color:#f92672">&amp;</span>boxed_expr).eval();
+
+        assert_eq<span style="color:#f92672">!</span>(eval_boxed, eval_inlined);
+    }
+}
+
+<span style="color:#75715e">#[cfg(test)]</span>
+<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">arb_expr</span>() -&gt; <span style="color:#a6e22e">impl</span> Strategy<span style="color:#f92672">&lt;</span>Value <span style="color:#f92672">=</span> ExprBoxed<span style="color:#f92672">&gt;</span> {
+    <span style="color:#66d9ef">let</span> leaf <span style="color:#f92672">=</span> any::<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i8</span><span style="color:#f92672">&gt;</span>().prop_map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> ExprBoxed::LiteralInt { literal: <span style="color:#a6e22e">x</span> <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i64</span> });
+    leaf.prop_recursive(
+        <span style="color:#ae81ff">8</span>,   <span style="color:#75715e">// 8 levels deep
+</span><span style="color:#75715e"></span>        <span style="color:#ae81ff">256</span>, <span style="color:#75715e">// Shoot for maximum size of 256 nodes
+</span><span style="color:#75715e"></span>        <span style="color:#ae81ff">10</span>,  <span style="color:#75715e">// We put up to 10 items per collection
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">|</span>inner<span style="color:#f92672">|</span> {
+            prop_oneof<span style="color:#f92672">!</span>[
+                (inner.clone(), inner.clone()).prop_map(<span style="color:#f92672">|</span>(a, b)<span style="color:#f92672">|</span> ExprBoxed::Add {
+                    a: Box::new(a),
+                    b: Box::new(b)
+                }),
+                (inner.clone(), inner.clone()).prop_map(<span style="color:#f92672">|</span>(a, b)<span style="color:#f92672">|</span> ExprBoxed::Sub {
+                    a: Box::new(a),
+                    b: Box::new(b)
+                }),
+                (inner.clone(), inner).prop_map(<span style="color:#f92672">|</span>(a, b)<span style="color:#f92672">|</span> ExprBoxed::Mul {
+                    a: Box::new(a),
+                    b: Box::new(b)
+                }),
+            ]
+        },
+    )
+}
+</code></pre></div>
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://recursion.wtf/posts/infinity_mirror_hypercrystal/">
+                <span class="button__text">Infinity Mirror HYPERCRYSTAL</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2022 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="https://recursion.wtf/assets/main.js"></script>
+<script src="https://recursion.wtf/assets/prism.js"></script>
+
+
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

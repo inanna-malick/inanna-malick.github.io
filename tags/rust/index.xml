@@ -6,10 +6,25 @@
     <description>Recent content in rust on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 12 Jul 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://recursion.wtf/tags/rust/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Elegant and performant recursion in Rust</title>
+      <link>https://recursion.wtf/posts/rust_schemes/</link>
+      <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/posts/rust_schemes/</guid>
+      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.&lt;/p&gt;
+
+  &lt;img src=&#34;https://recursion.wtf/img/rust_schemes/rust_schemes_grep.png&#34;  alt=&#34;command line output for a simple grep-type tool&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+
+
+&lt;p&gt;We&amp;rsquo;re not going to start with that, though.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Transitive Frontier</title>

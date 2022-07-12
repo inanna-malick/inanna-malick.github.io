@@ -6,15 +6,15 @@
     <description>Recent content in code on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 12 Jul 2002 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://recursion.wtf/tags/code/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Elegant and performant recursion in Rust</title>
+      <title>Elegant and performant recursion in Rust (Draft)</title>
       <link>https://recursion.wtf/posts/rust_schemes/</link>
-      <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 12 Jul 2002 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/posts/rust_schemes/</guid>
       <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.&lt;/p&gt;

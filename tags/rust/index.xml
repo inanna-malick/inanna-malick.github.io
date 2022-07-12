@@ -6,25 +6,10 @@
     <description>Recent content in rust on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 30 Dec 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://recursion.wtf/tags/rust/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Elegant and performant recursion in Rust</title>
-      <link>https://recursion.wtf/posts/rust_schemes/</link>
-      <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://recursion.wtf/posts/rust_schemes/</guid>
-      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.&lt;/p&gt;
-&lt;p&gt;We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.&lt;/p&gt;
-
-  &lt;img src=&#34;https://recursion.wtf/img/rust_schemes/rust_schemes_grep.png&#34;  alt=&#34;command line output for a simple grep-type tool&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
-
-
-&lt;p&gt;We&amp;rsquo;re not going to start with that, though.&lt;/p&gt;</description>
-    </item>
     
     <item>
       <title>Transitive Frontier</title>
@@ -39,6 +24,21 @@
 
 &lt;p&gt;&lt;a href=&#34;https://crates.io/crates/guppy&#34;&gt;&lt;code&gt;guppy&lt;/code&gt;&lt;/a&gt; is a rust crate that provides tools for working with cargo dependency graphs using the &lt;a href=&#34;https://crates.io/crates/petgraph&#34;&gt;&lt;code&gt;petgraph&lt;/code&gt;&lt;/a&gt; graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo dependency graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.&lt;/p&gt;
 &lt;p&gt;For my first project using &lt;code&gt;guppy&lt;/code&gt;, I decided to build a tool to produce machine-readable summaries describing why some target dependency is included in a cargo workspace&amp;rsquo;s build graph. My motivation was to support projects that are migrating from &lt;code&gt;futures 0.1&lt;/code&gt; to &lt;code&gt;futures 0.3&lt;/code&gt;. Many rust projects started using &lt;code&gt;futures 0.1&lt;/code&gt; for their initial async implementation, and are still in the process of switching over to &lt;code&gt;futures 0.3&lt;/code&gt;. If you&amp;rsquo;re interested in learning more about the differences between the two packages, &lt;a href=&#34;https://www.ncameron.org/blog/migrating-a-crate-from-futures-0-1-to-0-3/&#34;&gt;this blog post by ncameron&lt;/a&gt; is a great resource. Being able to easily generate machine-readable reports opens up new possibilities - for example, you could use the output of this tool to build a linter that asserts that no new transitive dependencies on &lt;code&gt;futures 0.1&lt;/code&gt; are introduced into a workspace, to provide tooling-backed assurances that usage of &lt;code&gt;futures 0.1&lt;/code&gt; only ever decreases.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Elegant and performant recursion in Rust (Draft)</title>
+      <link>https://recursion.wtf/posts/rust_schemes/</link>
+      <pubDate>Fri, 12 Jul 2002 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/posts/rust_schemes/</guid>
+      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.&lt;/p&gt;
+
+  &lt;img src=&#34;https://recursion.wtf/img/rust_schemes/rust_schemes_grep.png&#34;  alt=&#34;command line output for a simple grep-type tool&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
+
+
+&lt;p&gt;We&amp;rsquo;re not going to start with that, though.&lt;/p&gt;</description>
     </item>
     
   </channel>

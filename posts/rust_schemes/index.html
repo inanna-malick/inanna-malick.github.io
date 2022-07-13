@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.
 We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.
-We&amp;rsquo;re not going to start with that, though.
+We&amp;rsquo;re not going to start with that, though. That will be the subject of a future blog post building on this one.
 " />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
@@ -46,7 +46,7 @@ We&amp;rsquo;re not going to start with that, though.
 <meta property="og:title" content="Elegant and performant recursion in Rust (Draft)">
 <meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.
 We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.
-We&amp;rsquo;re not going to start with that, though.
+We&amp;rsquo;re not going to start with that, though. That will be the subject of a future blog post building on this one.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -135,7 +135,7 @@ We&rsquo;re going to start with a simplified non-generic version of this algorit
   
 
 
-We&rsquo;re not going to start with that, though."/>
+We&rsquo;re not going to start with that, though. That will be the subject of a future blog post building on this one."/>
 
   <meta property="og:title" content="Elegant and performant recursion in Rust (Draft)" />
 <meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that.
@@ -144,7 +144,7 @@ We&rsquo;re going to start with a simplified non-generic version of this algorit
   
 
 
-We&rsquo;re not going to start with that, though." />
+We&rsquo;re not going to start with that, though. That will be the subject of a future blog post building on this one." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="article:published_time" content="2002-07-12T00:00:00+00:00" />
@@ -195,9 +195,9 @@ We&rsquo;re not going to start with that, though." />
   <img src="/img/rust_schemes/rust_schemes_grep.png"  alt="command line output for a simple grep-type tool"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>We&rsquo;re not going to start with that, though.</p>
+<p>We&rsquo;re not going to start with that, though. That will be the subject of a future blog post building on this one.</p>
 <h1 id="evaluating-an-expression-language">Evaluating an expression language<a href="#evaluating-an-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. This is a naive representation of a recursive expression language that uses boxed pointers to handle the recursive case.</p>
+<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. This is a naive representation of a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar to boxed pointers, a <code>Box&lt;A&gt;</code> is just the rust way of storing a pointer to some value of type <code>A</code> - literally a box with a value of type <code>A</code> inside it.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
     Add {
@@ -445,6 +445,7 @@ criterion_main<span style="color:#f92672">!</span>(benches);
 
 
 <p>Evaluating a boxed expression takes an average 785.41 µs. Evaluating an expression stored in our <code>RecursiveExpr</code> takes an average of 559.22 µs. That&rsquo;s a 28% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results.</p>
+<h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
       </div></div>
 
   

@@ -46,13 +46,14 @@
       <pubDate>Fri, 12 Jul 2002 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/posts/rust_schemes/</guid>
-      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that.&lt;/p&gt;
-&lt;p&gt;We&amp;rsquo;re going to start with a simplified non-generic version of this algorithm to build understanding. As motivation, I&amp;rsquo;ve used it to implement a nontrivial proof of concept: a small but functional command line tool for searching the text of files (grep, basically). This tool uses async IO, handles failure cases with early termination, and has various other bells and whistles that I think are neat.&lt;/p&gt;
+      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that. It&amp;rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, check out these sick nasty criterion benchmark results showing a 20-30% improvement over the usual method of working with recursive data structures in Rust.&lt;/p&gt;
+&lt;pre&gt;&lt;font color=&#34;#A6CC70&#34;&gt;Evaluate expression tree of depth 17 with standard boxed method&lt;/font&gt;                                                                            
+                        time:   [722.18 µs &lt;font color=&#34;#77A8D9&#34;&gt;&lt;b&gt;733.00 µs&lt;/b&gt;&lt;/font&gt; 746.43 µs]
 
-  &lt;img src=&#34;https://recursion.wtf/img/rust_schemes/rust_schemes_grep.png&#34;  alt=&#34;command line output for a simple grep-type tool&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;
-
-
-&lt;p&gt;We&amp;rsquo;re not going to start with that, though. That will be the subject of a future blog post building on this one.&lt;/p&gt;</description>
+&lt;font color=&#34;#A6CC70&#34;&gt;Evaluate expression tree of depth 17 with my new fold method&lt;/font&gt;                                                                            
+                        time:   [477.87 µs &lt;font color=&#34;#77A8D9&#34;&gt;&lt;b&gt;482.54 µs&lt;/b&gt;&lt;/font&gt; 488.58 µs]
+&lt;/pre&gt;
+&lt;p&gt;I think that&amp;rsquo;s neat.&lt;/p&gt;</description>
     </item>
     
   </channel>

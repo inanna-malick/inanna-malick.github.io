@@ -266,7 +266,7 @@ idx_0:    Mul(1_idx, 2_idx)
 idx_1:    LiteralInt(1)
 idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
-idx_4:    LitearlInt(3)
+idx_4:    LiteralInt(3)
 ]
 </code></pre><p>We&rsquo;re going to show how to generate these later, for now let&rsquo;s focus on evaluating expression trees stored in this format</p>
 <h2 id="optimizing-for-performance">Optimizing for performance<a href="#optimizing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
@@ -343,13 +343,6 @@ idx_4:    LitearlInt(3)
             .take(self.elems.len())
             .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
 
-        <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">get_result_unsafe</span>(results: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> Vec<span style="color:#f92672">&lt;</span>MaybeUninit<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;&gt;</span>, idx: <span style="color:#a6e22e">ExprIdx</span>) -&gt; <span style="color:#66d9ef">i64</span> {
-            <span style="color:#66d9ef">unsafe</span> {
-                <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                    std::mem::replace(results.get_unchecked_mut(idx.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-                maybe_uninit.assume_init()
-            }
-        }
 
         <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
             <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
@@ -369,7 +362,7 @@ idx_4:    LitearlInt(3)
 
         <span style="color:#66d9ef">unsafe</span> {
             <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                std::mem::replace(results.get_unchecked_mut(<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
+                std::mem::replace(results.get_unchecked_mut(ExprIdx::head().<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
             maybe_uninit.assume_init()
         }
     }

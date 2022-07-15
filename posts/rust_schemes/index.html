@@ -198,7 +198,7 @@ I think that&rsquo;s neat." />
 </pre>
 <p>I think that&rsquo;s neat.</p>
 <h1 id="evaluating-an-expression-language">Evaluating an expression language<a href="#evaluating-an-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. This is a naive representation of a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. If you&rsquo;re curious, there&rsquo;s <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>.</p>
+<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * 2 - 3</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
     Add {
@@ -217,14 +217,14 @@ I think that&rsquo;s neat." />
         literal: <span style="color:#66d9ef">i64</span>,
     },
 }
-</code></pre></div><p>You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic. For example, an expression like <code>1 * 2 - 3</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code> or (actual code) this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">    ExprBoxed::Mul {
-        a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">1</span> }),
-        b: Box::new(ExprBoxed::Sub {
-            a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">2</span> }),
-            b: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">3</span> }),
-        }),
-    }
+</code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. If you&rsquo;re curious, there&rsquo;s <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>. Using this data structure, we can write <code>Mul(1, Sub(2, 3))</code> as:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">ExprBoxed::Mul {
+    a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">1</span> }),
+    b: Box::new(ExprBoxed::Sub {
+        a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">2</span> }),
+        b: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">3</span> }),
+    }),
+}
 </code></pre></div><p>Evaluating expressions is pretty simple - it&rsquo;s just addition, subtraction, and multiplication. This recursive eval function provides a fairly elegant and readable example of a recursive algorithm:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprBoxed {
     <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(<span style="color:#f92672">&amp;</span>self) -&gt; <span style="color:#66d9ef">i64</span> {
@@ -260,7 +260,7 @@ I think that&rsquo;s neat." />
 </span><span style="color:#75715e"></span>    elems: Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
 }
 
-</code></pre></div><p>Here&rsquo;s a sketch showing what the <code>1 * 2 - 3</code> expression looks like using this.</p>
+</code></pre></div><p>Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
 <pre><code>[
 idx_0:    Mul(1_idx, 2_idx)
 idx_1:    LiteralInt(1)
@@ -268,9 +268,7 @@ idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
 idx_4:    LiteralInt(3)
 ]
-</code></pre><p>We&rsquo;re going to show how to generate these later, for now let&rsquo;s focus on evaluating expression trees stored in this format</p>
-<h2 id="optimizing-for-performance">Optimizing for performance<a href="#optimizing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Ok, so all our expressions are now guaranteed to be stored in local memory. Let&rsquo;s see what evaluating this structure looks like. A warning, in advance. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code. But it <em>does</em> have better performance in criterion benchmarks over large recursive structures. Feel free to skim this without fully examining it, in the next section we&rsquo;ll introduce a nice clean elegant API that removes the need to write <code>unsafe</code> code just to evaluate an expression tree.</p>
+</code></pre><p>Ok, so all our expressions are now guaranteed to be stored in local memory. Let&rsquo;s see what evaluating this structure looks like. A warning, in advance. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code. But it <em>does</em> have better performance in criterion benchmarks over large recursive structures as compared to recursing over boxed expressions. Feel free to skim this without fully examining it, in the next section we&rsquo;ll introduce a nice clean elegant API that removes the need to write <code>unsafe</code> code just to evaluate an expression tree.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
@@ -345,7 +343,7 @@ idx_4:    LiteralInt(3)
 
 
         <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
+            <span style="color:#66d9ef">let</span> node: <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                 <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
                     std::mem::replace(results.get_unchecked_mut(idx.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
                 maybe_uninit.assume_init()
@@ -367,15 +365,15 @@ idx_4:    LiteralInt(3)
         }
     }
 }
-</code></pre></div><p>Ok, that&rsquo;s a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">            <span style="color:#66d9ef">match</span> node {
-                ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b
-                ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b
-                ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b
-                ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-            }
-</code></pre></div><p>This still results in a bunch of unsafe code scattered around. We can do better:</p>
-<h2 id="making-it-generic">Making it generic<a href="#making-it-generic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+</code></pre></div><h2 id="making-it-generic">Making it generic<a href="#making-it-generic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Ok, that&rsquo;s a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
+    ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b
+    ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b
+    ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b
+    ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
+}
+</code></pre></div><p>The above block of code takes  <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>alg_res</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>A: <span style="color:#a6e22e">std</span>::fmt::Debug, F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> alg: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
@@ -417,8 +415,8 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. In fact, it actually contains slightly less boilerplate than the eval function we wrote for <code>ExprBoxed::eval</code> because it doesn&rsquo;t have to handle recursively calling itself. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust. I think that&rsquo;s neat.</p>
 <h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>I promised I&rsquo;d show you how to generate expression trees before, and here&rsquo;s how:
-Just as before, we <em>could</em> write a function that generates expression trees with the logic of <em>how</em> we generate some structure interleaved with the machinery that handles generating layers. Let&rsquo;s do that, as a starting point. Here&rsquo;s what it looks like without <code>map</code>:</p>
+<p>// TODO rewrite this</p>
+<p>Just as before, we <em>could</em> write a function that generates expression trees with the logic of <em>how</em> we generate some structure interleaved with the machinery that handles generating layers. Let&rsquo;s do that, as a starting point. As before, feel free to skim:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::new();
@@ -467,7 +465,7 @@ Just as before, we <em>could</em> write a function that generates expression tre
     }
 }
 </code></pre></div><h2 id="factoring-out-duplicated-code-1">Factoring out duplicated code<a href="#factoring-out-duplicated-code-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Just as before, we can clean it up a bit if we use <code>map</code>:</p>
+<p>We can clean things up a bit if we use <code>map</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
@@ -495,13 +493,14 @@ Just as before, we <em>could</em> write a function that generates expression tre
 }
 </code></pre></div><h2 id="making-it-generic-1">Making it generic<a href="#making-it-generic-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>That&rsquo;s better, but just as with <code>fold</code>, we only really care about the <code>match</code> expression here:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
-                ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
-                ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
-                ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
-                ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
-            };
-</code></pre></div><p>Fortunately, just as with <code>fold</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
+    ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
+    ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
+    ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
+    ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
+};
+</code></pre></div><p>The above block of code takes  <code>seed</code>, a value of type <code>i64</code>, and consumes it to create <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>. What if, instead of <code>i64 -&gt; ExprLayer&lt;i64&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
+<p>Fortunately, just as with <code>fold</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([seed]);
@@ -577,7 +576,7 @@ proptest<span style="color:#f92672">!</span> {
 }
 </code></pre></div><h1 id="testing-for-performance">Testing for performance<a href="#testing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>TODO: get numbers from rain&rsquo;s box I guess, laptop is a bit shite for this</p>
-<p>For performance testing, we used criterion to benchmark the simple <code>ExprBoxed::eval</code> vs our <code>RecursiveExpr::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recusive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
+<p>For performance testing, we used criterion to benchmark the simple <code>ExprBoxed::eval</code> vs our <code>RecursiveExpr::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard boxed method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 

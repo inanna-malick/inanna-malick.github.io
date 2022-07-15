@@ -198,7 +198,7 @@ I think that&rsquo;s neat." />
 </pre>
 <p>I think that&rsquo;s neat.</p>
 <h1 id="evaluating-an-expression-language">Evaluating an expression language<a href="#evaluating-an-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * 2 - 3</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
+<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
     Add {
@@ -217,7 +217,8 @@ I think that&rsquo;s neat." />
         literal: <span style="color:#66d9ef">i64</span>,
     },
 }
-</code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. If you&rsquo;re curious, there&rsquo;s <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>. Using this data structure, we can write <code>Mul(1, Sub(2, 3))</code> as:</p>
+</code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. (If you&rsquo;re curious, there&rsquo;s <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>)</p>
+<p>Using this data structure, we can write <code>Mul(1, Sub(2, 3))</code> as:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">ExprBoxed::Mul {
     a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">1</span> }),
     b: Box::new(ExprBoxed::Sub {
@@ -236,7 +237,11 @@ I think that&rsquo;s neat." />
         }
     }
 }
-</code></pre></div><p>It has some issues: if we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures. Also, each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can&rsquo;t take advantage of cache locality - there&rsquo;s no guarantee that all these boxed pointers live in the same region of memory. If you&rsquo;re not sure what I mean by cache locality, or you want much more information on it than I can provide, there&rsquo;s a great rust performance optimization resource <a href="https://gist.github.com/kvark/f067ba974446f7c5ce5bd544fe370186#keep-as-much-as-possible-in-cache">here</a>.</p>
+</code></pre></div><p>It has some issues:</p>
+<ul>
+<li>if we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
+<li>Each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can&rsquo;t take advantage of cache locality - there&rsquo;s no guarantee that all these boxed pointers live in the same region of memory. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
+</ul>
 <h2 id="a-more-cache-local-structure">A more cache local structure<a href="#a-more-cache-local-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>We can fix that by writing an expression language using a Vec of values (guaranteeing memory locality), with boxed pointers replaced with newtype-wrapped vector indices.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone, Copy)]</span>
@@ -255,7 +260,7 @@ I think that&rsquo;s neat." />
     }
 }
 
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Expr</span> {
+<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExprTopo</span> {
     <span style="color:#75715e">// nonempty, in topological-sorted order. guaranteed via construction.
 </span><span style="color:#75715e"></span>    elems: Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
 }
@@ -268,9 +273,9 @@ idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
 idx_4:    LiteralInt(3)
 ]
-</code></pre><p>It&rsquo;s stored in topographical-sorted order, which means that for each node, all of that node&rsquo;s child nodes are stored at indices higher than it is. This means that, by traversing it in reverse order, we can perform bottom-up recursion - folding leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>Expr</code> is folded into a single value. Since it&rsquo;s in topo order, we&rsquo;re guaranteed to never encounter a node before processing all of its children.</p>
-<p>Let&rsquo;s see what evaluating this structure looks like in practice. A warning, in advance. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code. But it <em>does</em> have better performance in criterion benchmarks over large recursive structures as compared to recursing over boxed expressions. Feel free to skim this without fully examining it, in the next section we&rsquo;ll introduce a nice clean elegant API that removes the need to write <code>unsafe</code> code just to evaluate an expression tree.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
+</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. Since we have a topo order, we can perform bottom-up recursion - folding leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> is folded into a single value, just by iterating over the element vector in reverse order.</p>
+<p>Let&rsquo;s see what evaluating this structure looks like in practice. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in criterion benchmarks. Feel free to skim; in the next section we&rsquo;ll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
 
@@ -287,7 +292,7 @@ idx_4:    LiteralInt(3)
         }
 
         <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> {
+            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> {
                 <span style="color:#75715e">// each node is only referenced once so just remove it, also we know it&#39;s there so unsafe is fine
 </span><span style="color:#75715e"></span>                <span style="color:#66d9ef">match</span> node {
                     ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> {
@@ -308,7 +313,7 @@ idx_4:    LiteralInt(3)
                     ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
                 }
             };
-            results[idx].write(alg_res);
+            results[idx].write(result);
         }
 
         <span style="color:#66d9ef">unsafe</span> {
@@ -318,9 +323,11 @@ idx_4:    LiteralInt(3)
         }
     }
 }
-</code></pre></div><p>The problem here is that this is harder to read - imagine having to write one of these by hand, for each recursive function. It would be tedious and extremely error prone and even worse, it would require adding a bunch of <code>unsafe</code> blocks to what should be safe code.</p>
+</code></pre></div><p>The problem here is that this is harder to read - imagine having to write all of this by hand, for each recursive function. It would be tedious at best and error prone at worse.</p>
 <h2 id="factoring-out-duplicated-code">Factoring out duplicated code<a href="#factoring-out-duplicated-code" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Note that every arm of the above match statement (except for <code>LiteralInt</code>) calls <code>get_result_unsafe</code> in pretty much the same way. We can start by factoring that out. Less lines of code means less space for bugs. What we need here is the ability to map over <code>ExprLayer</code>'s. By map, we mean that for any <code>ExprLayer&lt;A&gt;</code> we want to be able to use some function <code>A -&gt; B</code> to turn it into an <code>ExprLayer&lt;B&gt;</code>. This is very similar to <code>Option::map</code>, from the standard library.</p>
+<p>Every arm of the above match statement (except for <code>LiteralInt</code>) calls <code>get_result_unsafe</code> in pretty much the same way. We can start by factoring that out.</p>
+<p>// NOTE: phrasing is &lsquo;too haskell&rsquo;, rain says, rewrite following paragraph:</p>
+<p>What we need here is the ability to map over <code>ExprLayer</code>'s. By map, we mean that for any <code>ExprLayer&lt;A&gt;</code> we want to be able to use some function <code>A -&gt; B</code> to turn it into an <code>ExprLayer&lt;B&gt;</code> (this is very similar to <code>Option::map</code>, in the standard library).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
     <span style="color:#75715e">#[inline(always)]</span>
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">&lt;</span>B, F: FnMut(A) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> {
@@ -332,9 +339,9 @@ idx_4:    LiteralInt(3)
         }
     }
 }
-</code></pre></div><p>If you&rsquo;re familiar with functional languages, this is basically just <code>fmap</code>.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+</code></pre></div><p>If you&rsquo;re familiar with functional languages, this is basically just <code>fmap</code>.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <p>Now, we can write something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
 
@@ -344,19 +351,19 @@ idx_4:    LiteralInt(3)
 
 
         <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> node: <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
+            <span style="color:#66d9ef">let</span> node: <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                 <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
                     std::mem::replace(results.get_unchecked_mut(idx.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
                 maybe_uninit.assume_init()
             });
 
-            <span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
+            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
                 ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
                 ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
                 ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
                 ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
             };
-            results[idx].write(alg_res);
+            results[idx].write(result);
         }
 
         <span style="color:#66d9ef">unsafe</span> {
@@ -368,15 +375,15 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><h2 id="making-it-generic">Making it generic<a href="#making-it-generic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Ok, that&rsquo;s a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
     ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b
     ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b
     ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b
     ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
 }
-</code></pre></div><p>The above block of code takes  <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>alg_res</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>A: <span style="color:#a6e22e">std</span>::fmt::Debug, F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> alg: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
+</code></pre></div><p>This code takes  <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>result</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>A: <span style="color:#a6e22e">std</span>::fmt::Debug, F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
 
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>::uninit())
@@ -384,16 +391,16 @@ idx_4:    LiteralInt(3)
             .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
 
         <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> {
+            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> {
                 <span style="color:#75715e">// each node is only referenced once so just remove it, also we know it&#39;s there so unsafe is fine
 </span><span style="color:#75715e"></span>                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                     <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
                         std::mem::replace(results.get_unchecked_mut(x.<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), MaybeUninit::uninit());
                     maybe_uninit.assume_init()
                 });
-                alg(node)
+                fold_layer(node)
             };
-            results[idx].write(alg_res);
+            results[idx].write(result);
         }
 
         <span style="color:#66d9ef">unsafe</span> {
@@ -404,7 +411,7 @@ idx_4:    LiteralInt(3)
     }
 }
 </code></pre></div><p>Nice. Now we can write:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         self.fold(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
             ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
@@ -414,60 +421,10 @@ idx_4:    LiteralInt(3)
         })
     }
 }
-</code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. In fact, it actually contains slightly less boilerplate than the eval function we wrote for <code>ExprBoxed::eval</code> because it doesn&rsquo;t have to handle recursively calling itself. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust. I think that&rsquo;s neat.</p>
+</code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust. I think that&rsquo;s neat.</p>
 <h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>// TODO rewrite this</p>
-<p>Just as before, we <em>could</em> write a function that generates expression trees with the logic of <em>how</em> we generate some structure interleaved with the machinery that handles generating layers. Let&rsquo;s do that, as a starting point. As before, feel free to skim:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::new();
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
-
-        <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">push_to_frontier</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">&#39;a</span><span style="color:#f92672">&gt;</span>(
-            elems: <span style="color:#66d9ef">&amp;</span>Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
-            frontier: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> VecDeque<span style="color:#f92672">&lt;&amp;</span><span style="color:#a6e22e">&#39;a</span> ExprBoxed<span style="color:#f92672">&gt;</span>,
-            a: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">&#39;a</span> ExprBoxed,
-        ) -&gt; <span style="color:#a6e22e">ExprIdx</span> {
-            frontier.push_back(a);
-            <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
-</span><span style="color:#75715e"></span>            ExprIdx(elems.len() <span style="color:#f92672">+</span> frontier.len())
-        }
-
-        push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, seed);
-
-        <span style="color:#75715e">// generate to build a vec of elems while preserving topo order
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> { frontier.pop_front() } {
-            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
-                ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> {
-                    <span style="color:#66d9ef">let</span> a <span style="color:#f92672">=</span> push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, a);
-                    <span style="color:#66d9ef">let</span> b <span style="color:#f92672">=</span> push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, b);
-                    ExprLayer::Add { a, b }
-                }
-                ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> {
-                    <span style="color:#66d9ef">let</span> a <span style="color:#f92672">=</span> push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, a);
-                    <span style="color:#66d9ef">let</span> b <span style="color:#f92672">=</span> push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, b);
-                    ExprLayer::Sub { a, b }
-                }
-                ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> {
-                    <span style="color:#66d9ef">let</span> a <span style="color:#f92672">=</span> push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, a);
-                    <span style="color:#66d9ef">let</span> b <span style="color:#f92672">=</span> push_to_frontier(<span style="color:#f92672">&amp;</span>elems, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> frontier, b);
-                    ExprLayer::Mul { a, b }
-                }
-                ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> {
-                    <span style="color:#75715e">// no more nodes to explore
-</span><span style="color:#75715e"></span>                    ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal }
-                }
-            };
-
-            elems.push(node);
-        }
-
-        Self { elems }
-    }
-}
-</code></pre></div><h2 id="factoring-out-duplicated-code-1">Factoring out duplicated code<a href="#factoring-out-duplicated-code-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>We can clean things up a bit if we use <code>map</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
+<p>Let&rsquo;s write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
@@ -493,14 +450,14 @@ idx_4:    LiteralInt(3)
     }
 }
 </code></pre></div><h2 id="making-it-generic-1">Making it generic<a href="#making-it-generic-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>That&rsquo;s better, but just as with <code>fold</code>, we only really care about the <code>match</code> expression here:</p>
+<p>Just as with <code>fold</code>, we only really care about the <code>match</code> expression here:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
     ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
     ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
     ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
     ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
 };
-</code></pre></div><p>The above block of code takes  <code>seed</code>, a value of type <code>i64</code>, and consumes it to create <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>. What if, instead of <code>i64 -&gt; ExprLayer&lt;i64&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
+</code></pre></div><p>This <code>seed</code>, a value of type <code>i64</code>, and consumes it to create <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>. What if, instead of <code>i64 -&gt; ExprLayer&lt;i64&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
 <p>Fortunately, just as with <code>fold</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
@@ -524,7 +481,7 @@ idx_4:    LiteralInt(3)
     }
 }
 </code></pre></div><p>This lets us write <code>generate_from_boxed</code> as:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         Self::generate(ast, <span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> seed {
             ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
@@ -593,10 +550,13 @@ proptest<span style="color:#f92672">!</span> {
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>If you&rsquo;re <em>really</em> familiar with functional languages, you might point out that it&rsquo;s not <em>quite</em> <code>fmap</code>, but that&rsquo;s fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If you&rsquo;re not sure what I mean by cache locality, or you want much more information on it than I can provide, there&rsquo;s a great rust performance optimization resource <a href="https://gist.github.com/kvark/f067ba974446f7c5ce5bd544fe370186#keep-as-much-as-possible-in-cache">here</a>. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
 <p>If you&rsquo;re not familiar with functional languages and are now wondering what <code>fmap</code> is, it&rsquo;s a method provided by a trait called <code>Functor</code>. It represents the ability to map a function <code>A -&gt; B</code> over <em>some arbitrary structure</em> - if we have a <code>Functor</code> instance for <code>F</code>, then we can map a function over <code>F&lt;A&gt;</code>, for <em>any</em> <code>A</code>.  <code>F</code> could be an option, or a list, or a tree - any structure parameterized over some value. <code>map</code> provides an implementation of <code>fmap</code> (as in _f_unction map) that&rsquo;s specialized to <code>ExprLayer</code>. If you&rsquo;re curious, <a href="http://learnyouahaskell.com/making-our-own-types-and-typeclasses#the-functor-typeclass">read more here</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>If you&rsquo;re <em>really</em> familiar with functional languages, you might point out that it&rsquo;s not <em>quite</em> <code>fmap</code>, but that&rsquo;s fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>

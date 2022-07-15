@@ -423,7 +423,7 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust. I think that&rsquo;s neat.</p>
 <h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let&rsquo;s write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation:</p>
+<p>Let&rsquo;s write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
@@ -457,9 +457,9 @@ idx_4:    LiteralInt(3)
     ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
     ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
 };
-</code></pre></div><p>This <code>seed</code>, a value of type <code>i64</code>, and consumes it to create <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>. What if, instead of <code>i64 -&gt; ExprLayer&lt;i64&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
+</code></pre></div><p>This matches on <code>seed</code>, a value of type <code>i64</code>, and consumes it to create <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>. What if, instead of <code>i64 -&gt; ExprLayer&lt;i64&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
 <p>Fortunately, just as with <code>fold</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> RecursiveExpr {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([seed]);
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
@@ -501,7 +501,7 @@ proptest<span style="color:#f92672">!</span> {
     <span style="color:#75715e">#[test]</span>
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expr_eval</span>(boxed_expr <span style="color:#66d9ef">in</span> arb_expr()) {
         <span style="color:#66d9ef">let</span> eval_boxed <span style="color:#f92672">=</span> boxed_expr.eval();
-        <span style="color:#66d9ef">let</span> eval_via_fold <span style="color:#f92672">=</span> RecursiveExpr::generate_from_boxed(<span style="color:#f92672">&amp;</span>boxed_expr).eval();
+        <span style="color:#66d9ef">let</span> eval_via_fold <span style="color:#f92672">=</span> ExprTopo::generate_from_boxed(<span style="color:#f92672">&amp;</span>boxed_expr).eval();
 
         assert_eq<span style="color:#f92672">!</span>(eval_boxed, eval_via_fold);
     }
@@ -534,14 +534,14 @@ proptest<span style="color:#f92672">!</span> {
 }
 </code></pre></div><h1 id="testing-for-performance">Testing for performance<a href="#testing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>TODO: get numbers from rain&rsquo;s box I guess, laptop is a bit shite for this</p>
-<p>For performance testing, we used criterion to benchmark the simple <code>ExprBoxed::eval</code> vs our <code>RecursiveExpr::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
+<p>For performance testing, we used criterion to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard boxed method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 
 <font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                            
                         time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
 </pre>
-<p>Evaluating a boxed expression of size  takes an average 785.41 µs. Evaluating an expression stored in our <code>RecursiveExpr</code> takes an average of 559.22 µs. That&rsquo;s a 28% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly more efficient for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
+<p>Evaluating a boxed expression of size  takes an average 785.41 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 559.22 µs. That&rsquo;s a 28% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly more efficient for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
 <h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>We started with a simplified non-generic version of this algorithm to build understanding. In future blog posts, I plan on showing how I made it generic, going into more detail on how I optimized it for performance (<code>MaybeUninit</code> absolutely slaps, as do stack machines), and how I used it to implement an async file tree search tool using <code>tokio::fs</code>.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>

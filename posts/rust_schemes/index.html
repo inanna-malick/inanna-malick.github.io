@@ -260,7 +260,7 @@ I think that&rsquo;s neat." />
 </span><span style="color:#75715e"></span>    elems: Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
 }
 
-</code></pre></div><p>Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
+</code></pre></div><p>Ok, so all our expressions are now guaranteed to be stored in local memory. Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
 <pre><code>[
 idx_0:    Mul(1_idx, 2_idx)
 idx_1:    LiteralInt(1)
@@ -268,7 +268,8 @@ idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
 idx_4:    LiteralInt(3)
 ]
-</code></pre><p>Ok, so all our expressions are now guaranteed to be stored in local memory. Let&rsquo;s see what evaluating this structure looks like. A warning, in advance. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code. But it <em>does</em> have better performance in criterion benchmarks over large recursive structures as compared to recursing over boxed expressions. Feel free to skim this without fully examining it, in the next section we&rsquo;ll introduce a nice clean elegant API that removes the need to write <code>unsafe</code> code just to evaluate an expression tree.</p>
+</code></pre><p>It&rsquo;s stored in topographical-sorted order, which means that for each node, all of that node&rsquo;s child nodes are stored at indices higher than it is. This means that, by traversing it in reverse order, we can perform bottom-up recursion - folding leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>Expr</code> is folded into a single value. Since it&rsquo;s in topo order, we&rsquo;re guaranteed to never encounter a node before processing all of its children.</p>
+<p>Let&rsquo;s see what evaluating this structure looks like in practice. A warning, in advance. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code. But it <em>does</em> have better performance in criterion benchmarks over large recursive structures as compared to recursing over boxed expressions. Feel free to skim this without fully examining it, in the next section we&rsquo;ll introduce a nice clean elegant API that removes the need to write <code>unsafe</code> code just to evaluate an expression tree.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> Expr {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;

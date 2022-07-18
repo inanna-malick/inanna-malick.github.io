@@ -6,11 +6,10 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that. It&amp;rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, I have criterion benchmark results showing a 14-30% improvement over the usual boxed pointer traversal method of working with recursive data structures in Rust.
-Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an intel i7-8550U with 8MB CPU cache:
-Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen™ 9 3950X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
-Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.89 µs 296.03 µs] Evaluate expression tree of depth 17 with my new fold method time: [250.96 µs 251.12 µs 251.31 µs]  I think that&amp;rsquo;s neat.
-" />
+<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
+Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
+Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
+Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.89 µs 296.03 µs] Evaluate expression tree of depth 17 with my new fold method time: [250.96 µs 251.12 µs 251.31 µs] " />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="https://recursion.wtf/posts/rust_schemes/" />
@@ -45,11 +44,10 @@ Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Elegant and performant recursion in Rust (Draft)">
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that. It&amp;rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, I have criterion benchmark results showing a 14-30% improvement over the usual boxed pointer traversal method of working with recursive data structures in Rust.
-Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an intel i7-8550U with 8MB CPU cache:
-Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen™ 9 3950X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
-Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.89 µs 296.03 µs] Evaluate expression tree of depth 17 with my new fold method time: [250.96 µs 251.12 µs 251.31 µs]  I think that&amp;rsquo;s neat.
-" />
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
+Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
+Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
+Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.89 µs 296.03 µs] Evaluate expression tree of depth 17 with my new fold method time: [250.96 µs 251.12 µs 251.31 µs] " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
 
@@ -131,42 +129,40 @@ Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Elegant and performant recursion in Rust (Draft)"/>
-<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that. It&rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, I have criterion benchmark results showing a 14-30% improvement over the usual boxed pointer traversal method of working with recursive data structures in Rust.
+<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 Performance test results
-These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an intel i7-8550U with 8MB CPU cache:
+These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
 Evaluate expression tree of depth 17 with standard method                                                                            
                         time:   [722.18 µs 733.00 µs 746.43 µs]
 
 Evaluate expression tree of depth 17 with my new fold method                                                                            
                         time:   [477.87 µs 482.54 µs 488.58 µs]
 
-The same tests, when run on an AMD Ryzen™ 9 3950X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
+The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
 Evaluate expression tree of depth 17 with standard method                                                                            
                         time:   [295.76 µs 295.89 µs 296.03 µs]
 
 Evaluate expression tree of depth 17 with my new fold method                                                                            
                         time:   [250.96 µs 251.12 µs 251.31 µs]
-
-I think that&rsquo;s neat."/>
+"/>
 
   <meta property="og:title" content="Elegant and performant recursion in Rust (Draft)" />
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that. It&rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, I have criterion benchmark results showing a 14-30% improvement over the usual boxed pointer traversal method of working with recursive data structures in Rust.
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 Performance test results
-These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an intel i7-8550U with 8MB CPU cache:
+These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
 Evaluate expression tree of depth 17 with standard method                                                                            
                         time:   [722.18 µs 733.00 µs 746.43 µs]
 
 Evaluate expression tree of depth 17 with my new fold method                                                                            
                         time:   [477.87 µs 482.54 µs 488.58 µs]
 
-The same tests, when run on an AMD Ryzen™ 9 3950X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
+The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
 Evaluate expression tree of depth 17 with standard method                                                                            
                         time:   [295.76 µs 295.89 µs 296.03 µs]
 
 Evaluate expression tree of depth 17 with my new fold method                                                                            
                         time:   [250.96 µs 251.12 µs 251.31 µs]
-
-I think that&rsquo;s neat." />
+" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="article:published_time" content="2002-07-12T00:00:00+00:00" />
@@ -211,25 +207,24 @@ I think that&rsquo;s neat." />
   
 
   <div class="post-content"><div>
-        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that. It&rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, I have criterion benchmark results showing a 14-30% improvement over the usual boxed pointer traversal method of working with recursive data structures in Rust.</p>
+        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
 <h1 id="performance-test-results">Performance test results<a href="#performance-test-results" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an intel i7-8550U with 8MB CPU cache:</p>
+<p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 
 <font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                            
                         time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
 </pre>
-<p>The same tests, when run on an AMD Ryzen™ 9 3950X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.</p>
+<p>The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
                         time:   [295.76 µs <font color="#77A8D9"><b>295.89 µs</b></font> 296.03 µs]
 
 <font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                            
                         time:   [250.96 µs <font color="#77A8D9"><b>251.12 µs</b></font> 251.31 µs]
 </pre>
-<p>I think that&rsquo;s neat.</p>
 <h1 id="evaluating-an-expression-language">Evaluating an expression language<a href="#evaluating-an-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication, just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
+<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication – just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
     Add {
@@ -268,13 +263,13 @@ I think that&rsquo;s neat." />
         }
     }
 }
-</code></pre></div><p>It has some issues:</p>
+</code></pre></div><p>This algorithm has some issues:</p>
 <ul>
-<li>if we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
+<li>If we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
 <li>Each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can&rsquo;t take advantage of cache locality - there&rsquo;s no guarantee that all these boxed pointers live in the same region of memory. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
 </ul>
-<h2 id="a-more-cache-local-structure">A more cache local structure<a href="#a-more-cache-local-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>We can fix that by writing an expression language using a Vec of values (guaranteeing memory locality), with boxed pointers replaced with newtype-wrapped vector indices.</p>
+<h2 id="a-more-cache-local-structure">A more cache-local structure<a href="#a-more-cache-local-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>We can fix that by writing an expression language using a Vec of individual expression nodes (guaranteeing memory locality), with boxed pointers replaced with newtype-wrapped vector indices.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone, Copy)]</span>
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
     Add { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
@@ -295,8 +290,8 @@ I think that&rsquo;s neat." />
     <span style="color:#75715e">// nonempty, in topological-sorted order. guaranteed via construction.
 </span><span style="color:#75715e"></span>    elems: Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
 }
-
-</code></pre></div><p>Ok, so all our expressions are now guaranteed to be stored in local memory. Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
+</code></pre></div><p>You might have noticed that we have used a generic parameter <code>A</code> rather than simply writing <code>ExprLayer&lt;ExprIdx&gt;</code>. Put a pin in that for now, we&rsquo;ll come back to that soon.</p>
+<p>All our expressions are now guaranteed to be stored in local memory. Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
 <pre><code>[
 idx_0:    Mul(1_idx, 2_idx)
 idx_1:    LiteralInt(1)
@@ -304,8 +299,8 @@ idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
 idx_4:    LiteralInt(3)
 ]
-</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. Since we have a topo order, we can perform bottom-up recursion - folding leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> is folded into a single value, just by iterating over the element vector in reverse order.</p>
-<p>Let&rsquo;s see what evaluating this structure looks like in practice. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in criterion benchmarks. Feel free to skim; in the next section we&rsquo;ll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
+</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. To evaluate an <code>ExprTopo</code>, we can perform bottom up recursion: fold leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> structure is folded into a single value. Since it&rsquo;s topologically sorted, we can do this by iterating over the element vector in reverse order.</p>
+<p>Let&rsquo;s see what evaluating this structure looks like in practice. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in benchmarks. Feel free to skim; in the next section we&rsquo;ll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
@@ -354,11 +349,10 @@ idx_4:    LiteralInt(3)
         }
     }
 }
-</code></pre></div><p>The problem here is that this is harder to read - imagine having to write all of this by hand, for each recursive function. It would be tedious at best and error prone at worse.</p>
+</code></pre></div><p>The problem here is that this is very difficult to read and write. Imagine having to write all of this by hand, for each recursive function. It would be tedious at best and error prone at worst.</p>
 <h2 id="factoring-out-duplicated-code">Factoring out duplicated code<a href="#factoring-out-duplicated-code" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Every arm of the above match statement (except for <code>LiteralInt</code>) calls <code>get_result_unsafe</code> in pretty much the same way. We can start by factoring that out.</p>
-<p>// NOTE: phrasing is &lsquo;too haskell&rsquo;, rain says, rewrite following paragraph:</p>
-<p>What we need here is the ability to map over <code>ExprLayer</code>'s. By map, we mean that for any <code>ExprLayer&lt;A&gt;</code> we want to be able to use some function <code>A -&gt; B</code> to turn it into an <code>ExprLayer&lt;B&gt;</code> (this is very similar to <code>Option::map</code>, in the standard library).</p>
+<p>Now you can see why we made <code>ExprLayer&lt;A&gt;</code> parameterized over some <code>A</code>. Since it is parameterized over some <code>A</code>, we can apply a function to each <code>A</code> inside it, turning it into an <code>ExprLayer</code><B><code>. We're going to write some code that's very similar to </code>Option::map` in the standard library.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
     <span style="color:#75715e">#[inline(always)]</span>
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">&lt;</span>B, F: FnMut(A) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> {
@@ -381,14 +375,14 @@ idx_4:    LiteralInt(3)
             .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
 
 
-        <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> node: <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
+        <span style="color:#66d9ef">for</span> (idx, layer) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
+            <span style="color:#66d9ef">let</span> layer: <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                 <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
                     std::mem::replace(results.get_unchecked_mut(idx.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
                 maybe_uninit.assume_init()
             });
 
-            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
+            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> layer {
                 ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
                 ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
                 ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
@@ -406,13 +400,14 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><h2 id="making-it-generic">Making it generic<a href="#making-it-generic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Ok, that&rsquo;s a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> node {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> layer {
     ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b
     ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b
     ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b
     ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
 }
-</code></pre></div><p>This code takes  <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>result</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
+</code></pre></div><p>This code takes  <code>layer</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>result</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
+<p>This function lets us provide an arbitrary function of type <code>ExprLayer&lt;A&gt; -&gt; A</code> and uses it to fold a recursive <code>ExprTopo</code> structure into a single value:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>A: <span style="color:#a6e22e">std</span>::fmt::Debug, F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
@@ -421,15 +416,14 @@ idx_4:    LiteralInt(3)
             .take(self.elems.len())
             .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
 
-        <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
+        <span style="color:#66d9ef">for</span> (idx, layer) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
             <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> {
-                <span style="color:#75715e">// each node is only referenced once so just remove it, also we know it&#39;s there so unsafe is fine
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
+                <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                     <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
                         std::mem::replace(results.get_unchecked_mut(x.<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), MaybeUninit::uninit());
                     maybe_uninit.assume_init()
                 });
-                fold_layer(node)
+                fold_layer(layer)
             };
             results[idx].write(result);
         }
@@ -452,9 +446,9 @@ idx_4:    LiteralInt(3)
         })
     }
 }
-</code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust. I think that&rsquo;s neat.</p>
+</code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust.</p>
 <h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let&rsquo;s write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise:</p>
+<p>Let&rsquo;s write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we&rsquo;ll be abstracting over the specifics just like we did with <code>fold</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
@@ -462,19 +456,19 @@ idx_4:    LiteralInt(3)
 
         <span style="color:#75715e">// generate to build a vec of elems while preserving topo order
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> { frontier.pop_front() } {
-            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
+            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
                 ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
                 ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
                 ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
                 ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
             };
-            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
+            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
                 frontier.push_back(seed);
                 <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
 </span><span style="color:#75715e"></span>                ExprIdx(elems.len() <span style="color:#f92672">+</span> frontier.len())
             });
 
-            elems.push(node);
+            elems.push(layer);
         }
 
         Self { elems }
@@ -482,30 +476,30 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><h2 id="making-it-generic-1">Making it generic<a href="#making-it-generic-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Just as with <code>fold</code>, we only really care about the <code>match</code> expression here:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
     ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
     ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
     ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
     ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
 };
-</code></pre></div><p>This matches on <code>seed</code>, a value of type <code>i64</code>, and consumes it to create <code>node</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>. What if, instead of <code>i64 -&gt; ExprLayer&lt;i64&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
+</code></pre></div><p>This matches on <code>seed</code>, a value of type <code>&amp;ExprBoxed</code>, and consumes it to create <code>layer</code>, a value of type <code>ExprLayer&lt;i64ExprBoxed&gt;</code>. What if, instead of <code>i64ExprBoxed -&gt; ExprLayer&lt;i64ExprBoxed&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
 <p>Fortunately, just as with <code>fold</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">Expr</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([seed]);
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
 
-        <span style="color:#75715e">// repeatedly generate nodes to build a vec of elems while preserving topo order
+        <span style="color:#75715e">// repeatedly generate layers to build a vec of elems while preserving topo order
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop_front() {
-            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> generate_layer(seed);
+            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> generate_layer(seed);
 
-            <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
+            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
                 frontier.push_back(seed);
                 <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
 </span><span style="color:#75715e"></span>                ExprIdx(elems.len() <span style="color:#f92672">+</span> frontier.len())
             });
 
-            elems.push(node);
+            elems.push(layer);
         }
 
         Self { elems }
@@ -524,7 +518,7 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><p>Nice and, as promised, elegant.</p>
 <h1 id="testing-for-correctness">Testing for Correctness<a href="#testing-for-correctness" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>I used proptest to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. (todo: describe this technique in more detail, mention that I learned it from Rain)</p>
+<p>I used <a href="">proptest</a> to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>This actually helped me find a bug! In my first implementation of <code>unfold</code>, I used a stack instead of a queue for the frontier, which ended up mangling the order of the expression tree. Since proptest is awesome, it not only found this bug but reduced the failing test case to <code>Add (0, Sub(0, 1))</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// generate a bunch of expression trees and evaluate them via each method (TODO: added new methods, test those too)
 </span><span style="color:#75715e"></span><span style="color:#75715e">#[cfg(test)]</span>
@@ -564,15 +558,14 @@ proptest<span style="color:#f92672">!</span> {
     )
 }
 </code></pre></div><h1 id="testing-for-performance">Testing for performance<a href="#testing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>TODO: get numbers from rain&rsquo;s box I guess, laptop is a bit shite for this</p>
-<p>For performance testing, we used criterion to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
+<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard boxed method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 
 <font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                            
                         time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
 </pre>
-<p>Evaluating a boxed expression of size  takes an average 785.41 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 559.22 µs. That&rsquo;s a 28% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly more efficient for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
+<p>Evaluating a boxed expression of depth 17 takes an average 733 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 482 µs. That&rsquo;s a 34% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly faster for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
 <h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>We started with a simplified non-generic version of this algorithm to build understanding. In future blog posts, I plan on showing how I made it generic, going into more detail on how I optimized it for performance (<code>MaybeUninit</code> absolutely slaps, as do stack machines), and how I used it to implement an async file tree search tool using <code>tokio::fs</code>.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
@@ -588,6 +581,9 @@ proptest<span style="color:#f92672">!</span> {
 </li>
 <li id="fn:3" role="doc-endnote">
 <p>If you&rsquo;re <em>really</em> familiar with functional languages, you might point out that it&rsquo;s not <em>quite</em> <code>fmap</code>, but that&rsquo;s fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>I learned this technique from my partner <a href="https://sunshowers.io/">Rain</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>

@@ -171,21 +171,21 @@
         <div class="post-content">
           
           
-          <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that. It&rsquo;s just an implementation detail. Instead, as motivation to read the rest of this posts, I have criterion benchmark results showing a 14-30% improvement over the usual boxed pointer traversal method of working with recursive data structures in Rust.</p>
+          <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
 <h1 id="performance-test-results">Performance test results</h1>
-<p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an intel i7-8550U with 8MB CPU cache:</p>
+<p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 <p><font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                         <br>
 time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
 </pre></p>
-<p>The same tests, when run on an AMD Ryzen™ 9 3950X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.</p>
+<p>The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
                         time:   [295.76 µs <font color="#77A8D9"><b>295.89 µs</b></font> 296.03 µs]
 <p><font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                         <br>
 time:   [250.96 µs <font color="#77A8D9"><b>251.12 µs</b></font> 251.31 µs]
 </pre></p>
-<p>I think that&rsquo;s neat.</p>
+
           
           
         </div>

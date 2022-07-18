@@ -6,7 +6,7 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
+<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 " />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
@@ -42,7 +42,7 @@
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Elegant and performant recursion in Rust">
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -125,10 +125,10 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Elegant and performant recursion in Rust"/>
-<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."/>
+<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."/>
 
   <meta property="og:title" content="Elegant and performant recursion in Rust" />
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust." />
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="article:published_time" content="2002-07-12T00:00:00+00:00" />
@@ -173,7 +173,7 @@
   
 
   <div class="post-content"><div>
-        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
+        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don't need to know anything about that; it's just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
 <h1 id="performance-test-results">Performance test results<a href="#performance-test-results" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
@@ -190,7 +190,7 @@
                         time:   [250.96 µs <font color="#77A8D9"><b>251.12 µs</b></font> 251.31 µs]
 </pre>
 <h1 id="evaluating-an-expression-language">Evaluating an expression language<a href="#evaluating-an-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication – just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
+<p>We're going to start with a simple expression language: addition, subtraction, multiplication – just enough to illustrate some concepts. You've probably seen something like this before, but if not, it's just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
     Add {
@@ -209,7 +209,7 @@
         literal: <span style="color:#66d9ef">i64</span>,
     },
 }
-</code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. (If you&rsquo;re curious, there&rsquo;s <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>)</p>
+</code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you're not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. (If you're curious, there's <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>)</p>
 <p>Using this data structure, we can write <code>Mul(1, Sub(2, 3))</code> as:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">ExprBoxed::Mul {
     a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">1</span> }),
@@ -218,7 +218,7 @@
         b: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">3</span> }),
     }),
 }
-</code></pre></div><p>Evaluating expressions is pretty simple - it&rsquo;s just addition, subtraction, and multiplication. This recursive eval function provides a fairly elegant and readable example of a recursive algorithm:</p>
+</code></pre></div><p>Evaluating expressions is pretty simple - it's just addition, subtraction, and multiplication. This recursive eval function provides a fairly elegant and readable example of a recursive algorithm:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprBoxed {
     <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(<span style="color:#f92672">&amp;</span>self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">match</span> <span style="color:#f92672">&amp;</span>self {
@@ -231,8 +231,8 @@
 }
 </code></pre></div><p>This algorithm has some issues:</p>
 <ul>
-<li>If we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
-<li>Each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can&rsquo;t take advantage of cache locality - there&rsquo;s no guarantee that all these boxed pointers live in the same region of memory. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
+<li>If we try to evaluate a sufficiently large expression it will fail with a stack overflow - we're not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
+<li>Each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can't take advantage of cache locality - there's no guarantee that all these boxed pointers live in the same region of memory. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
 </ul>
 <h2 id="a-more-cache-local-structure">A more cache-local structure<a href="#a-more-cache-local-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>We can fix that by writing an expression language using a Vec of individual expression nodes (guaranteeing memory locality), with boxed pointers replaced with newtype-wrapped vector indices.</p>
@@ -256,8 +256,8 @@
     <span style="color:#75715e">// nonempty, in topological-sorted order. guaranteed via construction.
 </span><span style="color:#75715e"></span>    elems: Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
 }
-</code></pre></div><p>You might have noticed that we have used a generic parameter <code>A</code> rather than simply writing <code>ExprLayer&lt;ExprIdx&gt;</code>. Put a pin in that for now, we&rsquo;ll come back to that soon.</p>
-<p>All our expressions are now guaranteed to be stored in local memory. Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
+</code></pre></div><p>You might have noticed that we have used a generic parameter <code>A</code> rather than simply writing <code>ExprLayer&lt;ExprIdx&gt;</code>. Put a pin in that for now, we'll come back to that soon.</p>
+<p>All our expressions are now guaranteed to be stored in local memory. Here's a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
 <pre><code>[
 idx_0:    Mul(1_idx, 2_idx)
 idx_1:    LiteralInt(1)
@@ -265,8 +265,8 @@ idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
 idx_4:    LiteralInt(3)
 ]
-</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. To evaluate an <code>ExprTopo</code>, we can perform bottom up recursion: fold leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> structure is folded into a single value. Since it&rsquo;s topologically sorted, we can do this by iterating over the element vector in reverse order.</p>
-<p>Let&rsquo;s see what evaluating this structure looks like in practice. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in benchmarks. Feel free to skim; in the next section we&rsquo;ll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
+</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. To evaluate an <code>ExprTopo</code>, we can perform bottom up recursion: fold leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> structure is folded into a single value. Since it's topologically sorted, we can do this by iterating over the element vector in reverse order.</p>
+<p>Let's see what evaluating this structure looks like in practice. It's not elegant. There's a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in benchmarks. Feel free to skim; in the next section we'll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
@@ -318,7 +318,7 @@ idx_4:    LiteralInt(3)
 </code></pre></div><p>The problem here is that this is very difficult to read and write. Imagine having to write all of this by hand, for each recursive function. It would be tedious at best and error prone at worst.</p>
 <h2 id="factoring-out-duplicated-code">Factoring out duplicated code<a href="#factoring-out-duplicated-code" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Every arm of the above match statement (except for <code>LiteralInt</code>) calls <code>get_result_unsafe</code> in pretty much the same way. We can start by factoring that out.</p>
-<p>Now you can see why we made <code>ExprLayer&lt;A&gt;</code> parameterized over some <code>A</code>. Since it is parameterized over some <code>A</code>, we can apply a function to each <code>A</code> inside it, turning it into an <code>ExprLayer&lt;B&gt;</code>. We&rsquo;re going to write some code that&rsquo;s very similar to <code>Option::map</code> in the standard library.</p>
+<p>Now you can see why we made <code>ExprLayer&lt;A&gt;</code> parameterized over some <code>A</code>. Since it is parameterized over some <code>A</code>, we can apply a function to each <code>A</code> inside it, turning it into an <code>ExprLayer&lt;B&gt;</code>. We're going to write some code that's very similar to <code>Option::map</code> in the standard library.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
     <span style="color:#75715e">#[inline(always)]</span>
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">&lt;</span>B, F: FnMut(A) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> {
@@ -330,7 +330,7 @@ idx_4:    LiteralInt(3)
         }
     }
 }
-</code></pre></div><p>If you&rsquo;re familiar with functional languages, this is basically just <code>fmap</code>.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+</code></pre></div><p>If you're familiar with functional languages, this is basically just <code>fmap</code>.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <p>Now, we can write something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
@@ -365,7 +365,7 @@ idx_4:    LiteralInt(3)
     }
 }
 </code></pre></div><h2 id="making-it-generic">Making it generic<a href="#making-it-generic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Ok, that&rsquo;s a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
+<p>Ok, that's a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> layer {
     ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b
     ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b
@@ -412,9 +412,9 @@ idx_4:    LiteralInt(3)
         })
     }
 }
-</code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust.</p>
+</code></pre></div><p>It's pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there's less boilerplate, it's easier to review and there's less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it's both more elegant and more performant than the traditional representation of recursive expression trees in rust.</p>
 <h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let&rsquo;s write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we&rsquo;ll be abstracting over the specifics just like we did with <code>fold</code>:</p>
+<p>Let's write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we'll be abstracting over the specifics just like we did with <code>fold</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
@@ -524,14 +524,14 @@ proptest<span style="color:#f92672">!</span> {
     )
 }
 </code></pre></div><h1 id="testing-for-performance">Testing for performance<a href="#testing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
+<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they're honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard boxed method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 
 <font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                            
                         time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
 </pre>
-<p>Evaluating a boxed expression of depth 17 takes an average 733 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 482 µs. That&rsquo;s a 34% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly faster for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
+<p>Evaluating a boxed expression of depth 17 takes an average 733 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 482 µs. That's a 34% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly faster for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
 <h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>We started with a simplified non-generic version of this algorithm to build understanding. In future blog posts, I plan on showing how I made it generic, going into more detail on how I optimized it for performance (<code>MaybeUninit</code> absolutely slaps, as do stack machines), and how I used it to implement an async file tree search tool using <code>tokio::fs</code>.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
@@ -540,13 +540,13 @@ proptest<span style="color:#f92672">!</span> {
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>If you&rsquo;re not sure what I mean by cache locality, or you want much more information on it than I can provide, there&rsquo;s a great rust performance optimization resource <a href="https://gist.github.com/kvark/f067ba974446f7c5ce5bd544fe370186#keep-as-much-as-possible-in-cache">here</a>. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If you're not sure what I mean by cache locality, or you want much more information on it than I can provide, there's a great rust performance optimization resource <a href="https://gist.github.com/kvark/f067ba974446f7c5ce5bd544fe370186#keep-as-much-as-possible-in-cache">here</a>. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>If you&rsquo;re not familiar with functional languages and are now wondering what <code>fmap</code> is, it&rsquo;s a method provided by a trait called <code>Functor</code>. It represents the ability to map a function <code>A -&gt; B</code> over <em>some arbitrary structure</em> - if we have a <code>Functor</code> instance for <code>F</code>, then we can map a function over <code>F&lt;A&gt;</code>, for <em>any</em> <code>A</code>.  <code>F</code> could be an option, or a list, or a tree - any structure parameterized over some value. <code>map</code> provides an implementation of <code>fmap</code> (as in _f_unction map) that&rsquo;s specialized to <code>ExprLayer</code>. If you&rsquo;re curious, <a href="http://learnyouahaskell.com/making-our-own-types-and-typeclasses#the-functor-typeclass">read more here</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If you're not familiar with functional languages and are now wondering what <code>fmap</code> is, it's a method provided by a trait called <code>Functor</code>. It represents the ability to map a function <code>A -&gt; B</code> over <em>some arbitrary structure</em> - if we have a <code>Functor</code> instance for <code>F</code>, then we can map a function over <code>F&lt;A&gt;</code>, for <em>any</em> <code>A</code>.  <code>F</code> could be an option, or a list, or a tree - any structure parameterized over some value. <code>map</code> provides an implementation of <code>fmap</code> (as in _f_unction map) that's specialized to <code>ExprLayer</code>. If you're curious, <a href="http://learnyouahaskell.com/making-our-own-types-and-typeclasses#the-functor-typeclass">read more here</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>If you&rsquo;re <em>really</em> familiar with functional languages, you might point out that it&rsquo;s not <em>quite</em> <code>fmap</code>, but that&rsquo;s fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If you're <em>really</em> familiar with functional languages, you might point out that it's not <em>quite</em> <code>fmap</code>, but that's fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
 <p>I learned this technique from my partner <a href="https://sunshowers.io/">Rain</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>

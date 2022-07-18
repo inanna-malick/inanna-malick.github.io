@@ -7,9 +7,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
-Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
-Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
-Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.89 µs 296.03 µs] Evaluate expression tree of depth 17 with my new fold method time: [250.96 µs 251.12 µs 251.31 µs] " />
+" />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="https://recursion.wtf/posts/rust_schemes/" />
@@ -45,9 +43,7 @@ Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Elegant and performant recursion in Rust">
 <meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
-Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
-Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
-Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.89 µs 296.03 µs] Evaluate expression tree of depth 17 with my new fold method time: [250.96 µs 251.12 µs 251.31 µs] " />
+" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
 
@@ -129,40 +125,10 @@ Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Elegant and performant recursion in Rust"/>
-<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
-Performance test results
-These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
-Evaluate expression tree of depth 17 with standard method                                                                            
-                        time:   [722.18 µs 733.00 µs 746.43 µs]
-
-Evaluate expression tree of depth 17 with my new fold method                                                                            
-                        time:   [477.87 µs 482.54 µs 488.58 µs]
-
-The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
-Evaluate expression tree of depth 17 with standard method                                                                            
-                        time:   [295.76 µs 295.89 µs 296.03 µs]
-
-Evaluate expression tree of depth 17 with my new fold method                                                                            
-                        time:   [250.96 µs 251.12 µs 251.31 µs]
-"/>
+<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."/>
 
   <meta property="og:title" content="Elegant and performant recursion in Rust" />
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
-Performance test results
-These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
-Evaluate expression tree of depth 17 with standard method                                                                            
-                        time:   [722.18 µs 733.00 µs 746.43 µs]
-
-Evaluate expression tree of depth 17 with my new fold method                                                                            
-                        time:   [477.87 µs 482.54 µs 488.58 µs]
-
-The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
-Evaluate expression tree of depth 17 with standard method                                                                            
-                        time:   [295.76 µs 295.89 µs 296.03 µs]
-
-Evaluate expression tree of depth 17 with my new fold method                                                                            
-                        time:   [250.96 µs 251.12 µs 251.31 µs]
-" />
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="article:published_time" content="2002-07-12T00:00:00+00:00" />

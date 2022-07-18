@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-    <title>Elegant and performant recursion in Rust (Draft) :: [ recursion.wtf ]</title>
+    <title>Elegant and performant recursion in Rust :: [ recursion.wtf ]</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@ Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Elegant and performant recursion in Rust (Draft)">
+<meta property="og:title" content="Elegant and performant recursion in Rust">
 <meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 Performance test results These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
 Evaluate expression tree of depth 17 with standard method time: [722.18 µs 733.00 µs 746.43 µs] Evaluate expression tree of depth 17 with my new fold method time: [477.87 µs 482.54 µs 488.58 µs]  The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.
@@ -128,7 +128,7 @@ Evaluate expression tree of depth 17 with standard method time: [295.76 µs 295.
   
 
   <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Elegant and performant recursion in Rust (Draft)"/>
+<meta name="twitter:title" content="Elegant and performant recursion in Rust"/>
 <meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 Performance test results
 These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
@@ -146,7 +146,7 @@ Evaluate expression tree of depth 17 with my new fold method
                         time:   [250.96 µs 251.12 µs 251.31 µs]
 "/>
 
-  <meta property="og:title" content="Elegant and performant recursion in Rust (Draft)" />
+  <meta property="og:title" content="Elegant and performant recursion in Rust" />
 <meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 Performance test results
 These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:
@@ -177,7 +177,7 @@ Evaluate expression tree of depth 17 with my new fold method
     
 <div class="post">
   <h1 class="post-title">
-    <a href="https://recursion.wtf/posts/rust_schemes/">Elegant and performant recursion in Rust (Draft)</a></h1>
+    <a href="https://recursion.wtf/posts/rust_schemes/">Elegant and performant recursion in Rust</a></h1>
   <div class="post-meta">
     
       <span class="post-date">
@@ -569,7 +569,7 @@ proptest<span style="color:#f92672">!</span> {
 <h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>We started with a simplified non-generic version of this algorithm to build understanding. In future blog posts, I plan on showing how I made it generic, going into more detail on how I optimized it for performance (<code>MaybeUninit</code> absolutely slaps, as do stack machines), and how I used it to implement an async file tree search tool using <code>tokio::fs</code>.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Thank you to everyone that helped me write this blog post and the code that it describes (todo: ask if ppl want to be credited, and by what name/handle)</p>
+<p>Thank you to <a href="https://twitter.com/munin">Fiona Weatherwax</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a> and <a href="https://gist.github.com/Gankra">Gankra</a>, among others, for reviewing drafts of this post.</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>

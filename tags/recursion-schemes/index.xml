@@ -17,7 +17,7 @@
       <pubDate>Mon, 18 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/posts/rust_schemes/</guid>
-      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.&lt;/p&gt;</description>
     </item>
     
   </channel>

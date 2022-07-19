@@ -6,7 +6,7 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
+<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 " />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
@@ -42,7 +42,7 @@
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Elegant and performant recursion in Rust">
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -125,10 +125,10 @@
 <meta name="twitter:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png"/>
 
 <meta name="twitter:title" content="Elegant and performant recursion in Rust"/>
-<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."/>
+<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."/>
 
   <meta property="og:title" content="Elegant and performant recursion in Rust" />
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust." />
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
 <meta property="og:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png" />
@@ -174,7 +174,7 @@
   
 
   <div class="post-content"><div>
-        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don't need to know anything about that; it's just an implementation detail. Instead, as motivation, here are some criterion benchmark results showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
+        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don't need to know anything about that; it's just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
 <h1 id="performance-test-results">Performance test results<a href="#performance-test-results" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            

@@ -387,7 +387,7 @@ idx_4:    LiteralInt(3)
             <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> {
                 <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                     <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                        std::mem::replace(results.get_unchecked_mut(x.<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), MaybeUninit::uninit());
+                        std::mem::replace(results.get_unchecked_mut(x.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
                     maybe_uninit.assume_init()
                 });
                 fold_layer(layer)
@@ -397,7 +397,7 @@ idx_4:    LiteralInt(3)
 
         <span style="color:#66d9ef">unsafe</span> {
             <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                std::mem::replace(results.get_unchecked_mut(ExprIdx::head().<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), MaybeUninit::uninit());
+                std::mem::replace(results.get_unchecked_mut(ExprIdx::head().<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
             maybe_uninit.assume_init()
         }
     }

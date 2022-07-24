@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>generic on [ recursion.wtf ]</title>
+    <link>https://recursion.wtf/tags/generic/</link>
+    <description>Recent content in generic on [ recursion.wtf ]</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 24 Jul 2002 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://recursion.wtf/tags/generic/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Fully generic recursion in Rust</title>
+      <link>https://recursion.wtf/posts/rust_schemes_2/</link>
+      <pubDate>Wed, 24 Jul 2002 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
+      <description>&lt;p&gt;This is the second in a series of blog posts on recursion in rust. The previous blog post introduced a method for writing performant stack safe recursion in Rust, but it was scoped to a single recursive data structure - a simple expression language. This post shows how to write &lt;em&gt;one&lt;/em&gt; recursive toolkit that can handle expanding and collapsing any recursive data structure. This has been implemented, with examples, in the crate here and the repo here.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

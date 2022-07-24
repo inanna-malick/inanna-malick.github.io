@@ -35,5 +35,14 @@
 &lt;p&gt;For my first project using &lt;code&gt;guppy&lt;/code&gt;, I decided to build a tool to produce machine-readable summaries describing why some target dependency is included in a cargo workspace&#39;s build graph. My motivation was to support projects that are migrating from &lt;code&gt;futures 0.1&lt;/code&gt; to &lt;code&gt;futures 0.3&lt;/code&gt;. Many rust projects started using &lt;code&gt;futures 0.1&lt;/code&gt; for their initial async implementation, and are still in the process of switching over to &lt;code&gt;futures 0.3&lt;/code&gt;. If you&#39;re interested in learning more about the differences between the two packages, &lt;a href=&#34;https://www.ncameron.org/blog/migrating-a-crate-from-futures-0-1-to-0-3/&#34;&gt;this blog post by ncameron&lt;/a&gt; is a great resource. Being able to easily generate machine-readable reports opens up new possibilities - for example, you could use the output of this tool to build a linter that asserts that no new transitive dependencies on &lt;code&gt;futures 0.1&lt;/code&gt; are introduced into a workspace, to provide tooling-backed assurances that usage of &lt;code&gt;futures 0.1&lt;/code&gt; only ever decreases.&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>Fully generic recursion in Rust</title>
+      <link>https://recursion.wtf/posts/rust_schemes_2/</link>
+      <pubDate>Wed, 24 Jul 2002 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
+      <description>&lt;p&gt;This is the second in a series of blog posts on recursion in rust. The previous blog post introduced a method for writing performant stack safe recursion in Rust, but it was scoped to a single recursive data structure - a simple expression language. This post shows how to write &lt;em&gt;one&lt;/em&gt; recursive toolkit that can handle expanding and collapsing any recursive data structure. This has been implemented, with examples, in the crate here and the repo here.&lt;/p&gt;</description>
+    </item>
+    
   </channel>
 </rss>

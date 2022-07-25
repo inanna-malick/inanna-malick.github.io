@@ -6,7 +6,7 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a recursive data structure. This post shows the core ideas I used to implement a single recursive backend that can handle collapsing or expanding any user-defined recursive data structure. I have a crate here, with the source code here.
+<meta name="description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can handle collapsing or expanding any user-defined recursive data structure. This single recursion backend has been implemented in a crate called recursion. Docs are here. Source code, along with examples and benchmarks, can be found here.
 " />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
@@ -42,7 +42,7 @@
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Fully generic recursion in Rust">
-<meta property="og:description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a recursive data structure. This post shows the core ideas I used to implement a single recursive backend that can handle collapsing or expanding any user-defined recursive data structure. I have a crate here, with the source code here.
+<meta property="og:description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can handle collapsing or expanding any user-defined recursive data structure. This single recursion backend has been implemented in a crate called recursion. Docs are here. Source code, along with examples and benchmarks, can be found here.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_2/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -125,10 +125,10 @@
 <meta name="twitter:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png"/>
 
 <meta name="twitter:title" content="Fully generic recursion in Rust"/>
-<meta name="twitter:description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a recursive data structure. This post shows the core ideas I used to implement a single recursive backend that can handle collapsing or expanding any user-defined recursive data structure. I have a crate here, with the source code here."/>
+<meta name="twitter:description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can handle collapsing or expanding any user-defined recursive data structure. This single recursion backend has been implemented in a crate called recursion. Docs are here. Source code, along with examples and benchmarks, can be found here."/>
 
   <meta property="og:title" content="Fully generic recursion in Rust" />
-<meta property="og:description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a recursive data structure. This post shows the core ideas I used to implement a single recursive backend that can handle collapsing or expanding any user-defined recursive data structure. I have a crate here, with the source code here." />
+<meta property="og:description" content="This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can handle collapsing or expanding any user-defined recursive data structure. This single recursion backend has been implemented in a crate called recursion. Docs are here. Source code, along with examples and benchmarks, can be found here." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_2/" />
 <meta property="og:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png" />
@@ -176,7 +176,7 @@
   
 
   <div class="post-content"><div>
-        <p>This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a recursive data structure. This post shows the core ideas I used to implement a <em>single</em> recursive backend that can handle collapsing or expanding any user-defined recursive data structure. I have a <a href="https://crates.io/crates/recursion">crate here</a>, with the <a href="https://github.com/inanna-malick/recursion">source code here</a>.</p>
+        <p>This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a <em>single</em> recursion backend that can handle collapsing or expanding any user-defined recursive data structure. This single recursion backend has been implemented in a crate called <a href="https://crates.io/crates/recursion">recursion</a>. Docs are <a href="https://docs.rs/recursion/0.0.1-BETA/recursion">here</a>. Source code, along with examples and benchmarks, <a href="https://github.com/inanna-malick/recursion">can be found here</a>.</p>
 <h1 id="a-recap">A Recap<a href="#a-recap" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p><a href="https://recursion.wtf/posts/rust_schemes/">Last time</a>, we implemented <code>collapse_layers</code> and <code>expand_layers</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> functions, specialized to <code>ExprTopo</code>.</p>
 <p>​We're going to start by looking at our <code>ExprTopo::collapse_layers</code> function from the last post. Note that it's specialized for use with <code>ExprLayer</code>. We explored the impl in detail last time, so we're going to elide that, and just look at the types:</p>
@@ -199,7 +199,7 @@
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span>;
 }
-</code></pre></div><p>This should be read as being parameterized over some type <code>Layer</code>, with <code>Wrapped</code> being <code>Layer&lt;A&gt;</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. <code>A</code> is just the type we're collapsing the data structure down into. Here's a link to this trait in the crate documentation.</p>
+</code></pre></div><p>This should be read as being parameterized over some type <code>Layer</code>, with <code>Wrapped</code> being <code>Layer&lt;A&gt;</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. <code>A</code> is just the type we're collapsing the data structure down into.</p>
 <p>While we're at it, let's put together a trait for expanding a recursive data structure from some seed:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Support for expanding a data structure from a seed value, one layer at a time
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Expand<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {

@@ -260,7 +260,7 @@
 </code></pre></div><p>You might have noticed that we have used a generic parameter <code>A</code> rather than simply writing <code>ExprLayer&lt;ExprIdx&gt;</code>. Put a pin in that for now, we'll come back to that soon.</p>
 <p>All our expressions are now guaranteed to be stored in local memory. Here's a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
 <pre><code>[
-idx_0:    Mul(1_idx, 2_idx)
+idx_0:    Mul(idx_1, idx_2)
 idx_1:    LiteralInt(1)
 idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
@@ -485,7 +485,7 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><p>Nice and, as promised, elegant.</p>
 <h1 id="testing-for-correctness">Testing for Correctness<a href="#testing-for-correctness" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>I used <a href="">proptest</a> to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<p>I used <a href="https://lib.rs/crates/proptest">proptest</a> to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>This actually helped me find a bug! In my first implementation of <code>expand</code>, I used a stack instead of a queue for the frontier, which ended up mangling the order of the expression tree. Since proptest is awesome, it not only found this bug but reduced the failing test case to <code>Add (0, Sub(0, 1))</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// generate a bunch of expression trees and evaluate them via each method
 </span><span style="color:#75715e"></span><span style="color:#75715e">#[cfg(test)]</span>

@@ -178,7 +178,8 @@
   <div class="post-content"><div>
         <p>This is the second in a series of blog posts on recursion in rust. The previous blog post introduced a method for writing performant stack safe recursion in Rust, but it was scoped to a single recursive data structure - a simple expression language. This post shows how to write <em>one</em> recursive toolkit that can handle expanding and collapsing any recursive data structure. This has been implemented, with examples, in the crate here and the repo here.</p>
 <h1 id="a-recap">A Recap<a href="#a-recap" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>​We're going to start by looking at our <code>ExprTopo::fold</code> function from the last post. Note that it's specialized for use with <code>ExprLayer</code>. We explored the impl in detail last time, so we're going to elide that, and just look at the types:</p>
+<p>Last time, we implemented <code>collapse_layers</code> and <code>expand_layers</code> functions, specialized to <code>ExprTopo</code>.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<p>​We're going to start by looking at our <code>ExprTopo::collapse_layers</code> function from the last post. Note that it's specialized for use with <code>ExprLayer</code>. We explored the impl in detail last time, so we're going to elide that, and just look at the types:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExprIdx</span>(<span style="color:#66d9ef">usize</span>);
 
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExprTopo</span> {
@@ -187,19 +188,19 @@
 }
 
 <span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#75715e">/* see previous post for full impl */</span>
     }
 }
 </code></pre></div><p>It's generic in one way - it can take any function <code>ExprLayer&lt;A&gt; -&gt; A</code> and use it to collapse an <code>ExprTopo</code> down to a single value. But it's still tied, explicitly, to <code>ExprTopo</code>. We want to use this, with all the complex internal machinery (that we really don't want to have to duplicate everywhere), written only once.</p>
 <h1 id="a-more-generic-collapse">A more Generic collapse<a href="#a-more-generic-collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We're going to start by renaming <code>fold</code> to <code>collapse</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and defining a trait <code>Collapse</code>:</p>
+<p>Here's what a generic <code>collapse_layers</code> looks like:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Support for collapsing a data structure into a single value, one layer at a time
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span>;
 }
 </code></pre></div><p>This should be read as being parameterized over some type <code>Layer</code>, with <code>Wrapped</code> being <code>Layer&lt;A&gt;</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. <code>A</code> is just the type we're collapsing the data structure down into. Here's a link to this trait in the crate documentation.</p>
-<p>While we're at it, let's put together a trait for expanding a recursive data structure from some seed - this corresponds to <code>generate</code> from the last post, but <code>collapse</code> and <code>expand</code> work really well together so we'll use <code>Expand</code> for our trait name and <code>expand_layers</code> for our function<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>:</p>
+<p>While we're at it, let's put together a trait for expanding a recursive data structure from some seed</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Support for expanding a data structure from a seed value, one layer at a time
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Expand<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>F: Fn(A) -&gt; <span style="color:#a6e22e">Wrapped</span><span style="color:#f92672">&gt;</span>(a: <span style="color:#a6e22e">A</span>, expand_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>;
@@ -214,7 +215,7 @@
     <span style="color:#e6db74">/// fmap over an owned value
 </span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fmap</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To;
 }
-</code></pre></div><p>And here it is <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+</code></pre></div><p>And here it is <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <p>Here's what it looks like as implemented for <code>ExprLayer</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, B<span style="color:#f92672">&gt;</span> Functor<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">To</span> <span style="color:#f92672">=</span> ExprLayer<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span>;
@@ -254,7 +255,7 @@
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([a]);
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
 
-        <span style="color:#75715e">// unfold to build a vec of elems while preserving topo order
+        <span style="color:#75715e">// expand to build a vec of elems while preserving topo order
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop_front() {
             <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> expand_layer(seed);
 
@@ -273,8 +274,8 @@
         }
     }
 }
-</code></pre></div><p>Very similar to the <code>generate</code> function in the previous post (link), but over <em>some generic structure</em>. Just to verify, let's write a function to expand out an <code>ExprTopo</code> from a boxed expression, just as we did in the last post. But this time, it's generic:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_from_boxed</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">ExprTopo</span> {
+</code></pre></div><p>Very similar to the <code>ExprTopo::expand_layers</code> function in the previous post (link), but over <em>some generic structure</em>. Just to verify, let's write a function to expand out an <code>ExprTopo</code> from a boxed expression, just as we did in the last post. But this time, it's generic:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_boxed</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">ExprTopo</span> {
     ExprTopo::expand(ast, <span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> seed {
         ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
         ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
@@ -284,13 +285,13 @@
 }
 </code></pre></div><p>Nice.</p>
 <h2 id="collapse">Collapse<a href="#collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Here's what collapse looks like. Just as before, it's fully generic: all it needs is a <code>Functor</code> to handle the internal bookkeeping. Feel free to skim the impl, since it's fully generic you can just use the crate, there's no need to ever impl it yourself.</p>
+<p>Here's what the impl for <code>Collapse</code> looks like. Just as before, it's fully generic: all it needs is a <code>Functor</code> to handle the internal bookkeeping. Feel free to skim the impl, since it's fully generic you can just use the crate, there's no need to ever impl it yourself.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Wrapped, Underlying<span style="color:#f92672">&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">where</span>
             Underlying: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> Wrapped, Unwrapped <span style="color:#f92672">=</span> Index<span style="color:#f92672">&gt;</span>
 {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>::uninit())
             .take(self.elems.len())
             .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
@@ -302,7 +303,7 @@
                         std::mem::replace(results.get_unchecked_mut(x), MaybeUninit::uninit());
                     maybe_uninit.assume_init()
                 });
-                fold_layer(node)
+                collapse_layer(node)
             };
             results[idx].write(alg_res);
         }
@@ -318,14 +319,14 @@
 }
 </code></pre></div><p>Here's what it looks like in use:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(expr: <span style="color:#a6e22e">ExprTopo</span>) -&gt; <span style="color:#66d9ef">i64</span> {
-    self.collapse(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
+    self.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
         ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
         ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
         ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
         ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
     })
 }
-</code></pre></div><p>These pass all the same tests as the <code>Expr</code>-specialized <code>fold</code> function, but we only have to write the machinery of recursion once! Not once per recursive data structure, just once! <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></p>
+</code></pre></div><p>These pass all the same tests as the <code>Expr</code>-specialized <code>collapse_layers</code> function, but we only have to write the machinery of recursion once! Not once per recursive data structure, just once! <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>Just as before, I want to emphasize that this is fully generic over <em>any layer type</em>:</p>
 <h1 id="a-minimal-example">A minimal example<a href="#a-minimal-example" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Here's what an N-tree looks like using this idiom (an N-tree is a tree where each node can have any number of child nodes, and where some value <code>V</code> is stored at each node of the tree. Nodes with no child nodes are leaf nodes)</p>
@@ -359,7 +360,7 @@
 </code></pre></div><p>Cool, right?</p>
 <h1 id="more-examples">More examples<a href="#more-examples" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <h2 id="async-io">Async IO<a href="#async-io" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>There's a small but fully functional filetree reader/file contents search tool here, in the top-level example directory. It's fully async, with all the bells and whistles one might expect. <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup></p>
+<p>There's a small but fully functional filetree reader/file contents search tool here, in the top-level example directory. It's fully async, with all the bells and whistles one might expect. <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></p>
 <pre><font color="#A6CC70"><b>➜ </b></font>./my_grep -- --regex &quot;Expr.*Sub&quot; --paths-to-ignore .git -p target
 <font color="#95E6CB">sparse filetree depth:</font> 4
 <font color="#95E6CB">file:</font> &quot;/home/inanna/dev/rust-schemes/src/examples/expr.rs&quot;
@@ -379,29 +380,26 @@
 </pre>
 <p>If you're curious how it's implemented, the source code is here (link).</p>
 <h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>My next post will show how to implement different recursion backends (yes, this is where we finally get to see stack machines in action), along with some cool stuff with fused <code>expand</code> and <code>collapse</code> operations such that we can construct a recursive data structure and consume it at the same time, without having to allocate a <code>RecursiveTree</code>.</p>
+<p>My next post will show how to implement different recursion backends (yes, this is where we finally get to see stack machines in action), along with some cool stuff with fused <code>expand_layers</code> and <code>collapse_layers</code> operations such that we can construct a recursive data structure and consume it at the same time, without having to allocate a <code>RecursiveTree</code>.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Thank you to <a href="https://twitter.com/munin">Fiona</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a>, among others, for reviewing drafts of this post.</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>because the function name <code>fold</code> is already used by the core <code>core::std::Iterator</code> trait, which results in confusing type errors. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If you're a recursion schemes nerd like me, you might notice that these correspond to catamorphism (a collapsing change) and anamorphism (an expanding change), but with less greek. They don't sound as cool, but I think they're a more readable representation of the same concept. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
 <p>In a perfect word, we could parameterize this over the <code>Layer</code> type (such as <code>ExprLayer</code>), but in Rust all types need to be fully applied, so we need to use <code>Wrapped</code> instead, to represent the fully applied <code>Layer&lt;A&gt;</code> type. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>If you're a recursion schemes nerd like me, you might notice that these correspond to catamorphism (a collapsing change) and anamorphism (an expanding change), but with less greek. They don't sound as cool, but I think they're more readable representations of the same concept. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Rust's type system isn't <em>quite</em> up to expressing all the required <code>Functor</code> constraints but it's enough for our purpose <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>Rust's type system isn't <em>quite</em> up to expressing all the required <code>Functor</code> constraints but it's enough for our purpose <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>a bolt of lightning strikes behind me. I am momentarily shown silhouetted by the actinic blue light. It is very dramatic <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
-<p>a bolt of lightning strikes behind me. I am momentarily shown silhouetted by the actinic blue light. It is very dramatic <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:6" role="doc-endnote">
-<p>ok, so it just uses <code>tokio::fs</code> (which just calls std lib blocking functions to work with the file system) instead of something hand crafted with manual file handle management, but there's a good reason I didn't implement that: I didn't want to <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>ok, so it just uses <code>tokio::fs</code> (which just calls std lib blocking functions to work with the file system) instead of something hand crafted with manual file handle management, but there's a good reason I didn't implement that: I didn't want to <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>

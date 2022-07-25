@@ -233,22 +233,22 @@
 <h1 id="implementing-the-expand-and-collapse-traits">Implementing the Expand and Collapse traits<a href="#implementing-the-expand-and-collapse-traits" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <h2 id="recursive-tree">Recursive Tree<a href="#recursive-tree" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>We'll be implementing <code>Expand</code> and <code>Collapse</code> for this data structure:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Recursive tree of some structure of type &#39;Layer&#39;
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RecursiveTree</span><span style="color:#f92672">&lt;</span>Wrapped, Index<span style="color:#f92672">&gt;</span> {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Index into the vector of elements
+</span><span style="color:#e6db74"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Index</span>(<span style="color:#66d9ef">usize</span>);
+
+<span style="color:#e6db74">/// Recursive tree made up of layers of some type &#39;Layer&lt;_&gt;&#39;
+</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RecursiveTree</span><span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#e6db74">/// nonempty, in topological-sorted order
 </span><span style="color:#e6db74"></span>    elems: Vec<span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span>, <span style="color:#75715e">// Layer&lt;Index&gt;
-</span><span style="color:#75715e"></span>    <span style="color:#e6db74">/// the index type over which &#39;Layer&#39; is parameterized
-</span><span style="color:#e6db74"></span>    _underlying: <span style="color:#a6e22e">std</span>::marker::PhantomData<span style="color:#f92672">&lt;</span>Index<span style="color:#f92672">&gt;</span>,
-}
-</code></pre></div><p>It's pretty much the same as <code>ExprTopo</code>, with some extra type parameters for bookkeeping.</p>
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p><code>Index</code> is a generic version of the <code>ExprIndex</code> used in the previous post - it's an internal index used to track links between different layers of the recursive tree.</p>
 <p>Here's what <code>ExprTopo</code> would look like using <code>RecursiveTree</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ArenaIndex</span>(<span style="color:#66d9ef">usize</span>);
-<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ExprTopo</span> <span style="color:#f92672">=</span> RecursiveTree<span style="color:#f92672">&lt;</span>ExprLayer, ArenaIndex<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ExprTopo</span> <span style="color:#f92672">=</span> RecursiveTree<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&gt;</span>
 </code></pre></div><h2 id="expand">Expand<a href="#expand" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Here's what expanding this data structure from a seed value looks like. It's the same as the <code>ExprLayer</code>-specific implementation, but we're using a <em>generic</em> <code>fmap</code> instead of a <code>map</code> function specific to <code>ExprLayer</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, Wrapped<span style="color:#f92672">&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying, ArenaIndex<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, Wrapped<span style="color:#f92672">&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying<span style="color:#f92672">&gt;</span>
 <span style="color:#66d9ef">where</span>
-    Wrapped: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>ArenaIndex, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> Underlying<span style="color:#f92672">&gt;</span>,
+    Wrapped: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>Index, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> Underlying<span style="color:#f92672">&gt;</span>,
 {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>F: Fn(A) -&gt; <span style="color:#a6e22e">Wrapped</span><span style="color:#f92672">&gt;</span>(a: <span style="color:#a6e22e">A</span>, expand_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([a]);
@@ -261,7 +261,7 @@
             <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.fmap(<span style="color:#f92672">|</span>aa<span style="color:#f92672">|</span> {
                 frontier.push_back(aa);
                 <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
-</span><span style="color:#75715e"></span>                ArenaIndex(elems.len() <span style="color:#f92672">+</span> frontier.len())
+</span><span style="color:#75715e"></span>                Index(elems.len() <span style="color:#f92672">+</span> frontier.len())
             });
 
             elems.push(layer);
@@ -286,9 +286,9 @@
 <h2 id="collapse">Collapse<a href="#collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Here's what collapse looks like. Just as before, it's fully generic: all it needs is a <code>Functor</code> to handle the internal bookkeeping. Feel free to skim the impl, since it's fully generic you can just use the crate, there's no need to ever impl it yourself.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Wrapped, Underlying<span style="color:#f92672">&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying, ArenaIndex<span style="color:#f92672">&gt;</span>
+    <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">where</span>
-            Underlying: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> Wrapped, Unwrapped <span style="color:#f92672">=</span> ArenaIndex<span style="color:#f92672">&gt;</span>
+            Underlying: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> Wrapped, Unwrapped <span style="color:#f92672">=</span> Index<span style="color:#f92672">&gt;</span>
 {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>::uninit())
@@ -297,7 +297,7 @@
 
         <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
             <span style="color:#66d9ef">let</span> alg_res <span style="color:#f92672">=</span> {
-                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.fmap(<span style="color:#f92672">|</span>ArenaIndex(x)<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
+                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.fmap(<span style="color:#f92672">|</span>Index(x)<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
                     <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
                         std::mem::replace(results.get_unchecked_mut(x), MaybeUninit::uninit());
                     maybe_uninit.assume_init()
@@ -309,7 +309,7 @@
 
         <span style="color:#66d9ef">unsafe</span> {
             <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span> std::mem::replace(
-                results.get_unchecked_mut(ArenaIndex::head().<span style="color:#ae81ff">0</span>),
+                results.get_unchecked_mut(Index::head().<span style="color:#ae81ff">0</span>),
                 MaybeUninit::uninit(),
             );
             maybe_uninit.assume_init()
@@ -334,7 +334,7 @@
     children: Vec<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>,
 }
 
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">RecursiveNTree</span><span style="color:#f92672">&lt;</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> RecursiveTree<span style="color:#f92672">&lt;</span>NTreeLayer<span style="color:#f92672">&lt;</span>V, ArenaIndex<span style="color:#f92672">&gt;</span>, ArenaIndex<span style="color:#f92672">&gt;</span>;
+<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">RecursiveNTree</span><span style="color:#f92672">&lt;</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> RecursiveTree<span style="color:#f92672">&lt;</span>NTreeLayer<span style="color:#f92672">&lt;</span>V, Index<span style="color:#f92672">&gt;&gt;</span>;
 
 <span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, B, V<span style="color:#f92672">&gt;</span> Functor<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> NTreeLayer<span style="color:#f92672">&lt;</span>V, A<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">To</span> <span style="color:#f92672">=</span> NTreeLayer<span style="color:#f92672">&lt;</span>V, B<span style="color:#f92672">&gt;</span>;
@@ -356,7 +356,7 @@
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">max</span><span style="color:#f92672">&lt;</span>V: Ord<span style="color:#f92672">&gt;</span>(r: <span style="color:#a6e22e">RecursiveNTree</span><span style="color:#f92672">&lt;</span>V<span style="color:#f92672">&gt;</span>) -&gt; Option<span style="color:#f92672">&lt;</span>V<span style="color:#f92672">&gt;</span> {
     r.collapse_layers(<span style="color:#f92672">|</span>layer<span style="color:#f92672">|</span> layer.children.into_iter().filter_map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> x).max())
 }
-</code></pre></div><p>Cool, right? No need to mess about with the visitor pattern, just directly expressing recursive algorithms. Neat.</p>
+</code></pre></div><p>Cool, right?</p>
 <h1 id="more-examples">More examples<a href="#more-examples" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <h2 id="async-io">Async IO<a href="#async-io" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>There's a small but fully functional filetree reader/file contents search tool here, in the top-level example directory. It's fully async, with all the bells and whistles one might expect. <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup></p>

@@ -374,9 +374,9 @@ idx_4:    LiteralInt(3)
     ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
 }
 </code></pre></div><p>This code takes  <code>layer</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>result</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
-<p>This function lets us provide an arbitrary function of type <code>ExprLayer&lt;A&gt; -&gt; A</code> and uses it to fold a recursive <code>ExprTopo</code> structure into a single value:</p>
+<p>This function lets us provide an arbitrary function of type <code>ExprLayer&lt;A&gt; -&gt; A</code> and uses it to collapse all the layers in an <code>ExprTopo</code> structure into a single value:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fold</span><span style="color:#f92672">&lt;</span>F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> fold_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
 
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>::uninit())
@@ -390,7 +390,7 @@ idx_4:    LiteralInt(3)
                         std::mem::replace(results.get_unchecked_mut(x.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
                     maybe_uninit.assume_init()
                 });
-                fold_layer(layer)
+                collapse_layer(layer)
             };
             results[idx].write(result);
         }
@@ -405,7 +405,7 @@ idx_4:    LiteralInt(3)
 </code></pre></div><p>Nice. Now we can write:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
     <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
-        self.fold(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
+        self.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
             ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
             ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
             ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
@@ -415,9 +415,9 @@ idx_4:    LiteralInt(3)
 }
 </code></pre></div><p>It's pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there's less boilerplate, it's easier to review and there's less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it's both more elegant and more performant than the traditional representation of recursive expression trees in rust.</p>
 <h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let's write a function to generate <code>ExprTopo</code> values from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we'll be abstracting over the specifics just like we did with <code>fold</code>:</p>
+<p>Let's write a function to build an <code>ExprTopo</code> value from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we'll be abstracting over the specifics just like we did with <code>collapse_layers</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
 
@@ -442,7 +442,7 @@ idx_4:    LiteralInt(3)
     }
 }
 </code></pre></div><h2 id="making-it-generic-1">Making it generic<a href="#making-it-generic-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Just as with <code>fold</code>, we only really care about the <code>match</code> expression here:</p>
+<p>Just as with <code>collapse_layers</code>, we only really care about the <code>match</code> expression here:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
     ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
     ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
@@ -450,15 +450,15 @@ idx_4:    LiteralInt(3)
     ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
 };
 </code></pre></div><p>This matches on <code>seed</code>, a value of type <code>&amp;ExprBoxed</code>, and consumes it to create <code>layer</code>, a value of type <code>ExprLayer&lt;i64ExprBoxed&gt;</code>. What if, instead of <code>i64ExprBoxed -&gt; ExprLayer&lt;i64ExprBoxed&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
-<p>Fortunately, just as with <code>fold</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
+<p>Fortunately, just as with <code>collapse_layers</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, expand_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([seed]);
         <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
 
-        <span style="color:#75715e">// repeatedly generate layers to build a vec of elems while preserving topo order
+        <span style="color:#75715e">// repeatedly expand layers to build a vec of elems while preserving topo order
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop_front() {
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> generate_layer(seed);
+            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> expand_layer(seed);
 
             <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
                 frontier.push_back(seed);
@@ -472,10 +472,10 @@ idx_4:    LiteralInt(3)
         Self { elems }
     }
 }
-</code></pre></div><p>This lets us write <code>generate_from_boxed</code> as:</p>
+</code></pre></div><p>This lets us write <code>from_boxed</code> as:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_from_boxed</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
-        Self::generate(ast, <span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> seed {
+    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_boxed</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+        Self::expand_layers(ast, <span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> seed {
             ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
             ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
             ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
@@ -486,16 +486,16 @@ idx_4:    LiteralInt(3)
 </code></pre></div><p>Nice and, as promised, elegant.</p>
 <h1 id="testing-for-correctness">Testing for Correctness<a href="#testing-for-correctness" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>I used <a href="">proptest</a> to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
-<p>This actually helped me find a bug! In my first implementation of <code>unfold</code>, I used a stack instead of a queue for the frontier, which ended up mangling the order of the expression tree. Since proptest is awesome, it not only found this bug but reduced the failing test case to <code>Add (0, Sub(0, 1))</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// generate a bunch of expression trees and evaluate them via each method (TODO: added new methods, test those too)
+<p>This actually helped me find a bug! In my first implementation of <code>expand</code>, I used a stack instead of a queue for the frontier, which ended up mangling the order of the expression tree. Since proptest is awesome, it not only found this bug but reduced the failing test case to <code>Add (0, Sub(0, 1))</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// generate a bunch of expression trees and evaluate them via each method
 </span><span style="color:#75715e"></span><span style="color:#75715e">#[cfg(test)]</span>
 proptest<span style="color:#f92672">!</span> {
     <span style="color:#75715e">#[test]</span>
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expr_eval</span>(boxed_expr <span style="color:#66d9ef">in</span> arb_expr()) {
         <span style="color:#66d9ef">let</span> eval_boxed <span style="color:#f92672">=</span> boxed_expr.eval();
-        <span style="color:#66d9ef">let</span> eval_via_fold <span style="color:#f92672">=</span> ExprTopo::generate_from_boxed(<span style="color:#f92672">&amp;</span>boxed_expr).eval();
+        <span style="color:#66d9ef">let</span> eval_via_collapse <span style="color:#f92672">=</span> ExprTopo::from_boxed(<span style="color:#f92672">&amp;</span>boxed_expr).eval();
 
-        assert_eq<span style="color:#f92672">!</span>(eval_boxed, eval_via_fold);
+        assert_eq<span style="color:#f92672">!</span>(eval_boxed, eval_via_collapse);
     }
 }
 
@@ -525,11 +525,11 @@ proptest<span style="color:#f92672">!</span> {
     )
 }
 </code></pre></div><h1 id="testing-for-performance">Testing for performance<a href="#testing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using unfold/fold, because they're honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/99620b4f9a0bb742996c0dece342c50c4ab31071/benches/expr.rs">defined here</a>.</p>
+<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using <code>expand</code>/<code>collapse</code>, because they're honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/f9fd5cf52f0fd486ead3d140c0fc40c588c4b4e0/benches/expr.rs">defined here</a>.</p>
 <pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard boxed method</font>                                                                            
                         time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
 
-<font color="#A6CC70">Evaluate expression tree of depth 17 with my new fold method</font>                                                                            
+<font color="#A6CC70">Evaluate expression tree of depth 17 with my collapse_layers method</font>                                                                            
                         time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
 </pre>
 <p>Evaluating a boxed expression of depth 17 takes an average 733 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 482 µs. That's a 34% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly faster for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
@@ -537,6 +537,10 @@ proptest<span style="color:#f92672">!</span> {
 <p>We started with a simplified non-generic version of this algorithm to build understanding. In future blog posts, I plan on showing how I made it generic, going into more detail on how I optimized it for performance (<code>MaybeUninit</code> absolutely slaps, as do stack machines), and how I used it to implement an async file tree search tool using <code>tokio::fs</code>.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Thank you to <a href="https://twitter.com/munin">Fiona</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a> and <a href="https://gist.github.com/Gankra">Gankra</a>, among others, for reviewing drafts of this post.</p>
+<h1 id="change-notes">Change notes<a href="#change-notes" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<ul>
+<li>07/24/2022: renamed fold/generate to collapse/expand</li>
+</ul>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>

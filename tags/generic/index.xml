@@ -17,7 +17,7 @@
       <pubDate>Wed, 24 Jul 2002 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
-      <description>&lt;p&gt;This is the second in a series of blog posts on recursion in rust. The previous blog post introduced a method for writing performant stack safe recursion in Rust, but it was scoped to a single recursive data structure - a simple expression language. This post shows how to write &lt;em&gt;one&lt;/em&gt; recursive toolkit that can handle expanding and collapsing any recursive data structure. This has been implemented, with examples, in the crate here and the repo here.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a recursive data structure. This post shows the core ideas I used to implement a &lt;em&gt;single&lt;/em&gt; recursive backend that can handle collapsing or expanding any user-defined recursive data structure. I have a &lt;a href=&#34;https://crates.io/crates/recursion&#34;&gt;crate here&lt;/a&gt;, with the &lt;a href=&#34;https://github.com/inanna-malick/recursion&#34;&gt;source code here&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     
   </channel>

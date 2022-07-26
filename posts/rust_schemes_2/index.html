@@ -208,24 +208,23 @@
 }
 </code></pre></div><p>Now that we have these traits, we can represent the generic ability to collapse or expand <em>arbitrary</em> recursive data structures, we just need to figure out how to implement them.</p>
 <h1 id="but-how">But how?<a href="#but-how" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p><a href="https://recursion.wtf/posts/rust_schemes/#factoring-out-duplicated-code">In the last post</a>, we saw how <code>ExprLayer::map</code> could be used to factor out the core logic of <code>collapse_layers</code> and <code>expand_layers</code>. We're going to abstract over <em>map</em> so we can map over any data structure, instead of just <code>ExprLayer&lt;_&gt;</code>.</p>
-<p>This is why I kept talking about <code>Functor</code> in the last post: we can write <code>Collapse</code> and <code>Expand</code> implementations over some <code>Layer&lt;_&gt;</code> type given only a <code>Functor</code> instance for that type. This makes sense, given that the <code>ExprLayer&lt;_&gt;</code>-specific expand and collapse functions both use <code>fmap</code> as a core component.</p>
-<p>You should read this as being implemented for some <code>Layer&lt;_&gt;</code> (eg <code>ExprLayer&lt;_&gt;</code>) with the (pseudocode) type signature <code>fn fmap(self: Layer&lt;A&gt;, f: Fn(A) -&gt; B) -&gt; Layer&lt;B&gt;</code>.</p>
+<p><a href="https://recursion.wtf/posts/rust_schemes/#factoring-out-duplicated-code">In the last post</a>, we saw how <code>ExprLayer::map</code> could be used to factor out the core logic of <code>collapse_layers</code> and <code>expand_layers</code>. We're going to abstract over this, such that we can map over a single layer of any recursive data structure, instead of just <code>ExprLayer&lt;_&gt;</code>. To do this, we're going to introduce a trait called <code>MapLayer</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// The ability to map over some a single layer of some structure
 </span><span style="color:#e6db74">/// &#39;Layer&lt;_&gt;&#39;, eg &#39;ExprLayer&lt;_&gt;&#39;.
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Functor<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> { <span style="color:#75715e">// where Self is Layer&lt;A&gt;
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Unwrapped</span>;
-    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">To</span>;
-    <span style="color:#e6db74">/// fn fmap(Self: Layer&lt;A&gt;, f: Fn(A) -&gt; B) -&gt; Layer&lt;B&gt;
-</span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fmap</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To;
+</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> MapLayer<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> { <span style="color:#75715e">// where Self is Layer&lt;A&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Unwrapped</span>;    <span style="color:#75715e">// which is A
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">To</span>;           <span style="color:#75715e">// which is Layer&lt;B&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#e6db74">/// fn map_layer(Self: Layer&lt;A&gt;, f: Fn(A) -&gt; B) -&gt; Layer&lt;B&gt;
+</span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map_layer</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To;
 }
-</code></pre></div><p>And here it is <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+</code></pre></div><p>You should read this as being implemented for some <code>Layer&lt;_&gt;</code> (eg <code>ExprLayer&lt;_&gt;</code>) with the (pseudocode) type signature <code>fn map_layer(self: Layer&lt;A&gt;, f: Fn(A) -&gt; B) -&gt; Layer&lt;B&gt;</code>.</p>
+<p>And here it is <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <p>Here's what it looks like as implemented for <code>ExprLayer&lt;_&gt;</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, B<span style="color:#f92672">&gt;</span> Functor<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, B<span style="color:#f92672">&gt;</span> MapLayer<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">To</span> <span style="color:#f92672">=</span> ExprLayer<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span>;
     <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Unwrapped</span> <span style="color:#f92672">=</span> A;
 
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fmap</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map_layer</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To {
         <span style="color:#66d9ef">match</span> self {
             Expr::Add(a, b) <span style="color:#f92672">=&gt;</span> Expr::Add(f(a), f(b)),
             Expr::Sub(a, b) <span style="color:#f92672">=&gt;</span> Expr::Sub(f(a), f(b)),
@@ -234,7 +233,7 @@
         }
     }
 }
-</code></pre></div><p>Nothing too complex, but by making it generic we've unlocked an <em>incredible power</em>, power <em>to rival the gods</em>.</p>
+</code></pre></div><p>Some boilerplate, nothing too complex.</p>
 <h1 id="implementing-the-collapse-and-expand-traits">Implementing the Collapse and Expand traits<a href="#implementing-the-collapse-and-expand-traits" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>We'll be implementing <code>Collapse</code> and <code>Expand</code> for this data structure:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Index into the vector of elements
@@ -249,17 +248,17 @@
 <p>Here's what <code>ExprTopo</code> would look like using <code>RecursiveTree</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ExprTopo</span> <span style="color:#f92672">=</span> RecursiveTree<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>Index<span style="color:#f92672">&gt;&gt;</span>
 </code></pre></div><h2 id="collapse">Collapse<a href="#collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Here's what the implementation of <code>Collapse</code> looks like. I've elided the internal machinery so we can focus on the types - the full source code is <a href="https://github.com/inanna-malick/recursion/blob/41b40a89d5f20fa86990db5d75f588d0e4674317/src/recursive_tree/arena_eval.rs#L96-L127">here</a>, but since it's fully generic you can just use the crate, there's no need to ever implement it yourself.</p>
+<p>Here's what the implementation of <code>Collapse</code> looks like. I've elided the internal machinery so we can focus on the types - the full source code is <a href="https://github.com/inanna-malick/recursion/blob/main/src/recursive_tree/arena_eval.rs#L96-L127">here</a>, but since it's fully generic you can just use the crate, there's no need to ever implement it yourself.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Wrapped, Underlying<span style="color:#f92672">&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">where</span>
-            Underlying: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> Wrapped, Unwrapped <span style="color:#f92672">=</span> Index<span style="color:#f92672">&gt;</span>
+            Underlying: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> Wrapped, Unwrapped <span style="color:#f92672">=</span> Index<span style="color:#f92672">&gt;</span>
 {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
         <span style="color:#75715e">/* elided */</span>
     }
 }
-</code></pre></div><p>This is very similar to the <code>ExprTopo::collapse_layers</code> function <a href="https://recursion.wtf/posts/rust_schemes/#making-it-generic">in the previous post</a>, and all we need is a <code>Functor</code>!</p>
+</code></pre></div><p>This is very similar to the <code>ExprTopo::collapse_layers</code> function <a href="https://recursion.wtf/posts/rust_schemes/#making-it-generic">in the previous post</a>, and all we need is a <code>MapLayer</code>!</p>
 <p>Here's what it looks like in use:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(expr: <span style="color:#a6e22e">ExprTopo</span>) -&gt; <span style="color:#66d9ef">i64</span> {
     self.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
@@ -270,10 +269,10 @@
     })
 }
 </code></pre></div><h2 id="expand">Expand<a href="#expand" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Here's what expanding this data structure from a seed value looks like. As before, I've elided the implementation. If you're curious, the full source code is <a href="https://github.com/inanna-malick/recursion/blob/41b40a89d5f20fa86990db5d75f588d0e4674317/src/recursive_tree/arena_eval.rs#L26-L52">here</a>.</p>
+<p>Here's what expanding this data structure from a seed value looks like. As before, I've elided the implementation. If you're curious, the full source code is <a href="https://github.com/inanna-malick/recursion/blob/main/src/recursive_tree/arena_eval.rs#L26-L52">here</a>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, Wrapped<span style="color:#f92672">&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>Underlying<span style="color:#f92672">&gt;</span>
 <span style="color:#66d9ef">where</span>
-    Wrapped: <span style="color:#a6e22e">Functor</span><span style="color:#f92672">&lt;</span>Index, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> Underlying<span style="color:#f92672">&gt;</span>,
+    Wrapped: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>Index, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> Underlying<span style="color:#f92672">&gt;</span>,
 {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>F: Fn(A) -&gt; <span style="color:#a6e22e">Wrapped</span><span style="color:#f92672">&gt;</span>(a: <span style="color:#a6e22e">A</span>, expand_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
         <span style="color:#75715e">/* elided */</span>
@@ -292,7 +291,7 @@
 <p>These pass all the same tests as the <code>Expr</code>-specialized <code>collapse_layers</code>/<code>expand_layers</code> functions, but we only have to write the machinery of recursion once! Not once per recursive data structure, just once! <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>Just as before, I want to emphasize that this is fully generic over <em>any</em> recursive data structure:</p>
 <h1 id="a-minimal-example">A minimal example<a href="#a-minimal-example" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Here's what an N-tree looks like using this idiom (an N-tree is a tree where each node can have any number of child nodes, and where some value <code>V</code> is stored at each node of the tree. Nodes with no child nodes are leaf nodes)</p>
+<p>For the last section of this blog post, we're going to use the machinery we've built up to implement another data structure: an N-tree. An N-tree is a tree where each node can have any number of child nodes, and where some value <code>V</code> is stored at each node of the tree. Nodes with no child nodes are leaf nodes.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">NTreeLayer</span><span style="color:#f92672">&lt;</span>Val, A<span style="color:#f92672">&gt;</span> {
     val: <span style="color:#a6e22e">Val</span>,
     children: Vec<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>,
@@ -300,11 +299,11 @@
 
 <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">RecursiveNTree</span><span style="color:#f92672">&lt;</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> RecursiveTree<span style="color:#f92672">&lt;</span>NTreeLayer<span style="color:#f92672">&lt;</span>V, Index<span style="color:#f92672">&gt;&gt;</span>;
 
-<span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, B, V<span style="color:#f92672">&gt;</span> Functor<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> NTreeLayer<span style="color:#f92672">&lt;</span>V, A<span style="color:#f92672">&gt;</span> {
+<span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, B, V<span style="color:#f92672">&gt;</span> MapLayer<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">for</span> NTreeLayer<span style="color:#f92672">&lt;</span>V, A<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">To</span> <span style="color:#f92672">=</span> NTreeLayer<span style="color:#f92672">&lt;</span>V, B<span style="color:#f92672">&gt;</span>;
     <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Unwrapped</span> <span style="color:#f92672">=</span> A;
 
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fmap</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To {
+    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map_layer</span><span style="color:#f92672">&lt;</span>F: FnMut(Self::Unwrapped) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>::To {
         Self::To {
             val: <span style="color:#a6e22e">self</span>.val,
             children: <span style="color:#a6e22e">self</span>.children.into_iter().map(f).collect(),
@@ -322,7 +321,7 @@
 }
 </code></pre></div><p>Cool, right?</p>
 <h1 id="async-io">Async IO<a href="#async-io" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>I've used my crate to implement a small but fully functional filetree reader/file contents search tool example. It's fully async, with all the bells and whistles one might expect. <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. <a href="https://github.com/inanna-malick/recursion/blob/41b40a89d5f20fa86990db5d75f588d0e4674317/examples/grep.rs">You can find the source code here.</a>.</p>
+<p>I've also used my crate to implement a small but fully functional filetree reader/file contents search tool example. It's fully async, with all the bells and whistles one might expect. <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. <a href="https://github.com/inanna-malick/recursion/blob/main/examples/grep.rs">You can find the source code here.</a>.</p>
 <pre><font color="#A6CC70"><b>➜ </b></font>./my_grep -- --regex &quot;Expr.*Sub&quot; --paths-to-ignore .git -p target
 <font color="#95E6CB">sparse filetree depth:</font> 4
 <font color="#95E6CB">file:</font> &quot;/home/inanna/dev/rust-schemes/src/examples/expr.rs&quot;
@@ -354,7 +353,7 @@
 <p>In a perfect word, we could parameterize this over the <code>Layer</code> type (such as <code>ExprLayer</code>), but in Rust all types need to be fully applied, so we need to use <code>Wrapped</code> instead, to represent the fully applied <code>Layer&lt;A&gt;</code> type. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Rust's type system isn't <em>quite</em> up to expressing all the required <code>Functor</code> constraints but it's enough for our purpose <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If you're a functional programming nerd like me, you might recognize this as 'Functor' <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
 <p>a bolt of lightning strikes behind me. I am momentarily shown silhouetted by the actinic blue light. It is very dramatic <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>

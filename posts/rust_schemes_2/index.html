@@ -177,7 +177,7 @@
 
   <div class="post-content"><div>
         <p>This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a <em>single</em> recursion backend that can handle collapsing or expanding any user-defined recursive data structure.</p>
-<p>This generic recursion backend is implemented in my new <a href="https://crates.io/crates/recursion">recursion</a> crate. Docs are <a href="https://docs.rs/recursion/0.0.1-BETA/recursion">here</a>. Source code, along with examples and benchmarks, <a href="https://github.com/inanna-malick/recursion">can be found here</a>.</p>
+<p>This generic recursion backend is implemented in my new <a href="https://crates.io/crates/recursion">recursion</a> crate. Docs are <a href="https://docs.rs/recursion">here</a>. Source code, along with examples and benchmarks, <a href="https://github.com/inanna-malick/recursion">can be found here</a>.</p>
 <h1 id="a-recap">A Recap<a href="#a-recap" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p><a href="https://recursion.wtf/posts/rust_schemes/">Last time</a>, we implemented <code>collapse_layers</code> and <code>expand_layers</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> functions, specialized to <code>ExprTopo</code>.</p>
 <p>​We're going to start by looking at our <code>ExprTopo::collapse_layers</code> function from the last post. Note that it's specialized for use with <code>ExprLayer</code>. We explored the impl in detail last time, so we're going to elide that, and just look at the types:</p>

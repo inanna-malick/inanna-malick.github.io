@@ -6,7 +6,7 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can collapse or expand any recursive data structure.
+<meta name="description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a single recursion backend that can collapse or expand any recursive data structure.
 " />
 <meta name="keywords" content="recursion schemes, rust, code" />
 <meta name="robots" content="noodp" />
@@ -42,7 +42,7 @@
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Fully generic recursion in Rust">
-<meta property="og:description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can collapse or expand any recursive data structure.
+<meta property="og:description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a single recursion backend that can collapse or expand any recursive data structure.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_2/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -125,10 +125,10 @@
 <meta name="twitter:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png"/>
 
 <meta name="twitter:title" content="Fully generic recursion in Rust"/>
-<meta name="twitter:description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can collapse or expand any recursive data structure."/>
+<meta name="twitter:description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a single recursion backend that can collapse or expand any recursive data structure."/>
 
   <meta property="og:title" content="Fully generic recursion in Rust" />
-<meta property="og:description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a single recursion backend that can collapse or expand any recursive data structure." />
+<meta property="og:description" content="Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a single recursion backend that can collapse or expand any recursive data structure." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_2/" />
 <meta property="og:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png" />
@@ -176,7 +176,7 @@
   
 
   <div class="post-content"><div>
-        <p><a href="https://recursion.wtf/posts/rust_schemes/">Previously</a>, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a <em>single</em> recursion backend that can collapse or expand any recursive data structure.</p>
+        <p><a href="https://recursion.wtf/posts/rust_schemes/">Previously</a>, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a <em>single</em> recursion backend that can collapse or expand any recursive data structure.</p>
 <p>This generic recursion backend is implemented in my new <a href="https://crates.io/crates/recursion">recursion</a> crate. Docs are <a href="https://docs.rs/recursion">here</a>. Source code, along with examples and benchmarks, <a href="https://github.com/inanna-malick/recursion">can be found here</a>.</p>
 <h1 id="a-recap">A Recap<a href="#a-recap" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p><a href="https://recursion.wtf/posts/rust_schemes/">Last time</a>, we implemented <code>collapse_layers</code> and <code>expand_layers</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> functions, specialized to <code>ExprTopo</code>.</p>
@@ -242,7 +242,7 @@
 <span style="color:#e6db74">/// Recursive tree made up of layers of some type &#39;Layer&lt;_&gt;&#39;, eg `ExprLayer&lt;_&gt;`
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RecursiveTree</span><span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#e6db74">/// nonempty, in topological-sorted order
-</span><span style="color:#e6db74"></span>    elems: Vec<span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span>, <span style="color:#75715e">// Layer&lt;Index&gt; (eg `Layer&lt;_&gt;`)
+</span><span style="color:#e6db74"></span>    elems: Vec<span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span>, <span style="color:#75715e">// Layer&lt;Index&gt; (eg `ExprLayer&lt;Index&gt;`)
 </span><span style="color:#75715e"></span>}
 </code></pre></div><p><code>Index</code> is a generic version of the <code>ExprIndex</code> used in the previous post - it's an internal index used to track links between different layers of the <code>RecursiveTree</code>.</p>
 <p>Here's what <code>ExprTopo</code> would look like using <code>RecursiveTree</code>:</p>

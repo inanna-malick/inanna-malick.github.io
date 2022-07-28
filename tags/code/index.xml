@@ -6,10 +6,19 @@
     <description>Recent content in code on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 28 Jul 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://recursion.wtf/tags/code/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Fully generic recursion in Rust</title>
+      <link>https://recursion.wtf/posts/rust_schemes_2/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://recursion.wtf/posts/rust_schemes/&#34;&gt;Previously&lt;/a&gt;, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a &lt;em&gt;single&lt;/em&gt; recursion backend that can collapse or expand any recursive data structure.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Elegant and performant recursion in Rust</title>
@@ -18,15 +27,6 @@
       
       <guid>https://recursion.wtf/posts/rust_schemes/</guid>
       <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Fully generic recursion in Rust</title>
-      <link>https://recursion.wtf/posts/rust_schemes_2/</link>
-      <pubDate>Wed, 24 Jul 2002 00:00:00 +0000</pubDate>
-      
-      <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://recursion.wtf/posts/rust_schemes/&#34;&gt;Previously&lt;/a&gt;, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a &lt;em&gt;single&lt;/em&gt; recursion backend that can collapse or expand any recursive data structure.&lt;/p&gt;</description>
     </item>
     
   </channel>

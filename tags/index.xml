@@ -6,7 +6,7 @@
     <description>Recent content in Tags on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 28 Jul 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,16 +14,25 @@
     <item>
       <title>code</title>
       <link>https://recursion.wtf/tags/code/</link>
-      <pubDate>Mon, 18 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/tags/code/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>generic</title>
+      <link>https://recursion.wtf/tags/generic/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/tags/generic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>recursion schemes</title>
       <link>https://recursion.wtf/tags/recursion-schemes/</link>
-      <pubDate>Mon, 18 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/tags/recursion-schemes/</guid>
       <description></description>
@@ -32,7 +41,7 @@
     <item>
       <title>rust</title>
       <link>https://recursion.wtf/tags/rust/</link>
-      <pubDate>Mon, 18 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/tags/rust/</guid>
       <description></description>
@@ -71,15 +80,6 @@
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/tags/guppy/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>generic</title>
-      <link>https://recursion.wtf/tags/generic/</link>
-      <pubDate>Wed, 24 Jul 2002 00:00:00 +0000</pubDate>
-      
-      <guid>https://recursion.wtf/tags/generic/</guid>
       <description></description>
     </item>
     

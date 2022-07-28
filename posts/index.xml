@@ -55,7 +55,7 @@
       <pubDate>Wed, 24 Jul 2002 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
-      <description>&lt;p&gt;This is the second in a series of blog posts. Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a &lt;em&gt;single&lt;/em&gt; recursion backend that can handle collapsing or expanding any user-defined recursive data structure.&lt;/p&gt;</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://recursion.wtf/posts/rust_schemes/&#34;&gt;Previously&lt;/a&gt;, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post covers the core ideas used to implement a &lt;em&gt;single&lt;/em&gt; recursion backend that can collapse or expand any recursive data structure.&lt;/p&gt;</description>
     </item>
     
   </channel>

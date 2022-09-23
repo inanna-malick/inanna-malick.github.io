@@ -81,4 +81,12 @@
     <loc>https://recursion.wtf/categories/</loc>
   </url>
   
+  <url>
+    <loc>https://recursion.wtf/posts/rust_schemes_3/</loc>
+  </url>
+  
+  <url>
+    <loc>https://recursion.wtf/tags/stack_machines/</loc>
+  </url>
+  
 </urlset>

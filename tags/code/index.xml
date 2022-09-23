@@ -29,5 +29,16 @@
       <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>Stack Machines for Free</title>
+      <link>https://recursion.wtf/posts/rust_schemes_3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://recursion.wtf/posts/rust_schemes_3/</guid>
+      <description>&lt;p&gt;Previously we saw how to expand seed values into recursive structures given a function that expands a single layer of structure, and how to collapse recursive structures into a single value given a function that consumes a single layer of structure. Here we&#39;ll see how to fuse those two steps, to generate a stack machine that simultaneously expands and collapses recursive structures, given just a function for expanding layers and a function for collapsing layers.&lt;/p&gt;
+
+  &lt;img src=&#34;https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif&#34;  alt=&#34;execution graph for simultaneously expanding and collapsing a simple expression&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px;&#34;  /&gt;</description>
+    </item>
+    
   </channel>
 </rss>

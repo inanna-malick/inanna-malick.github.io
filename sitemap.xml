@@ -78,15 +78,17 @@
   </url>
   
   <url>
-    <loc>https://recursion.wtf/categories/</loc>
-  </url>
-  
-  <url>
     <loc>https://recursion.wtf/posts/rust_schemes_3/</loc>
+    <lastmod>2000-09-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://recursion.wtf/tags/stack_machines/</loc>
+    <lastmod>2000-09-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://recursion.wtf/categories/</loc>
   </url>
   
 </urlset>

@@ -334,7 +334,7 @@
        
       <div class="post on-list">
         <h1 class="post-title">
-          <a href="https://recursion.wtf/posts/rust_schemes_3/">Stack Machines for Free</a>
+          <a href="https://recursion.wtf/posts/rust_schemes_3/">Fully Generic Recursion in Rust: Part 2</a>
         </h1>
         <div class="post-meta">
           <span class="post-date">
@@ -366,7 +366,8 @@
         <div class="post-content">
           
           
-          <p>Previously we saw how to expand seed values into recursive structures given a function that expands a single layer of structure, and how to collapse recursive structures into a single value given a function that consumes a single layer of structure. Here we'll see how to fuse those two steps, to generate a stack machine that simultaneously expands and collapses recursive structures, given just a function for expanding layers and a function for collapsing layers.</p>
+          <p>This is the third post in a three-post series. In the <a href="https://recursion.wtf/posts/rust_schemes">first post</a> we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the <a href="https://recursion.wtf/posts/rust_schemes_2">second post</a> we made it fully generic, providing a set of generic tools for expanding and collapsing <em>any</em> recursive data structure in Rust.</p>
+<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time. In the process, we will create a fully generic stack machine back end, allowing us to write arbitrary recursive functions in Rust while retaining stack safety.</p>
 <p><img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  /></p>
 
           

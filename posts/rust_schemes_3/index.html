@@ -7,7 +7,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will create a fully generic stack machine back end, allowing us to write arbitrary recursive functions in Rust while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 " />
 <meta name="keywords" content="recursion schemes, rust, code, stack_machines" />
 <meta name="robots" content="noodp" />
@@ -44,7 +44,7 @@ In this post we will see how to combine these two things - expanding a structure
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Fully Generic Recursion in Rust: Part 2">
 <meta property="og:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will create a fully generic stack machine back end, allowing us to write arbitrary recursive functions in Rust while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_3/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -128,13 +128,13 @@ In this post we will see how to combine these two things - expanding a structure
 
 <meta name="twitter:title" content="Fully Generic Recursion in Rust: Part 2"/>
 <meta name="twitter:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will create a fully generic stack machine back end, allowing us to write arbitrary recursive functions in Rust while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 
   "/>
 
   <meta property="og:title" content="Fully Generic Recursion in Rust: Part 2" />
 <meta property="og:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will create a fully generic stack machine back end, allowing us to write arbitrary recursive functions in Rust while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 
   " />
 <meta property="og:type" content="article" />
@@ -187,12 +187,12 @@ In this post we will see how to combine these two things - expanding a structure
 
   <div class="post-content"><div>
         <p>This is the third post in a three-post series. In the <a href="https://recursion.wtf/posts/rust_schemes">first post</a> we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the <a href="https://recursion.wtf/posts/rust_schemes_2">second post</a> we made it fully generic, providing a set of generic tools for expanding and collapsing <em>any</em> recursive data structure in Rust.</p>
-<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time. In the process, we will create a fully generic stack machine back end, allowing us to write arbitrary recursive functions in Rust while retaining stack safety.</p>
+<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel <code>RecursiveTree</code> type introduced in my previous post) while retaining stack safety.</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>A more full-featured version of the generic recursion machinery discussed in these posts is implemented in my <a href="https://crates.io/crates/recursion">recursion</a> crate. Docs are <a href="https://docs.rs/recursion">here</a>. Source code, along with examples and benchmarks, <a href="https://github.com/inanna-malick/recursion">can be found here</a>.</p>
+<p>This post covers functionality already implemented in my <a href="https://crates.io/crates/recursion">recursion</a> crate. For that reason, it will focus on diagrams over code, but the relevant code is provided if you're interested or curious.</p>
 <h2 id="our-expression-language">Our Expression Language<a href="#our-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Earlier in this series we defined a simple expression language for math, using this enum to represent <em>a single layer</em> of an expression tree:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
@@ -211,11 +211,11 @@ In this post we will see how to combine these two things - expanding a structure
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">mul</span>(a: <span style="color:#a6e22e">Self</span>, b: <span style="color:#a6e22e">Self</span>) -&gt; <span style="color:#a6e22e">Self</span> { ... }
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">literal_int</span>(x: <span style="color:#66d9ef">i64</span>) -&gt; <span style="color:#a6e22e">Self</span> { ... }
 }
-</code></pre></div><p>In this post we'll be working with the expression <code>5 - 3 * 3 + 12</code>. Here's what that looks like as code:</p>
+</code></pre></div><p>In this post we'll be working with the expression <code>(5 - 3) * (3 + 12)</code>. Here's what that looks like as code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> ExprBoxed::<span style="color:#f92672">*</span>;
 <span style="color:#66d9ef">let</span> expr <span style="color:#f92672">=</span> mul(
-	sub(literal_int(<span style="color:#ae81ff">4</span>), literal_int(<span style="color:#ae81ff">3</span>)),
-	add(literal_int(<span style="color:#ae81ff">2</span>), literal_int(<span style="color:#ae81ff">12</span>)),
+	sub(literal_int(<span style="color:#ae81ff">5</span>), literal_int(<span style="color:#ae81ff">3</span>)),
+	add(literal_int(<span style="color:#ae81ff">3</span>), literal_int(<span style="color:#ae81ff">12</span>)),
 );
 </code></pre></div><h2 id="expand-and-collapse">Expand and Collapse<a href="#expand-and-collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Previously, we defined two core traits representing the ability to expand a recursive structure out from some seed, and to collapse a recursive structure down into a single value:</p>
@@ -228,32 +228,32 @@ In this post we will see how to combine these two things - expanding a structure
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span>;
 }
-</code></pre></div><p>We'll be using those traits in this post to introduce a new recursion backend.</p>
-<h1 id="stack-machines">Stack Machines<a href="#stack-machines" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>A stack machine is similar to the call stack used by languages like Rust (if you've seen a stack overflow error, it's the call stack that's overflowing). The stack machines we'll be using in this post will be slightly more complex, but the implementation details aren't that important. We'll be using stack machines to provide <em>purpose-specific implementation of the call stack</em>  for our recursive functions. We'll implement our stack machines <em>once</em>, as <code>Collapse</code> and <code>Expand</code> instances, such that users of the abstractions described in this post need not worry about the specifics. By using our own stack instead of the Rust call stack, we don't need to worry about stack overflow errors.</p>
+</code></pre></div><p>We'll be introducing a new recursion backend that implements these traits. This is already implemented in the <code>recursion</code> crate, so this post is concerned mostly with communicating the underlying concepts - not the implementation details.</p>
 <h2 id="recursive-data-structure">Recursive Data Structure<a href="#recursive-data-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Instead of using a vector of elements linked by vector indices, we'll construct a vector where linkages are defined only by the <em>position</em> of elements. This lets us replace the <code>usize</code> vector indices used in the previous posts with zero-size markers that, instead of representing a specific index, just indicate that we should pop one element off the stack.  This results in an extremely compact representation of recursive structures.</p>
-<p>Here's what the data structure looks like</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Recursive tree made up of layers of some type &#39;Layer&lt;_&gt;&#39;, eg `ExprLayer&lt;_&gt;`
+<p>Instead of using a vector of elements linked by vector indices, we'll construct a vector where linkages are defined only by the <em>relative position</em> of elements. This lets us replace the <code>usize</code> vector indices used in the previous posts with zero-size markers (<code>StackMarker</code>, equivalent to <code>()</code> but given its own name for convenience). This results in an extremely compact representation of recursive structures.</p>
+<p>Here's what the data structure looks like. It's provided by the <code>recursion</code> crate, so you won't need to define it yourself.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">StackMarker</span>;
+
+<span style="color:#e6db74">/// Recursive tree made up of layers of some type &#39;Layer&lt;_&gt;&#39;, eg `ExprLayer&lt;_&gt;`
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RecursiveTree</span><span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span> {
     <span style="color:#e6db74">/// nonempty, in topological-sorted order
 </span><span style="color:#e6db74"></span>    elems: Vec<span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span>, <span style="color:#75715e">// Layer&lt;Index&gt; (eg `ExprLayer&lt;()&gt;`)
 </span><span style="color:#75715e"></span>}
-</code></pre></div><p>Here's a visualization of what this data structure looks like for the expression <code>5 - 3 * 3 + 12</code>.</p>
+</code></pre></div><p>Here's a visualization of what this data structure looks like for the expression <code>(5 - 3) * (3 + 12)</code>.</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png"  alt="simple expr data at rest"  class="center"  style="border-radius: 8px;"  />
 
 
 <h1 id="expand">Expand<a href="#expand" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let's see what expanding a boxed expression tree for <code>5 - 3 * 3 + 12</code> into a <code>RecursiveTree</code> looks like. We'll look at the implementation soon, but this visualization shows what the computation looks like.</p>
+<p>Let's see what expanding a boxed expression tree for <code>(5 - 3) * (3 + 12)</code> into a <code>RecursiveTree</code> looks like. We'll look at the implementation soon, but this visualization shows what the computation looks like.</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_expand_only.gif"  alt="execution graph for expansion of a simple expression"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>Expanding out the data structure takes the form of a depth-first traversal. Layers are generated and pushed onto a vector of elements, which then forms the <code>RecursiveTree</code>. Feel free to skim the implementation of <code>expand_layers</code>, if you're curious, but the important thing is <em>that</em> we have an implementation of <code>Expand</code>, not <em>how</em> we've implemented.</p>
+<p>You can see the implementation of <code>expand_layers</code> for this structure below, if you're curious, but the important thing is <em>that</em> we have an implementation of <code>Expand</code> provided by the <code>recursion</code> crate, not <em>how</em> its implemented. The whole point of having a crate is not having to examine every implementation detail!</p>
 <details>
       <summary>Click to expand code sample</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, O: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>(), Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> U<span style="color:#f92672">&gt;&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, O: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>StackMarker, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> U<span style="color:#f92672">&gt;&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span>
 {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>F: Fn(A) -&gt; <span style="color:#a6e22e">O</span><span style="color:#f92672">&gt;</span>(a: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
@@ -267,7 +267,7 @@ In this post we will see how to combine these two things - expanding a structure
             <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> topush <span style="color:#f92672">=</span> Vec::new();
             <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map_layer(<span style="color:#f92672">|</span>aa<span style="color:#f92672">|</span> {
                 topush.push(aa);
-                ()
+                StackMarker
             });
             frontier.extend(topush.into_iter().rev());
 
@@ -283,18 +283,17 @@ In this post we will see how to combine these two things - expanding a structure
     }
 }
 </code></pre></div></details>
-<p>Let's see what this looks like when expanding  <code>5 - 3 * 3 + 12</code> into a recursive tree. Since it's already made up of layers, we can just dereference the boxed value.</p>
+<p>Let's see what expanding a boxed-pointer expression into a <code>RecursiveTree</code> looks like. Since it's already made up of <code>ExprLayer</code> layers, we can just dereference the boxed value using the <code>*</code> operator.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> expr_tree <span style="color:#f92672">=</span> RecursiveTree::expand(expr, <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed)
 </code></pre></div><h1 id="collapse">Collapse<a href="#collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let's see what this looks like when collapsing  the <code>RecursiveTree</code> for <code>5 - 3 * 3 + 12</code> that we constructed in the last section. As in the last section, we'll look at the implementation soon, but this visualization shows what the computation looks like.</p>
+<p>Here's what collapsing the <code>RecursiveTree</code> that we just constructed for <code>(5 - 3) * (3 + 12)</code> looks like. As in the last section, this visualization shows what the computation looks like.</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_collapse_only.gif"  alt="execution graph for collapsing of a simple expression"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>We collapse a recursive tree by traversing the stack of layers, applying a <code>collapse_layers</code> function, and pushing the results to a results stack. As in the last section, feel free to skim the implementation of <code>collapse_layers</code> if you're curious, but the implementation details aren't as important as the fact that we have an implementation of <code>Collapse</code> for <code>RecursiveTree</code>.</p>
 <details>
       <summary>Click to expand code sample</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, O, U: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> O, Unwrapped <span style="color:#f92672">=</span> ()<span style="color:#f92672">&gt;&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, O, U: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> O, Unwrapped <span style="color:#f92672">=</span> StackMarker<span style="color:#f92672">&gt;&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span>
 {
     <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(O) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
@@ -310,7 +309,8 @@ In this post we will see how to combine these two things - expanding a structure
     }
 }
 </code></pre></div></details>
-<p>Here's how we can use this to collapse our expression:</p>
+<p>Here's how we can use this to collapse expressions represented in the <code>RecursiveTree</code> format. Nothing complex, just some simple arithmatic:</p>
+<p>let expr_tree = RecursiveTree::expand(expr, |ExprBoxed(boxed)| *boxed)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> recursive_tree.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> {
     <span style="color:#66d9ef">use</span> ExprLayer::<span style="color:#f92672">*</span>;
 	<span style="color:#66d9ef">match</span> expr {
@@ -321,29 +321,32 @@ In this post we will see how to combine these two things - expanding a structure
 	}
 })
 </code></pre></div><h1 id="combining-expand-and-collapse">Combining Expand and Collapse<a href="#combining-expand-and-collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>As a reminder, the <code>RecursiveTree</code> representing <code>5 - 3 * 3 + 12</code> looks like this:</p>
+<p>As a reminder, the <code>RecursiveTree</code> representing <code>(5 - 3) * (3 + 12)</code> looks like this:</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png"  alt="simple expr data at rest"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>Here's a visualization showing what the full evaluation looks like, if we run expand immediately followed by collapse</p>
+<p>Here's a visualization showing what the full evaluation looks like, if we run <code>expand_layers</code> immediately followed by <code>collapse_layers</code>:</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval_sorted.gif"  alt="execution graph for expanding and then collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>But what if we could avoid holding the full tree in memory? It should be possible to evaluate the expression like this, one branch at a time:</p>
+<p>But what if we could avoid holding the full tree in memory? This would provide memory usage benefits, and it would also let us avoid introducing a new type of data structure - <code>RecursiveTree</code> - into our projects. It should be possible to evaluate the expression like this, one branch at a time, instead of constructing the full tree:</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>As before, the type signature is the important part - the full implementation is below, if you're curious, but you don't need to understand the internals to use the function.</p>
+<p>The function that does this is called <code>expand_and_collapse</code>, and it's provided by the <code>recursion</code> crate.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// For some Layer type, Expandable is Layer&lt;Seed&gt; and Collapsable is Layer&lt;Out&gt;
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_and_collapse</span><span style="color:#f92672">&lt;</span>Seed, Out, Expandable, Collapsable<span style="color:#f92672">&gt;</span>(
     seed: <span style="color:#a6e22e">Seed</span>,
     <span style="color:#66d9ef">mut</span> expand_layer: <span style="color:#a6e22e">impl</span> FnMut(Seed) -&gt; <span style="color:#a6e22e">Expandable</span>,
     <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">impl</span> FnMut(Collapsable) -&gt; <span style="color:#a6e22e">Out</span>,
 ) -&gt; <span style="color:#a6e22e">Out</span>
-</code></pre></div><details>
+    Expandable: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>(), Unwrapped <span style="color:#f92672">=</span> Seed<span style="color:#f92672">&gt;</span>,
+    <span style="color:#f92672">&lt;</span>Expandable <span style="color:#66d9ef">as</span> MapLayer<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;&gt;</span>::To: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>Out, Unwrapped <span style="color:#f92672">=</span> (), To <span style="color:#f92672">=</span> Collapsable<span style="color:#f92672">&gt;</span>,
+</code></pre></div><p>The full implementation is below, if you're curious.</p>
+<details>
       <summary>Click to expand code sample</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_and_collapse</span><span style="color:#f92672">&lt;</span>Seed, Out, Expandable, Collapsable<span style="color:#f92672">&gt;</span>(
     seed: <span style="color:#a6e22e">Seed</span>,
@@ -383,9 +386,28 @@ In this post we will see how to combine these two things - expanding a structure
     vals.pop().unwrap()
 }
 </code></pre></div></details>
-<p>This is <em>fully generic</em>, and can be used with any recursive structure, not just the simple expression language used in this post. In the next post, I'll show how to use it to build an expression language for matching filesystem entities, with features like short-circuiting to minimize syscalls, arena allocation (as a flex), and, of course, many more execution graphs.</p>
-<h1 id="haskell-bullshit-feel-free-to-skip">Haskell Bullshit (feel free to skip)<a href="#haskell-bullshit-feel-free-to-skip" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Here's how we can use this function to evaluate a traditional boxed-pointer recursive expression tree, without constructing an intermediate <code>RecursiveTree</code> - thus saving on both conceptual overhead and memory-usage overhead:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(expr: <span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">i63</span> {
+    expand_and_collapse(
+        expr,                      <span style="color:#75715e">// seed value
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed, <span style="color:#75715e">// expand layer function
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> {
+            <span style="color:#75715e">// collapse layer function
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">use</span> ExprLayer::<span style="color:#f92672">*</span>;
+            <span style="color:#66d9ef">match</span> expr {
+                Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
+                Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
+                Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
+                LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
+            }
+        },
+    )
+}
+</code></pre></div><p>This is <em>fully generic</em>, and can be used with any recursive structure, not just the simple expression language used in this post. In the next post, I'll show how to use it to build an expression language for matching filesystem entities, with features like short-circuiting to minimize syscalls, arena allocation (as a flex), and, of course, many more execution graphs.</p>
+<h1 id="computer-science-bullshit-feel-free-to-skip">Computer Science Bullshit (feel free to skip)<a href="#computer-science-bullshit-feel-free-to-skip" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>If you have a background in data structures and algorithms, and if you looked closely at the implementation details of the above functions, you might recognize them as implementing a stack machine.</p>
 <p>If you're familiar with Haskell and Recursion schemes, you might recognize this as a hylomorphism. If you don't know what the hell a hylomorphism is and are interested in learning, there's an <a href="https://blog.sumtypeofway.com/posts/recursion-schemes-part-5.html">excellent blog post here</a>:</p>
+<p>There does appear to be a fundamental correspondence between stack machines and hylomorphisms. This is interesting, because these ideas arise in different corners of the computer science universe. That said, this isn't <em>that</em> surprising, as both are descriptions of the same thing: recursion.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Thank you to <a href="https://twitter.com/munin">Fiona</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a>, among others, for reviewing drafts of this post.</p>
       </div></div>

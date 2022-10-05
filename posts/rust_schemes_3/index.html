@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   
-    <title>Fully Generic Recursion in Rust: Part 2 :: [ recursion.wtf ]</title>
+    <title>Single Pass Recursion in Rust :: [ recursion.wtf ]</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 " />
 <meta name="keywords" content="recursion schemes, rust, code, stack_machines" />
 <meta name="robots" content="noodp" />
@@ -42,9 +42,9 @@ In this post we will see how to combine these two things - expanding a structure
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Fully Generic Recursion in Rust: Part 2">
+<meta property="og:title" content="Single Pass Recursion in Rust">
 <meta property="og:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 " />
 <meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_3/" />
 <meta property="og:site_name" content="[ recursion.wtf ]" />
@@ -126,15 +126,15 @@ In this post we will see how to combine these two things - expanding a structure
   <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://recursion.wtf/img/rust_schemes/.png"/>
 
-<meta name="twitter:title" content="Fully Generic Recursion in Rust: Part 2"/>
+<meta name="twitter:title" content="Single Pass Recursion in Rust"/>
 <meta name="twitter:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 
   "/>
 
-  <meta property="og:title" content="Fully Generic Recursion in Rust: Part 2" />
+  <meta property="og:title" content="Single Pass Recursion in Rust" />
 <meta property="og:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
+In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
 
   " />
 <meta property="og:type" content="article" />
@@ -152,7 +152,7 @@ In this post we will see how to combine these two things - expanding a structure
     
 <div class="post">
   <h1 class="post-title">
-    <a href="https://recursion.wtf/posts/rust_schemes_3/">Fully Generic Recursion in Rust: Part 2</a></h1>
+    <a href="https://recursion.wtf/posts/rust_schemes_3/">Single Pass Recursion in Rust</a></h1>
   <div class="post-meta">
     
       <span class="post-date">
@@ -187,7 +187,7 @@ In this post we will see how to combine these two things - expanding a structure
 
   <div class="post-content"><div>
         <p>This is the third post in a three-post series. In the <a href="https://recursion.wtf/posts/rust_schemes">first post</a> we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the <a href="https://recursion.wtf/posts/rust_schemes_2">second post</a> we made it fully generic, providing a set of generic tools for expanding and collapsing <em>any</em> recursive data structure in Rust.</p>
-<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel <code>RecursiveTree</code> type introduced in my previous post) while retaining stack safety.</p>
+<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel <code>RecursiveTree</code> type introduced in my previous post) while retaining stack safety.</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
@@ -284,7 +284,7 @@ In this post we will see how to combine these two things - expanding a structure
 }
 </code></pre></div></details>
 <p>Let's see what expanding a boxed-pointer expression into a <code>RecursiveTree</code> looks like. Since it's already made up of <code>ExprLayer</code> layers, we can just dereference the boxed value using the <code>*</code> operator.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> expr_tree <span style="color:#f92672">=</span> RecursiveTree::expand(expr, <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> expr_tree <span style="color:#f92672">=</span> RecursiveTree::expand_layers(expr, <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed)
 </code></pre></div><h1 id="collapse">Collapse<a href="#collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Here's what collapsing the <code>RecursiveTree</code> that we just constructed for <code>(5 - 3) * (3 + 12)</code> looks like. As in the last section, this visualization shows what the computation looks like.</p>
 
@@ -310,7 +310,6 @@ In this post we will see how to combine these two things - expanding a structure
 }
 </code></pre></div></details>
 <p>Here's how we can use this to collapse expressions represented in the <code>RecursiveTree</code> format. Nothing complex, just some simple arithmatic:</p>
-<p>let expr_tree = RecursiveTree::expand(expr, |ExprBoxed(boxed)| *boxed)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> recursive_tree.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> {
     <span style="color:#66d9ef">use</span> ExprLayer::<span style="color:#f92672">*</span>;
 	<span style="color:#66d9ef">match</span> expr {
@@ -320,7 +319,7 @@ In this post we will see how to combine these two things - expanding a structure
         LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
 	}
 })
-</code></pre></div><h1 id="combining-expand-and-collapse">Combining Expand and Collapse<a href="#combining-expand-and-collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+</code></pre></div><h1 id="expand-and-collapse-in-a-single-pass">Expand and Collapse in a Single Pass<a href="#expand-and-collapse-in-a-single-pass" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>As a reminder, the <code>RecursiveTree</code> representing <code>(5 - 3) * (3 + 12)</code> looks like this:</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png"  alt="simple expr data at rest"  class="center"  style="border-radius: 8px;"  />
@@ -331,7 +330,7 @@ In this post we will see how to combine these two things - expanding a structure
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval_sorted.gif"  alt="execution graph for expanding and then collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
 
-<p>But what if we could avoid holding the full tree in memory? This would provide memory usage benefits, and it would also let us avoid introducing a new type of data structure - <code>RecursiveTree</code> - into our projects. It should be possible to evaluate the expression like this, one branch at a time, instead of constructing the full tree:</p>
+<p>But what if could run both operations in a single pass? That would remove the need to hold the full tree in memory. It would also let us avoid introducing a new type of data structure - <code>RecursiveTree</code> - into our projects. It should be possible to evaluate the expression like this, one branch at a time, instead of constructing the full tree:</p>
 
   <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
@@ -403,10 +402,10 @@ In this post we will see how to combine these two things - expanding a structure
         },
     )
 }
-</code></pre></div><p>This is <em>fully generic</em>, and can be used with any recursive structure, not just the simple expression language used in this post. In the next post, I'll show how to use it to build an expression language for matching filesystem entities, with features like short-circuiting to minimize syscalls, arena allocation (as a flex), and, of course, many more execution graphs.</p>
-<h1 id="computer-science-bullshit-feel-free-to-skip">Computer Science Bullshit (feel free to skip)<a href="#computer-science-bullshit-feel-free-to-skip" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>If you have a background in data structures and algorithms, and if you looked closely at the implementation details of the above functions, you might recognize them as implementing a stack machine.</p>
-<p>If you're familiar with Haskell and Recursion schemes, you might recognize this as a hylomorphism. If you don't know what the hell a hylomorphism is and are interested in learning, there's an <a href="https://blog.sumtypeofway.com/posts/recursion-schemes-part-5.html">excellent blog post here</a>:</p>
+</code></pre></div><p>This is <em>fully generic</em>, and can be used with any recursive structure, not just the simple expression language used in this post. In the next post, I'll show how to use <code>expand_and_collapse</code> to build an expression language for matching filesystem entities, with features like short-circuiting to minimize syscalls, arena allocation (as a flex), and, of course, many more execution graphs.</p>
+<h1 id="computer-science-implications">Computer Science Implications<a href="#computer-science-implications" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>If you have a background in data structures and algorithms, and if you looked closely at the implementation details of the above functions, you might recognize them as implementing stack machines.</p>
+<p>If you're familiar with Haskell and Recursion schemes, you might recognize <code>expand_and_collapse</code> as a hylomorphism. If you don't know what the hell a hylomorphism is and are interested in learning, there's an <a href="https://blog.sumtypeofway.com/posts/recursion-schemes-part-5.html">excellent blog post here</a> that goes into some detail on the concept.</p>
 <p>There does appear to be a fundamental correspondence between stack machines and hylomorphisms. This is interesting, because these ideas arise in different corners of the computer science universe. That said, this isn't <em>that</em> surprising, as both are descriptions of the same thing: recursion.</p>
 <h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Thank you to <a href="https://twitter.com/munin">Fiona</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a>, among others, for reviewing drafts of this post.</p>

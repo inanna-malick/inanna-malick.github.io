@@ -6,7 +6,7 @@
     <description>Recent content in stack_machines on [ recursion.wtf ]</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 Sep 2000 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 05 Oct 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://recursion.wtf/tags/stack_machines/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Single Pass Recursion in Rust</title>
       <link>https://recursion.wtf/posts/rust_schemes_3/</link>
-      <pubDate>Fri, 01 Sep 2000 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
       
       <guid>https://recursion.wtf/posts/rust_schemes_3/</guid>
       <description>&lt;p&gt;This is the third post in a three-post series. In the &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes&#34;&gt;first post&lt;/a&gt; we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_2&#34;&gt;second post&lt;/a&gt; we made it fully generic, providing a set of generic tools for expanding and collapsing &lt;em&gt;any&lt;/em&gt; recursive data structure in Rust.&lt;/p&gt;

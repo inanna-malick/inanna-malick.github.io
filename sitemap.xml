@@ -2,63 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/tags/code/</loc>
+    <loc>https://recursion.wtf/tags/code/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/</loc>
+    <loc>https://recursion.wtf/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/</loc>
+    <loc>https://recursion.wtf/posts/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/recursion/</loc>
+    <loc>https://recursion.wtf/tags/recursion/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/recursion_lib_intro/</loc>
+    <loc>https://recursion.wtf/posts/recursion_lib_intro/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/rust/</loc>
+    <loc>https://recursion.wtf/tags/rust/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/</loc>
+    <loc>https://recursion.wtf/tags/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/generic/</loc>
+    <loc>https://recursion.wtf/tags/generic/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/recursion-schemes/</loc>
+    <loc>https://recursion.wtf/tags/recursion-schemes/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/rust_schemes_3/</loc>
+    <loc>https://recursion.wtf/posts/rust_schemes_3/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/stack_machines/</loc>
+    <loc>https://recursion.wtf/tags/stack_machines/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/rust_schemes_2/</loc>
+    <loc>https://recursion.wtf/posts/rust_schemes_2/</loc>
     <lastmod>2022-07-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/rust_schemes/</loc>
+    <loc>https://recursion.wtf/posts/rust_schemes/</loc>
     <lastmod>2022-07-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/infinity/</loc>
+    <loc>https://recursion.wtf/tags/infinity/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/infinity_mirror_hypercrystal/</loc>
+    <loc>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/meatspace/</loc>
+    <loc>https://recursion.wtf/tags/meatspace/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/mirrors/</loc>
+    <loc>https://recursion.wtf/tags/mirrors/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/guppy/</loc>
+    <loc>https://recursion.wtf/tags/guppy/</loc>
     <lastmod>2020-12-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/posts/transitive-frontier/</loc>
+    <loc>https://recursion.wtf/posts/transitive-frontier/</loc>
     <lastmod>2020-12-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/categories/</loc>
+    <loc>https://recursion.wtf/categories/</loc>
   </url>
 </urlset>

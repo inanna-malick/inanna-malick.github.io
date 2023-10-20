@@ -1,467 +1,711 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  
-    <title>Single Pass Recursion in Rust :: [ recursion.wtf ]</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>Single Pass Recursion in Rust - </title>
+
+  <meta name="description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
 In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
-" />
-<meta name="keywords" content="recursion schemes, rust, code, stack_machines" />
-<meta name="robots" content="noodp" />
-<link rel="canonical" href="https://recursion.wtf/posts/rust_schemes_3/" />
 
 
-
-
-<link rel="stylesheet" href="https://recursion.wtf/assets/style.css">
-
-  <link rel="stylesheet" href="https://recursion.wtf/assets/blue.css">
-
-
-
-
-
-
-<link rel="apple-touch-icon" href="https://recursion.wtf/img/apple-touch-icon-192x192.png">
-
-  <link rel="shortcut icon" href="https://recursion.wtf/img/favicon/blue.png">
-
-
-
-<meta name="twitter:card" content="summary" />
 
   
-    <meta name="twitter:site" content="" />
+    
+      
+    
+    
   
-    <meta name="twitter:creator" content="inanna_malick" />
+"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Inanna Malick",
+    
+    "url": ""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": ""
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/posts\/rust_schemes_3\/",
+          "name": "Single pass recursion in rust"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Inanna Malick"
+  },
+  "headline": "Single Pass Recursion in Rust",
+  "description" : "This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.\nIn this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.\n",
+  "inLanguage" : "en",
+  "wordCount":  1517 ,
+  "datePublished" : "2022-10-05T00:00:00",
+  "dateModified" : "2022-10-05T00:00:00",
+  "image" : "img\/avatar-icon.png",
+  "keywords" : [ "recursion schemes, rust, code, generic, stack_machines" ],
+  "mainEntityOfPage" : "\/posts\/rust_schemes_3\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
 
-
-
-<meta property="og:locale" content="en" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="Single Pass Recursion in Rust">
+<meta property="og:title" content="Single Pass Recursion in Rust" />
 <meta property="og:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
 In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
-" />
-<meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_3/" />
-<meta property="og:site_name" content="[ recursion.wtf ]" />
-
-  <meta property="og:image" content="https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif">
-
-<meta property="og:image:width" content="2048">
-<meta property="og:image:height" content="1024">
-
-
-  <meta property="article:published_time" content="2022-10-05 00:00:00 &#43;0000 UTC" />
 
 
 
-
-
-
-
-
-
-
-
-
-</head>
-<body class="blue">
-
-
-<div class="container center headings--one-size">
-
-  <header class="header">
-  <div class="header__inner">
-    <div class="header__logo">
-      <a href="/">
-  <div class="logo">
-    Inanna Malick
-  </div>
-</a>
-
-    </div>
-    
-      <div class="menu-trigger">menu</div>
-    
-  </div>
   
-    <nav class="menu">
-  <ul class="menu__inner menu__inner--desktop">
     
       
-        
-          <li><a href="https://github.com/inanna-malick/">Github</a></li>
-        
-      
-        
-          <li><a href="https://hachyderm.io/@Inanna">Mastodon</a></li>
-        
-      
-      
     
+    
+  
+">
+<meta property="og:image" content="img/avatar-icon.png" />
+<meta property="og:url" content="/posts/rust_schemes_3/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inanna Malick" />
+
+  <meta name="twitter:title" content="Single Pass Recursion in Rust" />
+  <meta name="twitter:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language …">
+  <meta name="twitter:image" content="img/avatar-icon.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link href='img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.111.3">
+  <link rel="alternate" href="index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="css/syntax.css" /><link rel="stylesheet" href="css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="">Inanna Malick</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
 
     
-  </ul>
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Inanna Malick" href="">
+            <img class="avatar-img" src="img/avatar-icon.png" alt="Inanna Malick" />
+          </a>
+        </div>
+      </div>
+    
 
-  <ul class="menu__inner menu__inner--mobile">
-    
-      
-        <li><a href="https://github.com/inanna-malick/">Github</a></li>
-      
-    
-      
-        <li><a href="https://hachyderm.io/@Inanna">Mastodon</a></li>
-      
-    
-    
-  </ul>
+  </div>
 </nav>
 
-  
-
-  <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"/>
-
-<meta name="twitter:title" content="Single Pass Recursion in Rust"/>
-<meta name="twitter:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
-
-  "/>
-
-  <meta property="og:title" content="Single Pass Recursion in Rust" />
-<meta property="og:description" content="This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.
-In this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.
-
-  " />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://recursion.wtf/posts/rust_schemes_3/" />
-<meta property="og:image" content="https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" />
-<meta property="article:published_time" content="2022-10-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-10-05T00:00:00+00:00" /><meta property="og:site_name" content="[ recursion.wtf ]" />
 
 
 
-</header>
+    
 
 
-  <div class="content">
-    
-<div class="post">
-  <h1 class="post-title">
-    <a href="https://recursion.wtf/posts/rust_schemes_3/">Single Pass Recursion in Rust</a></h1>
-  <div class="post-meta">
-    
-      <span class="post-date">
-        2022-10-05 
-      </span>
-    
-    
-    <span class="post-author">:: Inanna Malick</span>
-    
-  </div>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-  
-  <span class="post-tags">
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
     
-    #<a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
     
-    #<a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
-    
-    #<a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
-    
-    #<a href="https://recursion.wtf/tags/generic/">generic</a>&nbsp;
-    
-    #<a href="https://recursion.wtf/tags/stack_machines/">stack_machines</a>&nbsp;
-    
-  </span>
-  
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
 
   
   
+  
+
+
+
+
+
 
   
 
-  <div class="post-content"><div>
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>Single Pass Recursion in Rust</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
         <p>This is the third post in a three-post series. In the <a href="https://recursion.wtf/posts/rust_schemes">first post</a> we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the <a href="https://recursion.wtf/posts/rust_schemes_2">second post</a> we made it fully generic, providing a set of generic tools for expanding and collapsing <em>any</em> recursive data structure in Rust.</p>
 <p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel <code>RecursiveTree</code> type introduced in my previous post) while retaining stack safety.</p>
 
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
+<link rel="stylesheet" href="css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" alt="execution graph for simultaneously expanding and collapsing a simple expression"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" itemprop="contentUrl"></a>
+  </figure>
+</div>
 
-
-<p>This post covers functionality already implemented in my <a href="https://crates.io/crates/recursion">recursion</a> crate. For that reason, it will focus on diagrams over code, but the relevant code is provided if you're interested or curious.</p>
-<h2 id="our-expression-language">Our Expression Language<a href="#our-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>This post covers functionality already implemented in my <a href="https://crates.io/crates/recursion">recursion</a> crate. For that reason, it will focus on diagrams over code, but the relevant code is provided if you&rsquo;re interested or curious.</p>
+<h2 id="our-expression-language">Our Expression Language</h2>
 <p>Earlier in this series we defined a simple expression language for math, using this enum to represent <em>a single layer</em> of an expression tree:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
-    Add { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
-    Sub { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
-    Mul { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
-    LiteralInt { literal: <span style="color:#66d9ef">i64</span> },
-}
-
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExprBoxed</span>(Box<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;&gt;</span>);
-</code></pre></div><p>So that we can easily write expressions out by hand (for test cases and examples), let's define some helper functions (specifics omitted).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// some simple utility functions for creating boxed expressions
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">impl</span> ExprBoxed {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">add</span>(a: <span style="color:#a6e22e">Self</span>, b: <span style="color:#a6e22e">Self</span>) -&gt; <span style="color:#a6e22e">Self</span> { ... }
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">sub</span>(a: <span style="color:#a6e22e">Self</span>, b: <span style="color:#a6e22e">Self</span>) -&gt; <span style="color:#a6e22e">Self</span> { ... }
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">mul</span>(a: <span style="color:#a6e22e">Self</span>, b: <span style="color:#a6e22e">Self</span>) -&gt; <span style="color:#a6e22e">Self</span> { ... }
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">literal_int</span>(x: <span style="color:#66d9ef">i64</span>) -&gt; <span style="color:#a6e22e">Self</span> { ... }
-}
-</code></pre></div><p>In this post we'll be working with the expression <code>(5 - 3) * (3 + 12)</code>. Here's what that looks like as code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> ExprBoxed::<span style="color:#f92672">*</span>;
-<span style="color:#66d9ef">let</span> expr <span style="color:#f92672">=</span> mul(
-	sub(literal_int(<span style="color:#ae81ff">5</span>), literal_int(<span style="color:#ae81ff">3</span>)),
-	add(literal_int(<span style="color:#ae81ff">3</span>), literal_int(<span style="color:#ae81ff">12</span>)),
-);
-</code></pre></div><h2 id="expand-and-collapse">Expand and Collapse<a href="#expand-and-collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">enum</span> <span style="color:#56949f">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">A</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">A</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">A</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#286983">i64</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">struct</span> <span style="color:#56949f">ExprBoxed</span><span style="color:#797593">(</span><span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">);</span>
+</span></span></code></pre></div><p>So that we can easily write expressions out by hand (for test cases and examples), let&rsquo;s define some helper functions (specifics omitted).</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#9893a5">// some simple utility functions for creating boxed expressions
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprBoxed</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">add</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span>: <span style="color:#56949f">Self</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">Self</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span> <span style="color:#797593">..</span><span style="color:#797593">.</span> <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">sub</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span>: <span style="color:#56949f">Self</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">Self</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span> <span style="color:#797593">..</span><span style="color:#797593">.</span> <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">mul</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span>: <span style="color:#56949f">Self</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">Self</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span> <span style="color:#797593">..</span><span style="color:#797593">.</span> <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">literal_int</span><span style="color:#797593">(</span><span style="color:#d7827e">x</span>: <span style="color:#286983">i64</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span> <span style="color:#797593">..</span><span style="color:#797593">.</span> <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>In this post we&rsquo;ll be working with the expression <code>(5 - 3) * (3 + 12)</code>. Here&rsquo;s what that looks like as code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">use</span> <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#797593">*</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">let</span> <span style="color:#d7827e">expr</span> <span style="color:#797593">=</span> <span style="color:#d7827e">mul</span><span style="color:#797593">(</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d7827e">sub</span><span style="color:#797593">(</span><span style="color:#d7827e">literal_int</span><span style="color:#797593">(</span><span style="color:#ea9d34">5</span><span style="color:#797593">),</span> <span style="color:#d7827e">literal_int</span><span style="color:#797593">(</span><span style="color:#ea9d34">3</span><span style="color:#797593">)),</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d7827e">add</span><span style="color:#797593">(</span><span style="color:#d7827e">literal_int</span><span style="color:#797593">(</span><span style="color:#ea9d34">3</span><span style="color:#797593">),</span> <span style="color:#d7827e">literal_int</span><span style="color:#797593">(</span><span style="color:#ea9d34">12</span><span style="color:#797593">)),</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">);</span>
+</span></span></code></pre></div><h2 id="expand-and-collapse">Expand and Collapse</h2>
 <p>Previously, we defined two core traits representing the ability to expand a recursive structure out from some seed, and to collapse a recursive structure down into a single value:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Support for expanding a data structure from a seed value, one layer at a time
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Expand<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>F: Fn(A) -&gt; <span style="color:#a6e22e">Wrapped</span><span style="color:#f92672">&gt;</span>(a: <span style="color:#a6e22e">A</span>, expand_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span>;
-}
-
-<span style="color:#e6db74">/// Support for collapsing a data structure into a single value, one layer at a time
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">trait</span> Collapse<span style="color:#f92672">&lt;</span>A, Wrapped<span style="color:#f92672">&gt;</span> {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(Wrapped) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span>;
-}
-</code></pre></div><p>We'll be introducing a new recursion backend that implements these traits. This is already implemented in the <code>recursion</code> crate, so this post is concerned mostly with communicating the underlying concepts - not the implementation details.</p>
-<h2 id="recursive-data-structure">Recursive Data Structure<a href="#recursive-data-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Instead of using a vector of elements linked by vector indices, we'll construct a vector where linkages are defined only by the <em>relative position</em> of elements. This lets us replace the <code>usize</code> vector indices used in the previous posts with zero-size markers (<code>StackMarker</code>, equivalent to <code>()</code> but given its own name for convenience). This results in an extremely compact representation of recursive structures.</p>
-<p>Here's what the data structure looks like. It's provided by the <code>recursion</code> crate, so you won't need to define it yourself.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">StackMarker</span>;
-
-<span style="color:#e6db74">/// Recursive tree made up of layers of some type &#39;Layer&lt;_&gt;&#39;, eg `ExprLayer&lt;_&gt;`
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RecursiveTree</span><span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span> {
-    <span style="color:#e6db74">/// nonempty, in topological-sorted order
-</span><span style="color:#e6db74"></span>    elems: Vec<span style="color:#f92672">&lt;</span>Wrapped<span style="color:#f92672">&gt;</span>, <span style="color:#75715e">// Layer&lt;Index&gt; (eg `ExprLayer&lt;()&gt;`)
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>Here's a visualization of what this data structure looks like for the expression <code>(5 - 3) * (3 + 12)</code>.</p>
-
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png"  alt="simple expr data at rest"  class="center"  style="border-radius: 8px;"  />
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ea9d34">/// Support for expanding a data structure from a seed value, one layer at a time
+</span></span></span><span style="display:flex;"><span><span style="color:#ea9d34"></span><span style="color:#286983">pub</span> <span style="color:#286983">trait</span> <span style="color:#d7827e">Expand</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">Wrapped</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">expand_layers</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">F</span>: <span style="color:#d7827e">Fn</span><span style="color:#797593">(</span><span style="color:#d7827e">A</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Wrapped</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">expand_layer</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ea9d34">/// Support for collapsing a data structure into a single value, one layer at a time
+</span></span></span><span style="display:flex;"><span><span style="color:#ea9d34"></span><span style="color:#286983">pub</span> <span style="color:#286983">trait</span> <span style="color:#d7827e">Collapse</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">Wrapped</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">collapse_layers</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">F</span>: <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">Wrapped</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">A</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">,</span> <span style="color:#d7827e">collapse_layer</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">A</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>We&rsquo;ll be introducing a new recursion backend that implements these traits. This is already implemented in the <code>recursion</code> crate, so this post is concerned mostly with communicating the underlying concepts - not the implementation details.</p>
+<h2 id="recursive-data-structure">Recursive Data Structure</h2>
+<p>Instead of using a vector of elements linked by vector indices, we&rsquo;ll construct a vector where linkages are defined only by the <em>relative position</em> of elements. This lets us replace the <code>usize</code> vector indices used in the previous posts with zero-size markers (<code>StackMarker</code>, equivalent to <code>()</code> but given its own name for convenience). This results in an extremely compact representation of recursive structures.</p>
+<p>Here&rsquo;s what the data structure looks like. It&rsquo;s provided by the <code>recursion</code> crate, so you won&rsquo;t need to define it yourself.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">struct</span> <span style="color:#56949f">StackMarker</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ea9d34">/// Recursive tree made up of layers of some type &#39;Layer&lt;_&gt;&#39;, eg `ExprLayer&lt;_&gt;`
+</span></span></span><span style="display:flex;"><span><span style="color:#ea9d34"></span><span style="color:#286983">pub</span> <span style="color:#286983">struct</span> <span style="color:#56949f">RecursiveTree</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Wrapped</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ea9d34">/// nonempty, in topological-sorted order
+</span></span></span><span style="display:flex;"><span><span style="color:#ea9d34"></span>    <span style="color:#d7827e">elems</span>: <span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Wrapped</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span> <span style="color:#9893a5">// Layer&lt;Index&gt; (eg `ExprLayer&lt;()&gt;`)
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>Here&rsquo;s a visualization of what this data structure looks like for the expression <code>(5 - 3) * (3 + 12)</code>.</p>
 
 
-<h1 id="expand">Expand<a href="#expand" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let's see what expanding a boxed expression tree for <code>(5 - 3) * (3 + 12)</code> into a <code>RecursiveTree</code> looks like. We'll look at the implementation soon, but this visualization shows what the computation looks like.</p>
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png" alt="simple expr data at rest"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_structure.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
 
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_expand_only.gif"  alt="execution graph for expansion of a simple expression"  class="center"  style="border-radius: 8px;"  />
-
-
-<p>You can see the implementation of <code>expand_layers</code> for this structure below, if you're curious, but the important thing is <em>that</em> we have an implementation of <code>Expand</code> provided by the <code>recursion</code> crate, not <em>how</em> its implemented. The whole point of having a crate is not having to examine every implementation detail!</p>
-<details>
-      <summary>Click to expand code sample</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, O: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>StackMarker, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> U<span style="color:#f92672">&gt;&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span>
-{
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>F: Fn(A) -&gt; <span style="color:#a6e22e">O</span><span style="color:#f92672">&gt;</span>(a: <span style="color:#a6e22e">A</span>, generate_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> Vec::from([a]);
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
-
-        <span style="color:#75715e">// expand to build a vec of elems while preserving topo order
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop() {
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> generate_layer(seed);
-
-            <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> topush <span style="color:#f92672">=</span> Vec::new();
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map_layer(<span style="color:#f92672">|</span>aa<span style="color:#f92672">|</span> {
-                topush.push(aa);
-                StackMarker
-            });
-            frontier.extend(topush.into_iter().rev());
-
-            elems.push(layer);
-        }
-
-        elems.reverse();
-
-        Self {
-            elems,
-            _underlying: <span style="color:#a6e22e">std</span>::marker::PhantomData,
-        }
-    }
-}
-</code></pre></div></details>
-<p>Let's see what expanding a boxed-pointer expression into a <code>RecursiveTree</code> looks like. Since it's already made up of <code>ExprLayer</code> layers, we can just dereference the boxed value using the <code>*</code> operator.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> expr_tree <span style="color:#f92672">=</span> RecursiveTree::expand_layers(expr, <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed)
-</code></pre></div><h1 id="collapse">Collapse<a href="#collapse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Here's what collapsing the <code>RecursiveTree</code> that we just constructed for <code>(5 - 3) * (3 + 12)</code> looks like. As in the last section, this visualization shows what the computation looks like.</p>
-
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_collapse_only.gif"  alt="execution graph for collapsing of a simple expression"  class="center"  style="border-radius: 8px;"  />
+<h1 id="expand">Expand</h1>
+<p>Let&rsquo;s see what expanding a boxed expression tree for <code>(5 - 3) * (3 + 12)</code> into a <code>RecursiveTree</code> looks like. We&rsquo;ll look at the implementation soon, but this visualization shows what the computation looks like.</p>
 
 
-<details>
-      <summary>Click to expand code sample</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, O, U: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> O, Unwrapped <span style="color:#f92672">=</span> StackMarker<span style="color:#f92672">&gt;&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span>
-{
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(O) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> result_stack <span style="color:#f92672">=</span> Vec::new();
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_expand_only.gif" alt="execution graph for expansion of a simple expression"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_expand_only.gif" itemprop="contentUrl"></a>
+  </figure>
+</div>
 
-        <span style="color:#66d9ef">for</span> layer <span style="color:#66d9ef">in</span> self.elems.into_iter() {
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map_layer(<span style="color:#f92672">|</span>_<span style="color:#f92672">|</span> result_stack.pop().unwrap());
+<p>You can see the implementation of <code>expand_layers</code> for this structure below, if you&rsquo;re curious, but the important thing is <em>that</em> we have an implementation of <code>Expand</code> provided by the <code>recursion</code> crate, not <em>how</em> its implemented. The whole point of having a crate is not having to examine every implementation detail!</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">Underlying</span><span style="color:#797593">,</span> <span style="color:#d7827e">O</span>: <span style="color:#56949f">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">StackMarker</span><span style="color:#797593">,</span> <span style="color:#d7827e">Unwrapped</span> <span style="color:#797593">=</span> <span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">To</span> <span style="color:#797593">=</span> <span style="color:#d7827e">U</span><span style="color:#797593">&gt;&gt;</span> <span style="color:#d7827e">Expand</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">O</span><span style="color:#797593">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">for</span> <span style="color:#d7827e">RecursiveTree</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">U</span><span style="color:#797593">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">expand_layers</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">F</span>: <span style="color:#d7827e">Fn</span><span style="color:#797593">(</span><span style="color:#d7827e">A</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">O</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">generate_layer</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">frontier</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Vec</span>::<span style="color:#d7827e">from</span><span style="color:#797593">([</span><span style="color:#d7827e">a</span><span style="color:#797593">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">elems</span> <span style="color:#797593">=</span> <span style="color:#d7827e">vec!</span><span style="color:#797593">[];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#9893a5">// expand to build a vec of elems while preserving topo order
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#286983">while</span> <span style="color:#286983">let</span> <span style="color:#d7827e">Some</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">)</span> <span style="color:#797593">=</span> <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">pop</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">generate_layer</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">topush</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Vec</span>::<span style="color:#d7827e">new</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">layer</span><span style="color:#797593">.</span><span style="color:#d7827e">map_layer</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">aa</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">topush</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">aa</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">StackMarker</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">extend</span><span style="color:#797593">(</span><span style="color:#d7827e">topush</span><span style="color:#797593">.</span><span style="color:#d7827e">into_iter</span><span style="color:#797593">().</span><span style="color:#d7827e">rev</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">layer</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">reverse</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">elems</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">_underlying</span>: <span style="color:#56949f">std</span>::<span style="color:#d7827e">marker</span>::<span style="color:#d7827e">PhantomData</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p>Let&rsquo;s see what expanding a boxed-pointer expression into a <code>RecursiveTree</code> looks like. Since it&rsquo;s already made up of <code>ExprLayer</code> layers, we can just dereference the boxed value using the <code>*</code> operator.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">let</span> <span style="color:#d7827e">expr_tree</span> <span style="color:#797593">=</span> <span style="color:#d7827e">RecursiveTree</span>::<span style="color:#d7827e">expand_layers</span><span style="color:#797593">(</span><span style="color:#d7827e">expr</span><span style="color:#797593">,</span> <span style="color:#797593">|</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">(</span><span style="color:#d7827e">boxed</span><span style="color:#797593">)</span><span style="color:#797593">|</span> <span style="color:#797593">*</span><span style="color:#d7827e">boxed</span><span style="color:#797593">)</span>
+</span></span></code></pre></div><h1 id="collapse">Collapse</h1>
+<p>Here&rsquo;s what collapsing the <code>RecursiveTree</code> that we just constructed for <code>(5 - 3) * (3 + 12)</code> looks like. As in the last section, this visualization shows what the computation looks like.</p>
 
-            result_stack.push(collapse_layer(layer));
-        }
 
-        result_stack.pop().unwrap()
-    }
-}
-</code></pre></div></details>
-<p>Here's how we can use this to collapse expressions represented in the <code>RecursiveTree</code> format. Nothing complex, just some simple arithmatic:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> recursive_tree.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> {
-    <span style="color:#66d9ef">use</span> ExprLayer::<span style="color:#f92672">*</span>;
-	<span style="color:#66d9ef">match</span> expr {
-        Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
-        Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
-        Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
-        LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-	}
-})
-</code></pre></div><h1 id="expand-and-collapse-in-a-single-pass">Expand and Collapse in a Single Pass<a href="#expand-and-collapse-in-a-single-pass" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_collapse_only.gif" alt="execution graph for collapsing of a simple expression"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_collapse_only.gif" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">O</span><span style="color:#797593">,</span> <span style="color:#d7827e">U</span>: <span style="color:#56949f">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">To</span> <span style="color:#797593">=</span> <span style="color:#d7827e">O</span><span style="color:#797593">,</span> <span style="color:#d7827e">Unwrapped</span> <span style="color:#797593">=</span> <span style="color:#d7827e">StackMarker</span><span style="color:#797593">&gt;&gt;</span> <span style="color:#d7827e">Collapse</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">O</span><span style="color:#797593">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">for</span> <span style="color:#d7827e">RecursiveTree</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">U</span><span style="color:#797593">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">collapse_layers</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">F</span>: <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">O</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">A</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">,</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">collapse_layer</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">A</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">result_stack</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Vec</span>::<span style="color:#d7827e">new</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">for</span> <span style="color:#d7827e">layer</span> <span style="color:#286983">in</span> <span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">into_iter</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">layer</span><span style="color:#797593">.</span><span style="color:#d7827e">map_layer</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">_</span><span style="color:#797593">|</span> <span style="color:#d7827e">result_stack</span><span style="color:#797593">.</span><span style="color:#d7827e">pop</span><span style="color:#797593">().</span><span style="color:#d7827e">unwrap</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">result_stack</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">collapse_layer</span><span style="color:#797593">(</span><span style="color:#d7827e">layer</span><span style="color:#797593">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">result_stack</span><span style="color:#797593">.</span><span style="color:#d7827e">pop</span><span style="color:#797593">().</span><span style="color:#d7827e">unwrap</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p>Here&rsquo;s how we can use this to collapse expressions represented in the <code>RecursiveTree</code> format. Nothing complex, just some simple arithmatic:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">let</span> <span style="color:#d7827e">result</span> <span style="color:#797593">=</span> <span style="color:#d7827e">recursive_tree</span><span style="color:#797593">.</span><span style="color:#d7827e">collapse_layers</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">expr</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">use</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#797593">*</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#286983">match</span> <span style="color:#d7827e">expr</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">})</span>
+</span></span></code></pre></div><h1 id="expand-and-collapse-in-a-single-pass">Expand and Collapse in a Single Pass</h1>
 <p>As a reminder, the <code>RecursiveTree</code> representing <code>(5 - 3) * (3 + 12)</code> looks like this:</p>
 
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png"  alt="simple expr data at rest"  class="center"  style="border-radius: 8px;"  />
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_structure.png" alt="simple expr data at rest"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_structure.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<p>Here&rsquo;s a visualization showing what the full evaluation looks like, if we run <code>expand_layers</code> immediately followed by <code>collapse_layers</code>:</p>
 
 
-<p>Here's a visualization showing what the full evaluation looks like, if we run <code>expand_layers</code> immediately followed by <code>collapse_layers</code>:</p>
-
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval_sorted.gif"  alt="execution graph for expanding and then collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
-
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_eval_sorted.gif" alt="execution graph for expanding and then collapsing a simple expression"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_eval_sorted.gif" itemprop="contentUrl"></a>
+  </figure>
+</div>
 
 <p>But what if could run both operations in a single pass? That would remove the need to hold the full tree in memory. It would also let us avoid introducing a new type of data structure - <code>RecursiveTree</code> - into our projects. It should be possible to evaluate the expression like this, one branch at a time, instead of constructing the full tree:</p>
 
-  <img src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif"  alt="execution graph for simultaneously expanding and collapsing a simple expression"  class="center"  style="border-radius: 8px;"  />
 
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" alt="execution graph for simultaneously expanding and collapsing a simple expression"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" itemprop="contentUrl"></a>
+  </figure>
+</div>
 
-<p>The function that does this is called <code>expand_and_collapse</code>, and it's provided by the <code>recursion</code> crate. Docs are <a href="https://docs.rs/recursion/0.3.1/recursion/stack_machine/fn.expand_and_collapse.html">here</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// For some Layer type, Expandable is Layer&lt;Seed&gt; and Collapsable is Layer&lt;Out&gt;
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_and_collapse</span><span style="color:#f92672">&lt;</span>Seed, Out, Expandable, Collapsable<span style="color:#f92672">&gt;</span>(
-    seed: <span style="color:#a6e22e">Seed</span>,
-    <span style="color:#66d9ef">mut</span> expand_layer: <span style="color:#a6e22e">impl</span> FnMut(Seed) -&gt; <span style="color:#a6e22e">Expandable</span>,
-    <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">impl</span> FnMut(Collapsable) -&gt; <span style="color:#a6e22e">Out</span>,
-) -&gt; <span style="color:#a6e22e">Out</span>
-    Expandable: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>(), Unwrapped <span style="color:#f92672">=</span> Seed<span style="color:#f92672">&gt;</span>,
-    <span style="color:#f92672">&lt;</span>Expandable <span style="color:#66d9ef">as</span> MapLayer<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;&gt;</span>::To: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>Out, Unwrapped <span style="color:#f92672">=</span> (), To <span style="color:#f92672">=</span> Collapsable<span style="color:#f92672">&gt;</span>,
-</code></pre></div><p>The full implementation is below, if you're curious.</p>
-<details>
-      <summary>Click to expand code sample</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_and_collapse</span><span style="color:#f92672">&lt;</span>Seed, Out, Expandable, Collapsable<span style="color:#f92672">&gt;</span>(
-    seed: <span style="color:#a6e22e">Seed</span>,
-    <span style="color:#66d9ef">mut</span> expand_layer: <span style="color:#a6e22e">impl</span> FnMut(Seed) -&gt; <span style="color:#a6e22e">Expandable</span>,
-    <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">impl</span> FnMut(Collapsable) -&gt; <span style="color:#a6e22e">Out</span>,
-) -&gt; <span style="color:#a6e22e">Out</span>
-<span style="color:#66d9ef">where</span>
-    Expandable: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>(), Unwrapped <span style="color:#f92672">=</span> Seed<span style="color:#f92672">&gt;</span>,
-    <span style="color:#f92672">&lt;</span>Expandable <span style="color:#66d9ef">as</span> MapLayer<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;&gt;</span>::To: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>Out, Unwrapped <span style="color:#f92672">=</span> (), To <span style="color:#f92672">=</span> Collapsable<span style="color:#f92672">&gt;</span>,
-{
-    <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">State</span><span style="color:#f92672">&lt;</span>Seed, CollapsableInternal<span style="color:#f92672">&gt;</span> {
-        Expand(Seed),
-        Collapse(CollapsableInternal),
-    }
-
-    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> vals: Vec<span style="color:#f92672">&lt;</span>Out<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
-    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> stack <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[State::Expand(seed)];
-
-    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(item) <span style="color:#f92672">=</span> stack.pop() {
-        <span style="color:#66d9ef">match</span> item {
-            State::Expand(seed) <span style="color:#f92672">=&gt;</span> {
-                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> expand_layer(seed);
-                <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> seeds <span style="color:#f92672">=</span> Vec::new();
-                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map_layer(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
-                    seeds.push(seed)
-                });
-
-                stack.push(State::Collapse(node));
-                stack.extend(seeds.into_iter().map(State::Expand));
-            }
-            State::Collapse(node) <span style="color:#f92672">=&gt;</span> {
-                <span style="color:#66d9ef">let</span> node <span style="color:#f92672">=</span> node.map_layer(<span style="color:#f92672">|</span>_: ()<span style="color:#f92672">|</span> vals.pop().unwrap());
-                vals.push(collapse_layer(node))
-            }
-        };
-    }
-    vals.pop().unwrap()
-}
-</code></pre></div></details>
-<p>Here's how we can use this function to evaluate a traditional boxed-pointer recursive expression tree, without constructing an intermediate <code>RecursiveTree</code> - thus saving on both conceptual overhead and memory-usage overhead:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(expr: <span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">i63</span> {
-    expand_and_collapse(
-        expr,                      <span style="color:#75715e">// seed value
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed, <span style="color:#75715e">// expand layer function
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> {
-            <span style="color:#75715e">// collapse layer function
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">use</span> ExprLayer::<span style="color:#f92672">*</span>;
-            <span style="color:#66d9ef">match</span> expr {
-                Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
-                Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
-                Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
-                LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-            }
-        },
-    )
-}
-</code></pre></div><p>This is <em>fully generic</em>, and can be used with any recursive structure, not just the simple expression language used in this post. In the next post, I'll show how to use <code>expand_and_collapse</code> to build an expression language for matching filesystem entities, with features like short-circuiting to minimize syscalls, arena allocation (as a flex), and, of course, many more execution graphs.</p>
-<h1 id="computer-science-implications">Computer Science Implications<a href="#computer-science-implications" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>The function that does this is called <code>expand_and_collapse</code>, and it&rsquo;s provided by the <code>recursion</code> crate. Docs are <a href="https://docs.rs/recursion/0.3.1/recursion/stack_machine/fn.expand_and_collapse.html">here</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ea9d34">/// For some Layer type, Expandable is Layer&lt;Seed&gt; and Collapsable is Layer&lt;Out&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#ea9d34"></span><span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">expand_and_collapse</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Seed</span><span style="color:#797593">,</span> <span style="color:#d7827e">Out</span><span style="color:#797593">,</span> <span style="color:#d7827e">Expandable</span><span style="color:#797593">,</span> <span style="color:#d7827e">Collapsable</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">seed</span>: <span style="color:#56949f">Seed</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">mut</span> <span style="color:#d7827e">expand_layer</span>: <span style="color:#56949f">impl</span> <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">Seed</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Expandable</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">mut</span> <span style="color:#d7827e">collapse_layer</span>: <span style="color:#56949f">impl</span> <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">Collapsable</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Out</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Out</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Expandable</span>: <span style="color:#56949f">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#797593">(),</span> <span style="color:#d7827e">Unwrapped</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Seed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">&lt;</span><span style="color:#d7827e">Expandable</span> <span style="color:#286983">as</span> <span style="color:#d7827e">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#797593">()</span><span style="color:#797593">&gt;&gt;</span>::<span style="color:#d7827e">To</span>: <span style="color:#56949f">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Out</span><span style="color:#797593">,</span> <span style="color:#d7827e">Unwrapped</span> <span style="color:#797593">=</span> <span style="color:#797593">(),</span> <span style="color:#d7827e">To</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Collapsable</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span></code></pre></div><p>The full implementation is below, if you&rsquo;re curious.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">expand_and_collapse</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Seed</span><span style="color:#797593">,</span> <span style="color:#d7827e">Out</span><span style="color:#797593">,</span> <span style="color:#d7827e">Expandable</span><span style="color:#797593">,</span> <span style="color:#d7827e">Collapsable</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">seed</span>: <span style="color:#56949f">Seed</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">mut</span> <span style="color:#d7827e">expand_layer</span>: <span style="color:#56949f">impl</span> <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">Seed</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Expandable</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">mut</span> <span style="color:#d7827e">collapse_layer</span>: <span style="color:#56949f">impl</span> <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">Collapsable</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Out</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Out</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">where</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Expandable</span>: <span style="color:#56949f">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#797593">(),</span> <span style="color:#d7827e">Unwrapped</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Seed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">&lt;</span><span style="color:#d7827e">Expandable</span> <span style="color:#286983">as</span> <span style="color:#d7827e">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#797593">()</span><span style="color:#797593">&gt;&gt;</span>::<span style="color:#d7827e">To</span>: <span style="color:#56949f">MapLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Out</span><span style="color:#797593">,</span> <span style="color:#d7827e">Unwrapped</span> <span style="color:#797593">=</span> <span style="color:#797593">(),</span> <span style="color:#d7827e">To</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Collapsable</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">enum</span> <span style="color:#56949f">State</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Seed</span><span style="color:#797593">,</span> <span style="color:#d7827e">CollapsableInternal</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Expand</span><span style="color:#797593">(</span><span style="color:#d7827e">Seed</span><span style="color:#797593">),</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Collapse</span><span style="color:#797593">(</span><span style="color:#d7827e">CollapsableInternal</span><span style="color:#797593">),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">vals</span>: <span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Out</span><span style="color:#797593">&gt;</span> <span style="color:#797593">=</span> <span style="color:#d7827e">vec!</span><span style="color:#797593">[];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">stack</span> <span style="color:#797593">=</span> <span style="color:#d7827e">vec!</span><span style="color:#797593">[</span><span style="color:#d7827e">State</span>::<span style="color:#d7827e">Expand</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">)];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">while</span> <span style="color:#286983">let</span> <span style="color:#d7827e">Some</span><span style="color:#797593">(</span><span style="color:#d7827e">item</span><span style="color:#797593">)</span> <span style="color:#797593">=</span> <span style="color:#d7827e">stack</span><span style="color:#797593">.</span><span style="color:#d7827e">pop</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">match</span> <span style="color:#d7827e">item</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">State</span>::<span style="color:#d7827e">Expand</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">)</span> <span style="color:#797593">=&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#d7827e">node</span> <span style="color:#797593">=</span> <span style="color:#d7827e">expand_layer</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">seeds</span> <span style="color:#797593">=</span> <span style="color:#d7827e">Vec</span>::<span style="color:#d7827e">new</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#d7827e">node</span> <span style="color:#797593">=</span> <span style="color:#d7827e">node</span><span style="color:#797593">.</span><span style="color:#d7827e">map_layer</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">seed</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">seeds</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">stack</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">State</span>::<span style="color:#d7827e">Collapse</span><span style="color:#797593">(</span><span style="color:#d7827e">node</span><span style="color:#797593">));</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">stack</span><span style="color:#797593">.</span><span style="color:#d7827e">extend</span><span style="color:#797593">(</span><span style="color:#d7827e">seeds</span><span style="color:#797593">.</span><span style="color:#d7827e">into_iter</span><span style="color:#797593">().</span><span style="color:#d7827e">map</span><span style="color:#797593">(</span><span style="color:#d7827e">State</span>::<span style="color:#d7827e">Expand</span><span style="color:#797593">));</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">State</span>::<span style="color:#d7827e">Collapse</span><span style="color:#797593">(</span><span style="color:#d7827e">node</span><span style="color:#797593">)</span> <span style="color:#797593">=&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#d7827e">node</span> <span style="color:#797593">=</span> <span style="color:#d7827e">node</span><span style="color:#797593">.</span><span style="color:#d7827e">map_layer</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">_</span>: <span style="color:#797593">()</span><span style="color:#797593">|</span> <span style="color:#d7827e">vals</span><span style="color:#797593">.</span><span style="color:#d7827e">pop</span><span style="color:#797593">().</span><span style="color:#d7827e">unwrap</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">vals</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">collapse_layer</span><span style="color:#797593">(</span><span style="color:#d7827e">node</span><span style="color:#797593">))</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">};</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">vals</span><span style="color:#797593">.</span><span style="color:#d7827e">pop</span><span style="color:#797593">().</span><span style="color:#d7827e">unwrap</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p>Here&rsquo;s how we can use this function to evaluate a traditional boxed-pointer recursive expression tree, without constructing an intermediate <code>RecursiveTree</code> - thus saving on both conceptual overhead and memory-usage overhead:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">fn</span> <span style="color:#d7827e">eval</span><span style="color:#797593">(</span><span style="color:#d7827e">expr</span>: <span style="color:#56949f">ExprBoxed</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">i63</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">expand_and_collapse</span><span style="color:#797593">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">expr</span><span style="color:#797593">,</span>                      <span style="color:#9893a5">// seed value
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#797593">|</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">(</span><span style="color:#d7827e">boxed</span><span style="color:#797593">)</span><span style="color:#797593">|</span> <span style="color:#797593">*</span><span style="color:#d7827e">boxed</span><span style="color:#797593">,</span> <span style="color:#9893a5">// expand layer function
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#797593">|</span><span style="color:#d7827e">expr</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#9893a5">// collapse layer function
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>            <span style="color:#286983">use</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#797593">*</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">match</span> <span style="color:#d7827e">expr</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>This is <em>fully generic</em>, and can be used with any recursive structure, not just the simple expression language used in this post. In the next post, I&rsquo;ll show how to use <code>expand_and_collapse</code> to build an expression language for matching filesystem entities, with features like short-circuiting to minimize syscalls, arena allocation (as a flex), and, of course, many more execution graphs.</p>
+<h1 id="computer-science-implications">Computer Science Implications</h1>
 <p>If you have a background in data structures and algorithms, and if you looked closely at the implementation details of the above functions, you might recognize them as implementing stack machines.</p>
-<p>If you're familiar with Haskell and Recursion schemes, you might recognize <code>expand_and_collapse</code> as a hylomorphism. If you don't know what the hell a hylomorphism is and are interested in learning, there's an <a href="https://blog.sumtypeofway.com/posts/recursion-schemes-part-5.html">excellent blog post here</a> that goes into some detail on the concept.</p>
-<p>There does appear to be a fundamental correspondence between stack machines and hylomorphisms. This is interesting, because these ideas arise in different corners of the computer science universe. That said, this isn't <em>that</em> surprising, as both are descriptions of the same thing: recursion.</p>
-<h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>If you&rsquo;re familiar with Haskell and Recursion schemes, you might recognize <code>expand_and_collapse</code> as a hylomorphism. If you don&rsquo;t know what the hell a hylomorphism is and are interested in learning, there&rsquo;s an <a href="https://blog.sumtypeofway.com/posts/recursion-schemes-part-5.html">excellent blog post here</a> that goes into some detail on the concept.</p>
+<p>There does appear to be a fundamental correspondence between stack machines and hylomorphisms. This is interesting, because these ideas arise in different corners of the computer science universe. That said, this isn&rsquo;t <em>that</em> surprising, as both are descriptions of the same thing: recursion.</p>
+<h1 id="thank-you">Thank you</h1>
 <p>Thank you to <a href="https://twitter.com/munin">Fiona</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a>, among others, for reviewing drafts of this post.</p>
-      </div></div>
 
+        
+          <div class="blog-tags">
+            
+              <a href="/tags/recursion-schemes/">recursion schemes</a>&nbsp;
+            
+              <a href="/tags/rust/">rust</a>&nbsp;
+            
+              <a href="/tags/code/">code</a>&nbsp;
+            
+              <a href="/tags/generic/">generic</a>&nbsp;
+            
+              <a href="/tags/stack_machines/">stack_machines</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=%2fposts%2frust_schemes_3%2f&amp;text=Single%20Pass%20Recursion%20in%20Rust&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
   
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=%2fposts%2frust_schemes_3%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
   
-<div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
+      
+      <li>
+        <a href="//reddit.com/submit?url=%2fposts%2frust_schemes_3%2f&amp;title=Single%20Pass%20Recursion%20in%20Rust" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=%2fposts%2frust_schemes_3%2f&amp;title=Single%20Pass%20Recursion%20in%20Rust" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=%2fposts%2frust_schemes_3%2f&amp;title=Single%20Pass%20Recursion%20in%20Rust" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=%2fposts%2frust_schemes_3%2f&amp;description=Single%20Pass%20Recursion%20in%20Rust" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+              </div>
+            </section>
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also">See also</h4>
+                  <ul>
+                
+                
+                    <li><a href="/posts/recursion_lib_intro/">Recursion: a quick introduction</a></li>
+                
+                    <li><a href="/posts/rust_schemes_2/">Fully generic recursion in Rust</a></li>
+                
+                    <li><a href="/posts/rust_schemes/">Elegant and performant recursion in Rust</a></li>
+                
+                    <li><a href="/posts/transitive-frontier/">Transitive Frontier</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/posts/rust_schemes_2/" data-toggle="tooltip" data-placement="top" title="Fully generic recursion in Rust">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="/posts/recursion_lib_intro/" data-toggle="tooltip" data-placement="top" title="Recursion: a quick introduction">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
     </div>
-    <div class="pagination__buttons">
-        
-        
-        <span class="button next">
-            <a href="https://recursion.wtf/posts/rust_schemes_2/">
-                <span class="button__text">Fully generic recursion in Rust</span>
-                <span class="button__icon">→</span>
+  </div>
+</div>
+
+      
+<footer>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            <a href="" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
             </a>
-        </span>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2023
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="">Inanna Malick</a>
+          
+        </p>
         
-    </div>
-</div>
-
-  
-
-  
-
-</div>
-
-  </div>
-
-  
-    <footer class="footer">
-  <div class="footer__inner">
-    
-      <div class="copyright">
-        <span>© 2022 Powered by <a href="http://gohugo.io">Hugo</a></span>
-    
-        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.111.3</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
       </div>
+    </div>
   </div>
-</footer>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 
-<script src="https://recursion.wtf/assets/main.js"></script>
-<script src="https://recursion.wtf/assets/prism.js"></script>
-
-
-
-
-
+<script src="js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="js/load-photoswipe.js"></script>
 
 
-  
-</div>
 
-</body>
+
+
+
+
+
+
+    
+  </body>
 </html>
+

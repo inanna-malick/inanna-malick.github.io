@@ -1,623 +1,788 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>Elegant and performant recursion in Rust - </title>
+
+  <meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Inanna Malick",
+    
+    "url": ""
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": ""
   
-    <title>Elegant and performant recursion in Rust :: [ recursion.wtf ]</title>
   
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
-" />
-<meta name="keywords" content="recursion schemes, rust, code" />
-<meta name="robots" content="noodp" />
-<link rel="canonical" href="https://recursion.wtf/posts/rust_schemes/" />
-
-
-
-
-<link rel="stylesheet" href="https://recursion.wtf/assets/style.css">
-
-  <link rel="stylesheet" href="https://recursion.wtf/assets/blue.css">
-
-
-
-
-
-
-<link rel="apple-touch-icon" href="https://recursion.wtf/img/apple-touch-icon-192x192.png">
-
-  <link rel="shortcut icon" href="https://recursion.wtf/img/favicon/blue.png">
-
-
-
-<meta name="twitter:card" content="summary" />
-
   
-    <meta name="twitter:site" content="" />
   
-    <meta name="twitter:creator" content="inanna_malick" />
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/posts\/rust_schemes\/",
+          "name": "Elegant and performant recursion in rust"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Inanna Malick"
+  },
+  "headline": "Elegant and performant recursion in Rust",
+  "description" : "This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don\u0026rsquo;t need to know anything about that; it\u0026rsquo;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.\n",
+  "inLanguage" : "en",
+  "wordCount":  2592 ,
+  "datePublished" : "2022-07-18T00:00:00",
+  "dateModified" : "2022-07-18T00:00:00",
+  "image" : "img\/avatar-icon.png",
+  "keywords" : [ "recursion schemes, rust, code" ],
+  "mainEntityOfPage" : "\/posts\/rust_schemes\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
 
+<meta property="og:title" content="Elegant and performant recursion in Rust" />
+<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.">
+<meta property="og:image" content="img/avatar-icon.png" />
+<meta property="og:url" content="/posts/rust_schemes/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inanna Malick" />
 
+  <meta name="twitter:title" content="Elegant and performant recursion in Rust" />
+  <meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about …">
+  <meta name="twitter:image" content="img/avatar-icon.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link href='img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.111.3">
+  <link rel="alternate" href="index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="css/syntax.css" /><link rel="stylesheet" href="css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
 
-<meta property="og:locale" content="en" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="Elegant and performant recursion in Rust">
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.
-" />
-<meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
-<meta property="og:site_name" content="[ recursion.wtf ]" />
-
-  <meta property="og:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png">
-
-<meta property="og:image:width" content="2048">
-<meta property="og:image:height" content="1024">
-
-
-  <meta property="article:published_time" content="2022-07-18 00:00:00 &#43;0000 UTC" />
-
-
-
-
-
-
-
-
-
-
-
-
-</head>
-<body class="blue">
-
-
-<div class="container center headings--one-size">
-
-  <header class="header">
-  <div class="header__inner">
-    <div class="header__logo">
-      <a href="/">
-  <div class="logo">
-    Inanna Malick
-  </div>
-</a>
-
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="">Inanna Malick</a>
     </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
     
-      <div class="menu-trigger">menu</div>
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Inanna Malick" href="">
+            <img class="avatar-img" src="img/avatar-icon.png" alt="Inanna Malick" />
+          </a>
+        </div>
+      </div>
     
+
   </div>
-  
-    <nav class="menu">
-  <ul class="menu__inner menu__inner--desktop">
-    
-      
-        
-          <li><a href="https://github.com/inanna-malick/">Github</a></li>
-        
-      
-        
-          <li><a href="https://hachyderm.io/@Inanna">Mastodon</a></li>
-        
-      
-      
-    
-
-    
-  </ul>
-
-  <ul class="menu__inner menu__inner--mobile">
-    
-      
-        <li><a href="https://github.com/inanna-malick/">Github</a></li>
-      
-    
-      
-        <li><a href="https://hachyderm.io/@Inanna">Mastodon</a></li>
-      
-    
-    
-  </ul>
 </nav>
 
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
   
 
-  <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png"/>
-
-<meta name="twitter:title" content="Elegant and performant recursion in Rust"/>
-<meta name="twitter:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust."/>
-
-  <meta property="og:title" content="Elegant and performant recursion in Rust" />
-<meta property="og:description" content="This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&#39;t need to know anything about that; it&#39;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://recursion.wtf/posts/rust_schemes/" />
-<meta property="og:image" content="https://recursion.wtf/img/rust_schemes/criterion_screenshot_preview.png" />
-<meta property="article:published_time" content="2022-07-18T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-07-18T00:00:00+00:00" /><meta property="og:site_name" content="[ recursion.wtf ]" />
 
 
 
-</header>
 
-
-  <div class="content">
-    
-<div class="post">
-  <h1 class="post-title">
-    <a href="https://recursion.wtf/posts/rust_schemes/">Elegant and performant recursion in Rust</a></h1>
-  <div class="post-meta">
-    
-      <span class="post-date">
-        2022-07-18 
-      </span>
-    
-    
-    <span class="post-author">:: Inanna Malick</span>
-    
-  </div>
-
-  
-  <span class="post-tags">
-    
-    #<a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
-    
-    #<a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
-    
-    #<a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
-    
-  </span>
-  
-
-  
-  
 
   
 
-  <div class="post-content"><div>
-        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don't need to know anything about that; it's just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
-<h1 id="performance-test-results">Performance test results<a href="#performance-test-results" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>Elegant and performant recursion in Rust</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&rsquo;t need to know anything about that; it&rsquo;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.</p>
+<h1 id="performance-test-results">Performance test results</h1>
 <p>These test results show a performance improvement of 34% for evaluating a very large expression tree (131072 elements, recursive depth 17). They were run on a 6th generation X1 carbon laptop with an Intel i7-8550U with 8MB CPU cache:</p>
-<pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
-                        time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
-
-<font color="#A6CC70">Evaluate expression tree of depth 17 with my new collapse_layers method</font>                                                                            
-                        time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
-</pre>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>The same tests, when run on an AMD Ryzen 9 3900X CPU with more than 64MB total cache (L1/L2/L3), still show a 14% speed improvement over the usual method.</p>
-<pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard method</font>                                                                            
-                        time:   [295.76 µs <font color="#77A8D9"><b>295.89 µs</b></font> 296.03 µs]
-
-<font color="#A6CC70">Evaluate expression tree of depth 17 with my new collapse_layers method</font>                                                                            
-                        time:   [250.96 µs <font color="#77A8D9"><b>251.12 µs</b></font> 251.31 µs]
-</pre>
-<h1 id="evaluating-an-expression-language">Evaluating an expression language<a href="#evaluating-an-expression-language" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>We're going to start with a simple expression language: addition, subtraction, multiplication – just enough to illustrate some concepts. You've probably seen something like this before, but if not, it's just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone)]</span>
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprBoxed</span> {
-    Add {
-        a: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
-        b: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
-    },
-    Sub {
-        a: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
-        b: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
-    },
-    Mul {
-        a: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
-        b: Box<span style="color:#f92672">&lt;</span>ExprBoxed<span style="color:#f92672">&gt;</span>,
-    },
-    LiteralInt {
-        literal: <span style="color:#66d9ef">i64</span>,
-    },
-}
-</code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you're not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. (If you're curious, there's <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>)</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h1 id="evaluating-an-expression-language">Evaluating an expression language</h1>
+<p>We&rsquo;re going to start with a simple expression language: addition, subtraction, multiplication – just enough to illustrate some concepts. You&rsquo;ve probably seen something like this before, but if not, it&rsquo;s just a way to represent simple arithmetic as a tree of expressions. For example, an expression like <code>1 * (2 - 3)</code> would be written as (pseudocode) <code>Mul(1, Sub(2, 3))</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#9893a5">#[derive(Debug, Clone)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">enum</span> <span style="color:#56949f">ExprBoxed</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Add</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">literal</span>: <span style="color:#286983">i64</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>This is a recursive expression language that uses boxed pointers to handle the recursive case. If you&rsquo;re not familiar with boxed pointers, a <code>Box&lt;A&gt;</code> is just the Rust way of storing a pointer to some value of type <code>A</code> - think of it as a box with a value of type <code>A</code> inside it. (If you&rsquo;re curious, there&rsquo;s <a href="https://doc.rust-lang.org/std/boxed/index.html">more documentation here</a>)</p>
 <p>Using this data structure, we can write <code>Mul(1, Sub(2, 3))</code> as:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">ExprBoxed::Mul {
-    a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">1</span> }),
-    b: Box::new(ExprBoxed::Sub {
-        a: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">2</span> }),
-        b: Box::new(ExprBoxed::LiteralInt { literal: <span style="color:#ae81ff">3</span> }),
-    }),
-}
-</code></pre></div><p>Evaluating expressions is pretty simple - it's just addition, subtraction, and multiplication. This recursive eval function provides a fairly elegant and readable example of a recursive algorithm:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprBoxed {
-    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(<span style="color:#f92672">&amp;</span>self) -&gt; <span style="color:#66d9ef">i64</span> {
-        <span style="color:#66d9ef">match</span> <span style="color:#f92672">&amp;</span>self {
-            ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> a.eval() <span style="color:#f92672">+</span> b.eval(),
-            ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> a.eval() <span style="color:#f92672">-</span> b.eval(),
-            ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> a.eval() <span style="color:#f92672">*</span> b.eval(),
-            ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> <span style="color:#f92672">*</span>literal,
-        }
-    }
-}
-</code></pre></div><p>This algorithm has some issues:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#ea9d34">1</span> <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#ea9d34">2</span> <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#ea9d34">3</span> <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>Evaluating expressions is pretty simple - it&rsquo;s just addition, subtraction, and multiplication. This recursive eval function provides a fairly elegant and readable example of a recursive algorithm:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprBoxed</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">eval</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#d7827e">self</span><span style="color:#797593">)</span> -&gt; <span style="color:#286983">i64</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">match</span> <span style="color:#797593">&amp;</span><span style="color:#d7827e">self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">()</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">(),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">()</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">(),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">()</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">(),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#797593">*</span><span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>This algorithm has some issues:</p>
 <ul>
-<li>If we try to evaluate a sufficiently large expression it will fail with a stack overflow - we're not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
-<li>Each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can't take advantage of cache locality - there's no guarantee that all these boxed pointers live in the same region of memory. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
+<li>If we try to evaluate a sufficiently large expression it will fail with a stack overflow - we&rsquo;re not likely to hit that case here, but this is a real problem when working with larger recursive data structures.</li>
+<li>Each recursive <code>eval</code> call requires us to traverse a boxed pointer. This means we can&rsquo;t take advantage of cache locality - there&rsquo;s no guarantee that all these boxed pointers live in the same region of memory. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
 </ul>
-<h2 id="a-more-cache-local-structure">A more cache-local structure<a href="#a-more-cache-local-structure" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="a-more-cache-local-structure">A more cache-local structure</h2>
 <p>We can fix that by writing an expression language using a Vec of individual expression nodes (guaranteeing memory locality), with boxed pointers replaced with newtype-wrapped vector indices.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">#[derive(Debug, Clone, Copy)]</span>
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
-    Add { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
-    Sub { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
-    Mul { a: <span style="color:#a6e22e">A</span>, b: <span style="color:#a6e22e">A</span> },
-    LiteralInt { literal: <span style="color:#66d9ef">i64</span> },
-}
-
-<span style="color:#75715e">#[derive(Eq, Hash, PartialEq)]</span>
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExprIdx</span>(<span style="color:#66d9ef">usize</span>);
-<span style="color:#66d9ef">impl</span> ExprIdx {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">head</span>() -&gt; <span style="color:#a6e22e">Self</span> {
-        ExprIdx(<span style="color:#ae81ff">0</span>)
-    }
-}
-
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExprTopo</span> {
-    <span style="color:#75715e">// nonempty, in topological-sorted order. guaranteed via construction.
-</span><span style="color:#75715e"></span>    elems: Vec<span style="color:#f92672">&lt;</span>ExprLayer<span style="color:#f92672">&lt;</span>ExprIdx<span style="color:#f92672">&gt;&gt;</span>,
-}
-</code></pre></div><p>You might have noticed that we have used a generic parameter <code>A</code> rather than simply writing <code>ExprLayer&lt;ExprIdx&gt;</code>. Put a pin in that for now, we'll come back to that soon.</p>
-<p>All our expressions are now guaranteed to be stored in local memory. Here's a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
-<pre><code>[
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#9893a5">#[derive(Debug, Clone, Copy)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">enum</span> <span style="color:#56949f">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">A</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">A</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">A</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#286983">i64</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#9893a5">#[derive(Eq, Hash, PartialEq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">struct</span> <span style="color:#56949f">ExprIdx</span><span style="color:#797593">(</span><span style="color:#286983">usize</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprIdx</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">head</span><span style="color:#797593">()</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">ExprIdx</span><span style="color:#797593">(</span><span style="color:#ea9d34">0</span><span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">struct</span> <span style="color:#56949f">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#9893a5">// nonempty, in topological-sorted order. guaranteed via construction.
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>    <span style="color:#d7827e">elems</span>: <span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">ExprIdx</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>You might have noticed that we have used a generic parameter <code>A</code> rather than simply writing <code>ExprLayer&lt;ExprIdx&gt;</code>. Put a pin in that for now, we&rsquo;ll come back to that soon.</p>
+<p>All our expressions are now guaranteed to be stored in local memory. Here&rsquo;s a sketch showing what the <code>Mul(1, Sub(2, 3))</code> expression would look like using this data structure.</p>
+<pre tabindex="0"><code>[
 idx_0:    Mul(idx_1, idx_2)
 idx_1:    LiteralInt(1)
 idx_2:    Sub(idx_3, idx_4)
 idx_3:    LiteralInt(2)
 idx_4:    LiteralInt(3)
 ]
-</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. To evaluate an <code>ExprTopo</code>, we can perform bottom up recursion: collapse leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> structure has been collpased into a single value. Since it's topologically sorted, we can do this by iterating over the element vector in reverse order.</p>
-<p>Let's see what evaluating this structure looks like in practice. It's not elegant. There's a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in benchmarks. Feel free to skim; in the next section we'll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
-        <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
-
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span>::uninit())
-            .take(self.elems.len())
-            .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
-
-        <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">get_result_unsafe</span>(results: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> Vec<span style="color:#f92672">&lt;</span>MaybeUninit<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;&gt;</span>, idx: <span style="color:#a6e22e">ExprIdx</span>) -&gt; <span style="color:#66d9ef">i64</span> {
-            <span style="color:#66d9ef">unsafe</span> {
-                <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                    std::mem::replace(results.get_unchecked_mut(idx.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-                maybe_uninit.assume_init()
-            }
-        }
-
-        <span style="color:#66d9ef">for</span> (idx, node) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> {
-                <span style="color:#75715e">// each node is only referenced once so just remove it, also we know it&#39;s there so unsafe is fine
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">match</span> node {
-                    ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> {
-                        <span style="color:#66d9ef">let</span> a <span style="color:#f92672">=</span> get_result_unsafe(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> results, a);
-                        <span style="color:#66d9ef">let</span> b <span style="color:#f92672">=</span> get_result_unsafe(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> results, b);
-                        a <span style="color:#f92672">+</span> b
-                    }
-                    ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> {
-                        <span style="color:#66d9ef">let</span> a <span style="color:#f92672">=</span> get_result_unsafe(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> results, a);
-                        <span style="color:#66d9ef">let</span> b <span style="color:#f92672">=</span> get_result_unsafe(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> results, b);
-                        a <span style="color:#f92672">-</span> b
-                    }
-                    ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> {
-                        <span style="color:#66d9ef">let</span> a <span style="color:#f92672">=</span> get_result_unsafe(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> results, a);
-                        <span style="color:#66d9ef">let</span> b <span style="color:#f92672">=</span> get_result_unsafe(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> results, b);
-                        a <span style="color:#f92672">*</span> b
-                    }
-                    ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-                }
-            };
-            results[idx].write(result);
-        }
-
-        <span style="color:#66d9ef">unsafe</span> {
-            <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                std::mem::replace(results.get_unchecked_mut(<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-            maybe_uninit.assume_init()
-        }
-    }
-}
-</code></pre></div><p>The problem here is that this is very difficult to read and write. Imagine having to write all of this by hand, for each recursive function. It would be tedious at best and error prone at worst.</p>
-<h2 id="factoring-out-duplicated-code">Factoring out duplicated code<a href="#factoring-out-duplicated-code" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+</code></pre><p>The nodes are stored in <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological order</a>, which means that for each node, all of its child nodes are stored at larger indices. To evaluate an <code>ExprTopo</code>, we can perform bottom up recursion: collapse leaf values into their parents, one <code>ExprLayer</code> at a time, until the entire <code>ExprTopo</code> structure has been collpased into a single value. Since it&rsquo;s topologically sorted, we can do this by iterating over the element vector in reverse order.</p>
+<p>Let&rsquo;s see what evaluating this structure looks like in practice. It&rsquo;s not elegant. There&rsquo;s a bunch of <code>unsafe</code> code, but it <em>does</em> have better performance in benchmarks. Feel free to skim; in the next section we&rsquo;ll introduce an elegant API that removes the need to write <code>unsafe</code> code.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">eval</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">)</span> -&gt; <span style="color:#286983">i64</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">use</span> <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">MaybeUninit</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">results</span> <span style="color:#797593">=</span> <span style="color:#d7827e">std</span>::<span style="color:#d7827e">iter</span>::<span style="color:#d7827e">repeat_with</span><span style="color:#797593">(</span><span style="color:#797593">||</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#797593">&lt;</span><span style="color:#286983">i64</span><span style="color:#797593">&gt;</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">.</span><span style="color:#d7827e">take</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">.</span><span style="color:#d7827e">collect</span>::<span style="color:#797593">&lt;</span><span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">_</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">fn</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span>: <span style="color:#286983">&amp;</span><span style="color:#56949f">mut</span> <span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">MaybeUninit</span><span style="color:#797593">&lt;</span><span style="color:#286983">i64</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">,</span> <span style="color:#d7827e">idx</span>: <span style="color:#56949f">ExprIdx</span><span style="color:#797593">)</span> -&gt; <span style="color:#286983">i64</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">unsafe</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#d7827e">maybe_uninit</span> <span style="color:#797593">=</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">replace</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span><span style="color:#797593">.</span><span style="color:#d7827e">get_unchecked_mut</span><span style="color:#797593">(</span><span style="color:#d7827e">idx</span><span style="color:#797593">.</span><span style="color:#ea9d34">0</span><span style="color:#797593">),</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">maybe_uninit</span><span style="color:#797593">.</span><span style="color:#d7827e">assume_init</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">for</span> <span style="color:#797593">(</span><span style="color:#d7827e">idx</span><span style="color:#797593">,</span> <span style="color:#d7827e">node</span><span style="color:#797593">)</span> <span style="color:#286983">in</span> <span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">into_iter</span><span style="color:#797593">().</span><span style="color:#d7827e">enumerate</span><span style="color:#797593">().</span><span style="color:#d7827e">rev</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">result</span> <span style="color:#797593">=</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#9893a5">// each node is only referenced once so just remove it, also we know it&#39;s there so unsafe is fine
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>                <span style="color:#286983">match</span> <span style="color:#d7827e">node</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#286983">let</span> <span style="color:#d7827e">a</span> <span style="color:#797593">=</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#286983">mut</span> <span style="color:#d7827e">results</span><span style="color:#797593">,</span> <span style="color:#d7827e">a</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#286983">let</span> <span style="color:#d7827e">b</span> <span style="color:#797593">=</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#286983">mut</span> <span style="color:#d7827e">results</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#d7827e">a</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#286983">let</span> <span style="color:#d7827e">a</span> <span style="color:#797593">=</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#286983">mut</span> <span style="color:#d7827e">results</span><span style="color:#797593">,</span> <span style="color:#d7827e">a</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#286983">let</span> <span style="color:#d7827e">b</span> <span style="color:#797593">=</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#286983">mut</span> <span style="color:#d7827e">results</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#d7827e">a</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#286983">let</span> <span style="color:#d7827e">a</span> <span style="color:#797593">=</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#286983">mut</span> <span style="color:#d7827e">results</span><span style="color:#797593">,</span> <span style="color:#d7827e">a</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#286983">let</span> <span style="color:#d7827e">b</span> <span style="color:#797593">=</span> <span style="color:#d7827e">get_result_unsafe</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#286983">mut</span> <span style="color:#d7827e">results</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#d7827e">a</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">};</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">results</span><span style="color:#797593">[</span><span style="color:#d7827e">idx</span><span style="color:#797593">].</span><span style="color:#d7827e">write</span><span style="color:#797593">(</span><span style="color:#d7827e">result</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">unsafe</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">maybe_uninit</span> <span style="color:#797593">=</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">replace</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span><span style="color:#797593">.</span><span style="color:#d7827e">get_unchecked_mut</span><span style="color:#797593">(</span><span style="color:#ea9d34">0</span><span style="color:#797593">),</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">maybe_uninit</span><span style="color:#797593">.</span><span style="color:#d7827e">assume_init</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>The problem here is that this is very difficult to read and write. Imagine having to write all of this by hand, for each recursive function. It would be tedious at best and error prone at worst.</p>
+<h2 id="factoring-out-duplicated-code">Factoring out duplicated code</h2>
 <p>Every arm of the above match statement (except for <code>LiteralInt</code>) calls <code>get_result_unsafe</code> in pretty much the same way. We can start by factoring that out.</p>
-<p>Now you can see why we made <code>ExprLayer&lt;A&gt;</code> parameterized over some <code>A</code>. Since it is parameterized over some <code>A</code>, we can apply a function to each <code>A</code> inside it, turning it into an <code>ExprLayer&lt;B&gt;</code>. We're going to write some code that's very similar to <code>Option::map</code> in the standard library.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> {
-    <span style="color:#75715e">#[inline(always)]</span>
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">&lt;</span>B, F: FnMut(A) -&gt; <span style="color:#a6e22e">B</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> f: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> {
-        <span style="color:#66d9ef">match</span> self {
-            ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a: <span style="color:#a6e22e">f</span>(a), b: <span style="color:#a6e22e">f</span>(b) },
-            ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a: <span style="color:#a6e22e">f</span>(a), b: <span style="color:#a6e22e">f</span>(b) },
-            ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a: <span style="color:#a6e22e">f</span>(a), b: <span style="color:#a6e22e">f</span>(b) },
-            ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal },
-        }
-    }
-}
-</code></pre></div><p>If you're familiar with functional languages, this is basically just <code>fmap</code>.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+<p>Now you can see why we made <code>ExprLayer&lt;A&gt;</code> parameterized over some <code>A</code>. Since it is parameterized over some <code>A</code>, we can apply a function to each <code>A</code> inside it, turning it into an <code>ExprLayer&lt;B&gt;</code>. We&rsquo;re going to write some code that&rsquo;s very similar to <code>Option::map</code> in the standard library.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span> <span style="color:#d7827e">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#9893a5">#[inline(always)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">map</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">B</span><span style="color:#797593">,</span> <span style="color:#d7827e">F</span>: <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">A</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">B</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">,</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">f</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">B</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">match</span> <span style="color:#d7827e">self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">f</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">),</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">f</span><span style="color:#797593">(</span><span style="color:#d7827e">b</span><span style="color:#797593">)</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">f</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">),</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">f</span><span style="color:#797593">(</span><span style="color:#d7827e">b</span><span style="color:#797593">)</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span>: <span style="color:#56949f">f</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">),</span> <span style="color:#d7827e">b</span>: <span style="color:#56949f">f</span><span style="color:#797593">(</span><span style="color:#d7827e">b</span><span style="color:#797593">)</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>If you&rsquo;re familiar with functional languages, this is basically just <code>fmap</code>.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <p>Now, we can write something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
-        <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
-
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span>::uninit())
-            .take(self.elems.len())
-            .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
-
-
-        <span style="color:#66d9ef">for</span> (idx, layer) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> layer: <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>idx<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
-                <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                    std::mem::replace(results.get_unchecked_mut(idx.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-                maybe_uninit.assume_init()
-            });
-
-            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> layer {
-                ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
-                ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
-                ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
-                ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-            };
-            results[idx].write(result);
-        }
-
-        <span style="color:#66d9ef">unsafe</span> {
-            <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                std::mem::replace(results.get_unchecked_mut(ExprIdx::head().<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-            maybe_uninit.assume_init()
-        }
-    }
-}
-</code></pre></div><h2 id="making-it-generic">Making it generic<a href="#making-it-generic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>Ok, that's a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> layer {
-    ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b
-    ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b
-    ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b
-    ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-}
-</code></pre></div><p>This code takes  <code>layer</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>result</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">eval</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">)</span> -&gt; <span style="color:#286983">i64</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">use</span> <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">MaybeUninit</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">results</span> <span style="color:#797593">=</span> <span style="color:#d7827e">std</span>::<span style="color:#d7827e">iter</span>::<span style="color:#d7827e">repeat_with</span><span style="color:#797593">(</span><span style="color:#797593">||</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#797593">&lt;</span><span style="color:#286983">i64</span><span style="color:#797593">&gt;</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">.</span><span style="color:#d7827e">take</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">.</span><span style="color:#d7827e">collect</span>::<span style="color:#797593">&lt;</span><span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">_</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">for</span> <span style="color:#797593">(</span><span style="color:#d7827e">idx</span><span style="color:#797593">,</span> <span style="color:#d7827e">layer</span><span style="color:#797593">)</span> <span style="color:#286983">in</span> <span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">into_iter</span><span style="color:#797593">().</span><span style="color:#d7827e">enumerate</span><span style="color:#797593">().</span><span style="color:#d7827e">rev</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span>: <span style="color:#56949f">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#286983">i64</span><span style="color:#797593">&gt;</span> <span style="color:#797593">=</span> <span style="color:#d7827e">layer</span><span style="color:#797593">.</span><span style="color:#d7827e">map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">idx</span><span style="color:#797593">|</span> <span style="color:#286983">unsafe</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#d7827e">maybe_uninit</span> <span style="color:#797593">=</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">replace</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span><span style="color:#797593">.</span><span style="color:#d7827e">get_unchecked_mut</span><span style="color:#797593">(</span><span style="color:#d7827e">idx</span><span style="color:#797593">.</span><span style="color:#ea9d34">0</span><span style="color:#797593">),</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">maybe_uninit</span><span style="color:#797593">.</span><span style="color:#d7827e">assume_init</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">result</span> <span style="color:#797593">=</span> <span style="color:#286983">match</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">};</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">results</span><span style="color:#797593">[</span><span style="color:#d7827e">idx</span><span style="color:#797593">].</span><span style="color:#d7827e">write</span><span style="color:#797593">(</span><span style="color:#d7827e">result</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">unsafe</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">maybe_uninit</span> <span style="color:#797593">=</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">replace</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span><span style="color:#797593">.</span><span style="color:#d7827e">get_unchecked_mut</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprIdx</span>::<span style="color:#d7827e">head</span><span style="color:#797593">().</span><span style="color:#ea9d34">0</span><span style="color:#797593">),</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">maybe_uninit</span><span style="color:#797593">.</span><span style="color:#d7827e">assume_init</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><h2 id="making-it-generic">Making it generic</h2>
+<p>Ok, that&rsquo;s a start. Unfortunately, we still have to write all this boilerplate for <em>every recursive function</em>, even though the only part that really matters is this block:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">let</span> <span style="color:#d7827e">result</span> <span style="color:#797593">=</span> <span style="color:#286983">match</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>This code takes  <code>layer</code>, a value of type <code>ExprLayer&lt;i64&gt;</code>, and consumes it to create <code>result</code>, a value of type <code>i64</code>. What if, instead of <code>ExprLayer&lt;i64&gt; -&gt; i64</code>, we use a function of type <code>ExprLayer&lt;A&gt; -&gt; A</code>?</p>
 <p>This function lets us provide an arbitrary function of type <code>ExprLayer&lt;A&gt; -&gt; A</code> and uses it to collapse all the layers in an <code>ExprTopo</code> structure into a single value:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">collapse_layers</span><span style="color:#f92672">&lt;</span>F: FnMut(ExprLayer<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>) -&gt; <span style="color:#a6e22e">A</span><span style="color:#f92672">&gt;</span>(self, <span style="color:#66d9ef">mut</span> collapse_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">A</span> {
-        <span style="color:#66d9ef">use</span> std::mem::MaybeUninit;
-
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> results <span style="color:#f92672">=</span> std::iter::repeat_with(<span style="color:#f92672">||</span> MaybeUninit::<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span>::uninit())
-            .take(self.elems.len())
-            .collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
-
-        <span style="color:#66d9ef">for</span> (idx, layer) <span style="color:#66d9ef">in</span> self.elems.into_iter().enumerate().rev() {
-            <span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> {
-                <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> <span style="color:#66d9ef">unsafe</span> {
-                    <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                        std::mem::replace(results.get_unchecked_mut(x.<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-                    maybe_uninit.assume_init()
-                });
-                collapse_layer(layer)
-            };
-            results[idx].write(result);
-        }
-
-        <span style="color:#66d9ef">unsafe</span> {
-            <span style="color:#66d9ef">let</span> maybe_uninit <span style="color:#f92672">=</span>
-                std::mem::replace(results.get_unchecked_mut(ExprIdx::head().<span style="color:#ae81ff">0</span>), MaybeUninit::uninit());
-            maybe_uninit.assume_init()
-        }
-    }
-}
-</code></pre></div><p>Nice. Now we can write:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(self) -&gt; <span style="color:#66d9ef">i64</span> {
-        self.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> expr {
-            ExprLayer::Add { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">+</span> b,
-            ExprLayer::Sub { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">-</span> b,
-            ExprLayer::Mul { a, b } <span style="color:#f92672">=&gt;</span> a <span style="color:#f92672">*</span> b,
-            ExprLayer::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> literal,
-        })
-    }
-}
-</code></pre></div><p>It's pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there's less boilerplate, it's easier to review and there's less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it's both more elegant and more performant than the traditional representation of recursive expression trees in rust.</p>
-<h1 id="constructing-exprs">Constructing Exprs<a href="#constructing-exprs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>Let's write a function to build an <code>ExprTopo</code> value from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we'll be abstracting over the specifics just like we did with <code>collapse_layers</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_boxed</span>(seed: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;&amp;</span>ExprBoxed<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> VecDeque::from([seed]);
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
-
-        <span style="color:#75715e">// expand layers to build a vec of elems while preserving topo order
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> { frontier.pop_front() } {
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
-                ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
-                ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
-                ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
-                ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
-            };
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
-                frontier.push_back(seed);
-                <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
-</span><span style="color:#75715e"></span>                ExprIdx(elems.len() <span style="color:#f92672">+</span> frontier.len())
-            });
-
-            elems.push(layer);
-        }
-
-        Self { elems }
-    }
-}
-</code></pre></div><h2 id="making-it-generic-1">Making it generic<a href="#making-it-generic-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">collapse_layers</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">F</span>: <span style="color:#d7827e">FnMut</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">A</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">,</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">collapse_layer</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">A</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">use</span> <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">MaybeUninit</span><span style="color:#797593">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">results</span> <span style="color:#797593">=</span> <span style="color:#d7827e">std</span>::<span style="color:#d7827e">iter</span>::<span style="color:#d7827e">repeat_with</span><span style="color:#797593">(</span><span style="color:#797593">||</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">.</span><span style="color:#d7827e">take</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">.</span><span style="color:#d7827e">collect</span>::<span style="color:#797593">&lt;</span><span style="color:#d7827e">Vec</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">_</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">for</span> <span style="color:#797593">(</span><span style="color:#d7827e">idx</span><span style="color:#797593">,</span> <span style="color:#d7827e">layer</span><span style="color:#797593">)</span> <span style="color:#286983">in</span> <span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">into_iter</span><span style="color:#797593">().</span><span style="color:#d7827e">enumerate</span><span style="color:#797593">().</span><span style="color:#d7827e">rev</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">result</span> <span style="color:#797593">=</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">layer</span><span style="color:#797593">.</span><span style="color:#d7827e">map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">x</span><span style="color:#797593">|</span> <span style="color:#286983">unsafe</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#286983">let</span> <span style="color:#d7827e">maybe_uninit</span> <span style="color:#797593">=</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">replace</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span><span style="color:#797593">.</span><span style="color:#d7827e">get_unchecked_mut</span><span style="color:#797593">(</span><span style="color:#d7827e">x</span><span style="color:#797593">.</span><span style="color:#ea9d34">0</span><span style="color:#797593">),</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">maybe_uninit</span><span style="color:#797593">.</span><span style="color:#d7827e">assume_init</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">collapse_layer</span><span style="color:#797593">(</span><span style="color:#d7827e">layer</span><span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">};</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">results</span><span style="color:#797593">[</span><span style="color:#d7827e">idx</span><span style="color:#797593">].</span><span style="color:#d7827e">write</span><span style="color:#797593">(</span><span style="color:#d7827e">result</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">unsafe</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">maybe_uninit</span> <span style="color:#797593">=</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">std</span>::<span style="color:#d7827e">mem</span>::<span style="color:#d7827e">replace</span><span style="color:#797593">(</span><span style="color:#d7827e">results</span><span style="color:#797593">.</span><span style="color:#d7827e">get_unchecked_mut</span><span style="color:#797593">(</span><span style="color:#d7827e">ExprIdx</span>::<span style="color:#d7827e">head</span><span style="color:#797593">().</span><span style="color:#ea9d34">0</span><span style="color:#797593">),</span> <span style="color:#d7827e">MaybeUninit</span>::<span style="color:#d7827e">uninit</span><span style="color:#797593">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">maybe_uninit</span><span style="color:#797593">.</span><span style="color:#d7827e">assume_init</span><span style="color:#797593">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>Nice. Now we can write:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">eval</span><span style="color:#797593">(</span><span style="color:#d7827e">self</span><span style="color:#797593">)</span> -&gt; <span style="color:#286983">i64</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">self</span><span style="color:#797593">.</span><span style="color:#d7827e">collapse_layers</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">expr</span><span style="color:#797593">|</span> <span style="color:#286983">match</span> <span style="color:#d7827e">expr</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">+</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">-</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">a</span> <span style="color:#797593">*</span> <span style="color:#d7827e">b</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">literal</span><span style="color:#797593">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">})</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>It&rsquo;s pretty much the same logic as the original <code>eval</code> functions, without any of the boilerplate. Since there&rsquo;s less boilerplate, it&rsquo;s easier to review and there&rsquo;s less room for bugs. Also, it retains all the performance benefits of the previous <code>eval</code> implementation - it&rsquo;s both more elegant and more performant than the traditional representation of recursive expression trees in rust.</p>
+<h1 id="constructing-exprs">Constructing Exprs</h1>
+<p>Let&rsquo;s write a function to build an <code>ExprTopo</code> value from the <code>ExprBoxed</code> representation. Just as before, <code>map</code> helps us keep it concise. Feel free to skim this one too, we&rsquo;ll be abstracting over the specifics just like we did with <code>collapse_layers</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">from_boxed</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span>: <span style="color:#286983">&amp;</span><span style="color:#56949f">ExprBoxed</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">frontier</span>: <span style="color:#56949f">VecDeque</span><span style="color:#797593">&lt;&amp;</span><span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span> <span style="color:#797593">=</span> <span style="color:#d7827e">VecDeque</span>::<span style="color:#d7827e">from</span><span style="color:#797593">([</span><span style="color:#d7827e">seed</span><span style="color:#797593">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">elems</span> <span style="color:#797593">=</span> <span style="color:#d7827e">vec!</span><span style="color:#797593">[];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#9893a5">// expand layers to build a vec of elems while preserving topo order
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#286983">while</span> <span style="color:#286983">let</span> <span style="color:#d7827e">Some</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">)</span> <span style="color:#797593">=</span> <span style="color:#797593">{</span> <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">pop_front</span><span style="color:#797593">()</span> <span style="color:#797593">}</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#286983">match</span> <span style="color:#d7827e">seed</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#797593">*</span><span style="color:#d7827e">literal</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">};</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">layer</span><span style="color:#797593">.</span><span style="color:#d7827e">map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">seed</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">push_back</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#9893a5">// idx of pointed-to element determined from frontier + elems size
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>                <span style="color:#d7827e">ExprIdx</span><span style="color:#797593">(</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">()</span> <span style="color:#797593">+</span> <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">layer</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Self</span> <span style="color:#797593">{</span> <span style="color:#d7827e">elems</span> <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><h2 id="making-it-generic-1">Making it generic</h2>
 <p>Just as with <code>collapse_layers</code>, we only really care about the <code>match</code> expression here:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> seed {
-    ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
-    ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
-    ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
-    ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
-};
-</code></pre></div><p>This matches on <code>seed</code>, a value of type <code>&amp;ExprBoxed</code>, and consumes it to create <code>layer</code>, a value of type <code>ExprLayer&lt;i64ExprBoxed&gt;</code>. What if, instead of <code>i64ExprBoxed -&gt; ExprLayer&lt;i64ExprBoxed&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#286983">match</span> <span style="color:#d7827e">seed</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#797593">*</span><span style="color:#d7827e">literal</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">};</span>
+</span></span></code></pre></div><p>This matches on <code>seed</code>, a value of type <code>&amp;ExprBoxed</code>, and consumes it to create <code>layer</code>, a value of type <code>ExprLayer&lt;i64ExprBoxed&gt;</code>. What if, instead of <code>i64ExprBoxed -&gt; ExprLayer&lt;i64ExprBoxed&gt;</code>, we use a function of type <code>A -&gt; ExprLayer&lt;A&gt;</code>?</p>
 <p>Fortunately, just as with <code>collapse_layers</code>, we can separate the machinery of recursion from the actual recursive (or, in this case, co-recursive) logic.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_layers</span><span style="color:#f92672">&lt;</span>A, F: Fn(A) -&gt; <span style="color:#a6e22e">ExprLayer</span><span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;&gt;</span>(seed: <span style="color:#a6e22e">A</span>, expand_layer: <span style="color:#a6e22e">F</span>) -&gt; <span style="color:#a6e22e">Self</span> {
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> frontier <span style="color:#f92672">=</span> VecDeque::from([seed]);
-        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> elems <span style="color:#f92672">=</span> vec<span style="color:#f92672">!</span>[];
-
-        <span style="color:#75715e">// repeatedly expand layers to build a vec of elems while preserving topo order
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(seed) <span style="color:#f92672">=</span> frontier.pop_front() {
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> expand_layer(seed);
-
-            <span style="color:#66d9ef">let</span> layer <span style="color:#f92672">=</span> layer.map(<span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> {
-                frontier.push_back(seed);
-                <span style="color:#75715e">// idx of pointed-to element determined from frontier + elems size
-</span><span style="color:#75715e"></span>                ExprIdx(elems.len() <span style="color:#f92672">+</span> frontier.len())
-            });
-
-            elems.push(layer);
-        }
-
-        Self { elems }
-    }
-}
-</code></pre></div><p>This lets us write <code>from_boxed</code> as:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">impl</span> ExprTopo {
-    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">from_boxed</span>(ast: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">Self</span> {
-        Self::expand_layers(ast, <span style="color:#f92672">|</span>seed<span style="color:#f92672">|</span> <span style="color:#66d9ef">match</span> seed {
-            ExprBoxed::Add { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Add { a, b },
-            ExprBoxed::Sub { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Sub { a, b },
-            ExprBoxed::Mul { a, b } <span style="color:#f92672">=&gt;</span> ExprLayer::Mul { a, b },
-            ExprBoxed::LiteralInt { literal } <span style="color:#f92672">=&gt;</span> ExprLayer::LiteralInt { literal: <span style="color:#f92672">*</span>literal },
-        })
-    }
-}
-</code></pre></div><p>Nice and, as promised, elegant.</p>
-<h1 id="testing-for-correctness">Testing for Correctness<a href="#testing-for-correctness" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">expand_layers</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">F</span>: <span style="color:#d7827e">Fn</span><span style="color:#797593">(</span><span style="color:#d7827e">A</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">ExprLayer</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;&gt;</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span>: <span style="color:#56949f">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">expand_layer</span>: <span style="color:#56949f">F</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">frontier</span> <span style="color:#797593">=</span> <span style="color:#d7827e">VecDeque</span>::<span style="color:#d7827e">from</span><span style="color:#797593">([</span><span style="color:#d7827e">seed</span><span style="color:#797593">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#286983">mut</span> <span style="color:#d7827e">elems</span> <span style="color:#797593">=</span> <span style="color:#d7827e">vec!</span><span style="color:#797593">[];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#9893a5">// repeatedly expand layers to build a vec of elems while preserving topo order
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#286983">while</span> <span style="color:#286983">let</span> <span style="color:#d7827e">Some</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">)</span> <span style="color:#797593">=</span> <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">pop_front</span><span style="color:#797593">()</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">expand_layer</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#286983">let</span> <span style="color:#d7827e">layer</span> <span style="color:#797593">=</span> <span style="color:#d7827e">layer</span><span style="color:#797593">.</span><span style="color:#d7827e">map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">seed</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">push_back</span><span style="color:#797593">(</span><span style="color:#d7827e">seed</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#9893a5">// idx of pointed-to element determined from frontier + elems size
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>                <span style="color:#d7827e">ExprIdx</span><span style="color:#797593">(</span><span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">()</span> <span style="color:#797593">+</span> <span style="color:#d7827e">frontier</span><span style="color:#797593">.</span><span style="color:#d7827e">len</span><span style="color:#797593">())</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">elems</span><span style="color:#797593">.</span><span style="color:#d7827e">push</span><span style="color:#797593">(</span><span style="color:#d7827e">layer</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Self</span> <span style="color:#797593">{</span> <span style="color:#d7827e">elems</span> <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>This lets us write <code>from_boxed</code> as:</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">impl</span> <span style="color:#d7827e">ExprTopo</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">from_boxed</span><span style="color:#797593">(</span><span style="color:#d7827e">ast</span>: <span style="color:#286983">&amp;</span><span style="color:#56949f">ExprBoxed</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Self</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">Self</span>::<span style="color:#d7827e">expand_layers</span><span style="color:#797593">(</span><span style="color:#d7827e">ast</span><span style="color:#797593">,</span> <span style="color:#797593">|</span><span style="color:#d7827e">seed</span><span style="color:#797593">|</span> <span style="color:#286983">match</span> <span style="color:#d7827e">seed</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span> <span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span> <span style="color:#797593">}</span> <span style="color:#797593">=&gt;</span> <span style="color:#d7827e">ExprLayer</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#797593">*</span><span style="color:#d7827e">literal</span> <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">})</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><p>Nice and, as promised, elegant.</p>
+<h1 id="testing-for-correctness">Testing for Correctness</h1>
 <p>I used <a href="https://lib.rs/crates/proptest">proptest</a> to test this code for correctness. It generates many expression trees, each of which is evaluated via both <code>eval</code> methods. I then assert that they have the same result. <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>This actually helped me find a bug! In my first implementation of <code>expand</code>, I used a stack instead of a queue for the frontier, which ended up mangling the order of the expression tree. Since proptest is awesome, it not only found this bug but reduced the failing test case to <code>Add (0, Sub(0, 1))</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// generate a bunch of expression trees and evaluate them via each method
-</span><span style="color:#75715e"></span><span style="color:#75715e">#[cfg(test)]</span>
-proptest<span style="color:#f92672">!</span> {
-    <span style="color:#75715e">#[test]</span>
-    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expr_eval</span>(boxed_expr <span style="color:#66d9ef">in</span> arb_expr()) {
-        <span style="color:#66d9ef">let</span> eval_boxed <span style="color:#f92672">=</span> boxed_expr.eval();
-        <span style="color:#66d9ef">let</span> eval_via_collapse <span style="color:#f92672">=</span> ExprTopo::from_boxed(<span style="color:#f92672">&amp;</span>boxed_expr).eval();
-
-        assert_eq<span style="color:#f92672">!</span>(eval_boxed, eval_via_collapse);
-    }
-}
-
-<span style="color:#75715e">#[cfg(test)]</span>
-<span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">arb_expr</span>() -&gt; <span style="color:#a6e22e">impl</span> Strategy<span style="color:#f92672">&lt;</span>Value <span style="color:#f92672">=</span> ExprBoxed<span style="color:#f92672">&gt;</span> {
-    <span style="color:#66d9ef">let</span> leaf <span style="color:#f92672">=</span> any::<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i8</span><span style="color:#f92672">&gt;</span>().prop_map(<span style="color:#f92672">|</span>x<span style="color:#f92672">|</span> ExprBoxed::LiteralInt { literal: <span style="color:#a6e22e">x</span> <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i64</span> });
-    leaf.prop_recursive(
-        <span style="color:#ae81ff">8</span>,   <span style="color:#75715e">// 8 levels deep
-</span><span style="color:#75715e"></span>        <span style="color:#ae81ff">256</span>, <span style="color:#75715e">// Shoot for maximum size of 256 nodes
-</span><span style="color:#75715e"></span>        <span style="color:#ae81ff">10</span>,  <span style="color:#75715e">// We put up to 10 items per collection
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">|</span>inner<span style="color:#f92672">|</span> {
-            prop_oneof<span style="color:#f92672">!</span>[
-                (inner.clone(), inner.clone()).prop_map(<span style="color:#f92672">|</span>(a, b)<span style="color:#f92672">|</span> ExprBoxed::Add {
-                    a: Box::new(a),
-                    b: Box::new(b)
-                }),
-                (inner.clone(), inner.clone()).prop_map(<span style="color:#f92672">|</span>(a, b)<span style="color:#f92672">|</span> ExprBoxed::Sub {
-                    a: Box::new(a),
-                    b: Box::new(b)
-                }),
-                (inner.clone(), inner).prop_map(<span style="color:#f92672">|</span>(a, b)<span style="color:#f92672">|</span> ExprBoxed::Mul {
-                    a: Box::new(a),
-                    b: Box::new(b)
-                }),
-            ]
-        },
-    )
-}
-</code></pre></div><h1 id="testing-for-performance">Testing for performance<a href="#testing-for-performance" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using <code>expand</code>/<code>collapse</code>, because they're honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/f9fd5cf52f0fd486ead3d140c0fc40c588c4b4e0/benches/expr.rs">defined here</a>.</p>
-<pre><font color="#A6CC70">Evaluate expression tree of depth 17 with standard boxed method</font>                                                                            
-                        time:   [722.18 µs <font color="#77A8D9"><b>733.00 µs</b></font> 746.43 µs]
-
-<font color="#A6CC70">Evaluate expression tree of depth 17 with my collapse_layers method</font>                                                                            
-                        time:   [477.87 µs <font color="#77A8D9"><b>482.54 µs</b></font> 488.58 µs]
-</pre>
-<p>Evaluating a boxed expression of depth 17 takes an average 733 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 482 µs. That's a 34% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly faster for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
-<h1 id="to-be-continued">To be continued<a href="#to-be-continued" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#9893a5">// generate a bunch of expression trees and evaluate them via each method
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span><span style="color:#9893a5">#[cfg(test)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#d7827e">proptest!</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#9893a5">#[test]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">fn</span> <span style="color:#d7827e">expr_eval</span><span style="color:#797593">(</span><span style="color:#d7827e">boxed_expr</span> <span style="color:#286983">in</span> <span style="color:#d7827e">arb_expr</span><span style="color:#797593">())</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#d7827e">eval_boxed</span> <span style="color:#797593">=</span> <span style="color:#d7827e">boxed_expr</span><span style="color:#797593">.</span><span style="color:#d7827e">eval</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#286983">let</span> <span style="color:#d7827e">eval_via_collapse</span> <span style="color:#797593">=</span> <span style="color:#d7827e">ExprTopo</span>::<span style="color:#d7827e">from_boxed</span><span style="color:#797593">(</span><span style="color:#797593">&amp;</span><span style="color:#d7827e">boxed_expr</span><span style="color:#797593">).</span><span style="color:#d7827e">eval</span><span style="color:#797593">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d7827e">assert_eq!</span><span style="color:#797593">(</span><span style="color:#d7827e">eval_boxed</span><span style="color:#797593">,</span> <span style="color:#d7827e">eval_via_collapse</span><span style="color:#797593">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#9893a5">#[cfg(test)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">arb_expr</span><span style="color:#797593">()</span> -&gt; <span style="color:#56949f">impl</span> <span style="color:#d7827e">Strategy</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Value</span> <span style="color:#797593">=</span> <span style="color:#d7827e">ExprBoxed</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#286983">let</span> <span style="color:#d7827e">leaf</span> <span style="color:#797593">=</span> <span style="color:#d7827e">any</span>::<span style="color:#797593">&lt;</span><span style="color:#286983">i8</span><span style="color:#797593">&gt;</span><span style="color:#797593">().</span><span style="color:#d7827e">prop_map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#d7827e">x</span><span style="color:#797593">|</span> <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">LiteralInt</span> <span style="color:#797593">{</span> <span style="color:#d7827e">literal</span>: <span style="color:#56949f">x</span> <span style="color:#286983">as</span> <span style="color:#286983">i64</span> <span style="color:#797593">});</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d7827e">leaf</span><span style="color:#797593">.</span><span style="color:#d7827e">prop_recursive</span><span style="color:#797593">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ea9d34">8</span><span style="color:#797593">,</span>   <span style="color:#9893a5">// 8 levels deep
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#ea9d34">256</span><span style="color:#797593">,</span> <span style="color:#9893a5">// Shoot for maximum size of 256 nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#ea9d34">10</span><span style="color:#797593">,</span>  <span style="color:#9893a5">// We put up to 10 items per collection
+</span></span></span><span style="display:flex;"><span><span style="color:#9893a5"></span>        <span style="color:#797593">|</span><span style="color:#d7827e">inner</span><span style="color:#797593">|</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d7827e">prop_oneof!</span><span style="color:#797593">[</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">(</span><span style="color:#d7827e">inner</span><span style="color:#797593">.</span><span style="color:#d7827e">clone</span><span style="color:#797593">(),</span> <span style="color:#d7827e">inner</span><span style="color:#797593">.</span><span style="color:#d7827e">clone</span><span style="color:#797593">()).</span><span style="color:#d7827e">prop_map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span><span style="color:#797593">)</span><span style="color:#797593">|</span> <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Add</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">),</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">b</span><span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">(</span><span style="color:#d7827e">inner</span><span style="color:#797593">.</span><span style="color:#d7827e">clone</span><span style="color:#797593">(),</span> <span style="color:#d7827e">inner</span><span style="color:#797593">.</span><span style="color:#d7827e">clone</span><span style="color:#797593">()).</span><span style="color:#d7827e">prop_map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span><span style="color:#797593">)</span><span style="color:#797593">|</span> <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Sub</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">),</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">b</span><span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">(</span><span style="color:#d7827e">inner</span><span style="color:#797593">.</span><span style="color:#d7827e">clone</span><span style="color:#797593">(),</span> <span style="color:#d7827e">inner</span><span style="color:#797593">).</span><span style="color:#d7827e">prop_map</span><span style="color:#797593">(</span><span style="color:#797593">|</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">,</span> <span style="color:#d7827e">b</span><span style="color:#797593">)</span><span style="color:#797593">|</span> <span style="color:#d7827e">ExprBoxed</span>::<span style="color:#d7827e">Mul</span> <span style="color:#797593">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">a</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">a</span><span style="color:#797593">),</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#d7827e">b</span>: <span style="color:#d7827e">Box</span>::<span style="color:#d7827e">new</span><span style="color:#797593">(</span><span style="color:#d7827e">b</span><span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#797593">}),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#797593">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#797593">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#797593">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
+</span></span></code></pre></div><h1 id="testing-for-performance">Testing for performance</h1>
+<p>For performance testing, we used <a href="https://github.com/bheisler/criterion.rs">criterion</a> to benchmark the simple <code>ExprBoxed::eval</code> vs <code>ExprTopo::eval</code>. This code basically just builds up a really big (as in, 131072 nodes) recursive structure (using <code>expand</code>/<code>collapse</code>, because they&rsquo;re honestly really convenient) and evaluates it a bunch of times. I also ran this test on recursive structures of other sizes, because graphs are cool. You can find the benchmarks <a href="https://github.com/inanna-malick/rust-schemes/blob/f9fd5cf52f0fd486ead3d140c0fc40c588c4b4e0/benches/expr.rs">defined here</a>.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Evaluating a boxed expression of depth 17 takes an average 733 µs. Evaluating an expression stored in our <code>ExprTopo</code> takes an average of 482 µs. That&rsquo;s a 34% improvement. Running these tests with expression trees of different depths generated via the above method yields similar results. The standard boxed method is slightly faster for expression trees of size 256 or less. That said, this test provides pretty much optimal conditions with regard to pointer locality, because there are no other heap allocations to fragment things and force the boxed pointers to use different regions of memory.</p>
+<h1 id="to-be-continued">To be continued</h1>
 <p>We started with a simplified non-generic version of this algorithm to build understanding. In future blog posts, I plan on showing how I made it generic, going into more detail on how I optimized it for performance (<code>MaybeUninit</code> absolutely slaps, as do stack machines), and how I used it to implement an async file tree search tool using <code>tokio::fs</code>.</p>
-<h1 id="thank-you">Thank you<a href="#thank-you" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h1 id="thank-you">Thank you</h1>
 <p>Thank you to <a href="https://twitter.com/munin">Fiona</a>, <a href="https://twitter.com/sunshowers6">Rain</a>, <a href="https://twitter.com/mycoliza">Eliza</a> and <a href="https://gist.github.com/Gankra">Gankra</a>, among others, for reviewing drafts of this post.</p>
-<h1 id="change-notes">Change notes<a href="#change-notes" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h1 id="change-notes">Change notes</h1>
 <ul>
 <li>07/24/2022: renamed fold/generate to collapse/expand</li>
 </ul>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>If you're not sure what I mean by cache locality, or you want much more information on it than I can provide, there's a great rust performance optimization resource <a href="https://gist.github.com/kvark/f067ba974446f7c5ce5bd544fe370186#keep-as-much-as-possible-in-cache">here</a>. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>If you&rsquo;re not sure what I mean by cache locality, or you want much more information on it than I can provide, there&rsquo;s a great rust performance optimization resource <a href="https://gist.github.com/kvark/f067ba974446f7c5ce5bd544fe370186#keep-as-much-as-possible-in-cache">here</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>If you're not familiar with functional languages and are now wondering what <code>fmap</code> is, it's a method provided by a trait called <code>Functor</code>. It represents the ability to map a function <code>A -&gt; B</code> over <em>some arbitrary structure</em> - if we have a <code>Functor</code> instance for <code>F</code>, then we can map a function over <code>F&lt;A&gt;</code>, for <em>any</em> <code>A</code>.  <code>F</code> could be an option, or a list, or a tree - any structure parameterized over some value. <code>map</code> provides an implementation of <code>fmap</code> (as in _f_unction map) that's specialized to <code>ExprLayer</code>. If you're curious, <a href="http://learnyouahaskell.com/making-our-own-types-and-typeclasses#the-functor-typeclass">read more here</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>If you&rsquo;re not familiar with functional languages and are now wondering what <code>fmap</code> is, it&rsquo;s a method provided by a trait called <code>Functor</code>. It represents the ability to map a function <code>A -&gt; B</code> over <em>some arbitrary structure</em> - if we have a <code>Functor</code> instance for <code>F</code>, then we can map a function over <code>F&lt;A&gt;</code>, for <em>any</em> <code>A</code>.  <code>F</code> could be an option, or a list, or a tree - any structure parameterized over some value. <code>map</code> provides an implementation of <code>fmap</code> (as in _f_unction map) that&rsquo;s specialized to <code>ExprLayer</code>. If you&rsquo;re curious, <a href="http://learnyouahaskell.com/making-our-own-types-and-typeclasses#the-functor-typeclass">read more here</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>If you're <em>really</em> familiar with functional languages, you might point out that it's not <em>quite</em> <code>fmap</code>, but that's fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>If you&rsquo;re <em>really</em> familiar with functional languages, you might point out that it&rsquo;s not <em>quite</em> <code>fmap</code>, but that&rsquo;s fine for our limited use case. <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>I learned this technique from my partner <a href="https://sunshowers.io/">Rain</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>I learned this technique from my partner <a href="https://sunshowers.io/">Rain</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
-      </div></div>
-
-  
-  
-<div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="https://recursion.wtf/posts/rust_schemes_2/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Fully generic recursion in Rust</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="https://recursion.wtf/posts/infinity_mirror_hypercrystal/">
-                <span class="button__text">Infinity Mirror HYPERCRYSTAL</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
 </div>
 
+        
+          <div class="blog-tags">
+            
+              <a href="/tags/recursion-schemes/">recursion schemes</a>&nbsp;
+            
+              <a href="/tags/rust/">rust</a>&nbsp;
+            
+              <a href="/tags/code/">code</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=%2fposts%2frust_schemes%2f&amp;text=Elegant%20and%20performant%20recursion%20in%20Rust&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
   
-
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=%2fposts%2frust_schemes%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
   
-
-</div>
-
+      
+      <li>
+        <a href="//reddit.com/submit?url=%2fposts%2frust_schemes%2f&amp;title=Elegant%20and%20performant%20recursion%20in%20Rust" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=%2fposts%2frust_schemes%2f&amp;title=Elegant%20and%20performant%20recursion%20in%20Rust" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=%2fposts%2frust_schemes%2f&amp;title=Elegant%20and%20performant%20recursion%20in%20Rust" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=%2fposts%2frust_schemes%2f&amp;description=Elegant%20and%20performant%20recursion%20in%20Rust" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
   </div>
-
   
-    <footer class="footer">
-  <div class="footer__inner">
+
+              </div>
+            </section>
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also">See also</h4>
+                  <ul>
+                
+                
+                    <li><a href="/posts/recursion_lib_intro/">Recursion: a quick introduction</a></li>
+                
+                    <li><a href="/posts/rust_schemes_3/">Single Pass Recursion in Rust</a></li>
+                
+                    <li><a href="/posts/rust_schemes_2/">Fully generic recursion in Rust</a></li>
+                
+                    <li><a href="/posts/transitive-frontier/">Transitive Frontier</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/posts/infinity_mirror_hypercrystal/" data-toggle="tooltip" data-placement="top" title="Infinity Mirror HYPERCRYSTAL">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="/posts/rust_schemes_2/" data-toggle="tooltip" data-placement="top" title="Fully generic recursion in Rust">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      
+<footer>
+  <div class="container">
     
-      <div class="copyright">
-        <span>© 2022 Powered by <a href="http://gohugo.io">Hugo</a></span>
-    
-        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            <a href="" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2023
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="">Inanna Malick</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.111.3</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
       </div>
+    </div>
   </div>
-</footer>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 
-<script src="https://recursion.wtf/assets/main.js"></script>
-<script src="https://recursion.wtf/assets/prism.js"></script>
-
-
-
-
-
+<script src="js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="js/load-photoswipe.js"></script>
 
 
-  
-</div>
 
-</body>
+
+
+
+
+
+
+    
+  </body>
 </html>
+

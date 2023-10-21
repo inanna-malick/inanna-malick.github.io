@@ -14,7 +14,7 @@
 
   <meta name="description" content="In traditional low level languages such as C iteration is implemented manually, with users writing out  for (int idx = 0; idx &lt; items_len; &#43;&#43;idx) { do_thing(items[idx] } 
 , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic:   for item in items.iter() { do_thing(item) } .
-The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate"><script type="application/ld+json">
+The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate. This post is an introduction to the new version of the recursion crate, but you don&rsquo;t have to read my earlier posts to understand it."><script type="application/ld+json">
 {
     "@context": "http://schema.org",
     "@type": "WebSite",
@@ -62,9 +62,9 @@ The recursion crate does the same thing for recursive data structures. This post
     "name" : "Inanna Malick"
   },
   "headline": "Recursion: a quick introduction",
-  "description" : "In traditional low level languages such as C iteration is implemented manually, with users writing out for (int idx = 0; idx \u0026lt; items_len; \u002b\u002bidx) { do_thing(items[idx] } , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic: for item in items.iter() { do_thing(item) } .\nThe recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate\n",
+  "description" : "In traditional low level languages such as C iteration is implemented manually, with users writing out for (int idx = 0; idx \u0026lt; items_len; \u002b\u002bidx) { do_thing(items[idx] } , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic: for item in items.iter() { do_thing(item) } .\nThe recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate. This post is an introduction to the new version of the recursion crate, but you don\u0026rsquo;t have to read my earlier posts to understand it.\n",
   "inLanguage" : "en",
-  "wordCount":  1533 ,
+  "wordCount":  1647 ,
   "datePublished" : "2023-10-16T00:00:00",
   "dateModified" : "2023-10-16T00:00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -86,7 +86,7 @@ The recursion crate does the same thing for recursive data structures. This post
 <meta property="og:title" content="Recursion: a quick introduction" />
 <meta property="og:description" content="In traditional low level languages such as C iteration is implemented manually, with users writing out  for (int idx = 0; idx &lt; items_len; &#43;&#43;idx) { do_thing(items[idx] } 
 , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic:   for item in items.iter() { do_thing(item) } .
-The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate">
+The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate. This post is an introduction to the new version of the recursion crate, but you don&rsquo;t have to read my earlier posts to understand it.">
 <meta property="og:image" content="https://recursion.wtf/img/avatar-icon.png" />
 <meta property="og:url" content="https://recursion.wtf/posts/recursion_lib_intro/" />
 <meta property="og:type" content="website" />
@@ -242,7 +242,7 @@ The recursion crate does the same thing for recursive data structures. This post
       <article role="main" class="blog-post">
         <p>In traditional low level languages such as C iteration is implemented manually, with users writing out <code class="code-inline language-c"> <span style="color:#286983">for</span> <span style="color:#797593">(</span><span style="color:#286983">int</span> <span style="color:#d7827e">idx</span> <span style="color:#797593">=</span> <span style="color:#ea9d34">0</span><span style="color:#797593">;</span> <span style="color:#d7827e">idx</span> <span style="color:#797593">&lt;</span> <span style="color:#d7827e">items_len</span><span style="color:#797593">;</span> <span style="color:#797593">++</span><span style="color:#d7827e">idx</span><span style="color:#797593">)</span> <span style="color:#797593">{</span> <span style="color:#d7827e">do_thing</span><span style="color:#797593">(</span><span style="color:#d7827e">items</span><span style="color:#797593">[</span><span style="color:#d7827e">idx</span><span style="color:#797593">]</span> <span style="color:#797593">}</span> 
 </code>, every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the <em>machinery</em> of recursion from the logic: <code class="code-inline language-rust">  <span style="color:#286983">for</span> <span style="color:#d7827e">item</span> <span style="color:#286983">in</span> <span style="color:#d7827e">items</span><span style="color:#797593">.</span><span style="color:#d7827e">iter</span><span style="color:#797593">()</span> <span style="color:#797593">{</span> <span style="color:#d7827e">do_thing</span><span style="color:#797593">(</span><span style="color:#d7827e">item</span><span style="color:#797593">)</span> <span style="color:#797593">}</span></code> .</p>
-<p>The <a href="https://crates.io/crates/recursion">recursion crate</a> does the same thing for recursive data structures. This post is an introduction to the new version of the <code>recursion</code> crate</p>
+<p>The <a href="https://crates.io/crates/recursion">recursion crate</a> does the same thing for recursive data structures. This post is an introduction to the new version of the <code>recursion</code> crate. This post is an introduction to the new version of the <code>recursion</code> crate, but you don&rsquo;t have to read <a href="https://recursion.wtf/posts/rust_schemes/">my</a> <a href="https://recursion.wtf/posts/rust_schemes_2/">earlier</a> <a href="https://recursion.wtf/posts/rust_schemes_3/">posts</a> to understand it.</p>
 <h1 id="motivation-a-file-matching-tool">Motivation: a file matching tool</h1>
 <p>I often use the <code>find</code> tool to find files matching some set of criteria - name, metadata, file contents, that kind of thing. Almost every time I use it for something nontrivial, I end up having to google the right combination of command line flags to express my query. For example, let&rsquo;s say we want to list all files that fits one of the two following criteria:</p>
 <ol>
@@ -265,7 +265,7 @@ The recursion crate does the same thing for recursive data structures. This post
 <div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>detect <span style="color:#ea9d34">&#39;filename(detect) &amp;&amp; executable() || filename(.rs) &amp;&amp; contains(map_frame)&#39;</span>
 </span></span></code></pre></div><p>Since some matching criteria are cheap and some are expensive, the <code>detect</code> tools is clever enough to run them in multiple stages - first filename criteria, then metadata criteria, and only then criteria that require looking at the full file contents. At each stage, it attempts to short circuit before running the next, more expensive, stage.</p>
 <p>For the expression above, here are some visualizations of <code>detect</code> , as run against three different files in its own <a href="https://github.com/inanna-malick/detect">repository</a>:</p>
-<p>README.md: short circuits as <code>false</code> using only filename matcher</p>
+<p><code>README.md</code>: short circuits as <code>false</code> using only filename matcher</p>
 
 <link rel="stylesheet" href="https://recursion.wtf/css/hugo-easy-gallery.css" />
 <div class="box" >
@@ -277,7 +277,7 @@ The recursion crate does the same thing for recursive data structures. This post
   </figure>
 </div>
 
-<p>target/debug/detect: short circuits as <code>true</code> after reading metadata:</p>
+<p><code>target/debug/detect</code>: short circuits as <code>true</code> after reading metadata:</p>
 
 
 <div class="box" >
@@ -289,7 +289,7 @@ The recursion crate does the same thing for recursive data structures. This post
   </figure>
 </div>
 
-<p>src/expr/frame.rs: evaluates to <code>true</code> after reading metadata and file contents</p>
+<p><code>src/expr/frame.rs</code>: evaluates to <code>true</code> after reading metadata and file contents</p>
 
 
 <div class="box" >
@@ -311,7 +311,8 @@ The recursion crate does the same thing for recursive data structures. This post
 </span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
 </span></span></code></pre></div><p>The type parameters let us change the type of a <code>Predicate</code> to indicate what stage we&rsquo;re on. As stages are eliminated we will use <code>Done</code> - an uninhabited type - to mark those branches as eliminated.</p>
 <div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">enum</span> <span style="color:#56949f">Done</span> <span style="color:#797593">{}</span>
-</span></span></code></pre></div><p>Because <code>Done</code> is an enum with zero branches, it cannot exist at runtime. That means any branch of an enum containing it cannot exist either. For example, a <code>Predicate&lt;Done, Done, Content&gt;</code> can <em>only</em> contain <code>Predicate::Content</code> branches. We will evaluate predicates by eliminating predicate type parameters to mark the evaluation of the corresponding phase, short circuiting where evaluation is possible:</p>
+</span></span></code></pre></div><p>Because <code>Done</code> is an enum with zero branches, it cannot exist at runtime. That means any branch of an enum containing it cannot exist either. For example, a <code>Predicate&lt;Done, Done, Content&gt;</code> can <em>only</em> contain <code>Predicate::Content</code> branches, because all the other branches are marked as uninhabited.</p>
+<p>We will evaluate predicates by eliminating predicate type parameters to mark the evaluation of the corresponding phase, short circuiting where evaluation is possible:</p>
 <div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">enum</span> <span style="color:#56949f">ShortCircuit</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
 </span></span><span style="display:flex;"><span>  <span style="color:#d7827e">Unknown</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
 </span></span><span style="display:flex;"><span>  <span style="color:#d7827e">Known</span><span style="color:#797593">(</span><span style="color:#286983">bool</span><span style="color:#797593">),</span>
@@ -333,7 +334,7 @@ The recursion crate does the same thing for recursive data structures. This post
 </span></span><span style="display:flex;"><span>        -&gt; <span style="color:#56949f">ShortCircuit</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Predicate</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Done</span><span style="color:#797593">,</span> <span style="color:#d7827e">Done</span><span style="color:#797593">,</span> <span style="color:#d7827e">Done</span><span style="color:#797593">&gt;&gt;</span>  <span style="color:#797593">{}</span>
 </span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
 </span></span></code></pre></div><p>At each stage, one type of predicate is eliminated as a possibility until none are left.</p>
-<h1 id="an-expression-language">An expression language</h1>
+<h1 id="the-expression-language">The expression language</h1>
 <p>The structure of the expression language is the same throughout each phase, with only the predicate type changing as we step through each phase.</p>
 <div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">enum</span> <span style="color:#56949f">Expr</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Predicate</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#d7827e">And</span><span style="color:#797593">(</span><span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Expr</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span> <span style="color:#d7827e">Box</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">Expr</span><span style="color:#797593">&gt;</span><span style="color:#797593">),</span>
@@ -350,7 +351,7 @@ The recursion crate does the same thing for recursive data structures. This post
 </span></span><span style="display:flex;"><span>	<span style="color:#d7827e">eval_predicate</span>: <span style="color:#56949f">impl</span> <span style="color:#d7827e">Fn</span><span style="color:#797593">(</span><span style="color:#d7827e">A</span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">ShortCircuit</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">B</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
 </span></span><span style="display:flex;"><span><span style="color:#797593">)</span> -&gt; <span style="color:#56949f">Expr</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">B</span><span style="color:#797593">&gt;</span> <span style="color:#797593">{</span> <span style="color:#9893a5">/* etc */</span> <span style="color:#797593">}</span>
 </span></span></code></pre></div><p>Let&rsquo;s see what the <code>reduce_and_short_circuit</code> function looks like, with and without the recursion crate.</p>
-<h2 id="the-old-ways">the old ways</h2>
+<h2 id="the-old-ways">The old ways</h2>
 <p>The traditional way to write this function is both hard to read and can cause a stack overflow if an expression is too deeply nested. Feel free to let your eyes slide over it - the nested matches, the <code>&amp;**</code> invocations, the verbose recursive calls - terrible. We can do better.</p>
 <div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#286983">pub</span> <span style="color:#286983">fn</span> <span style="color:#d7827e">reduce_and_short_circuit</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">,</span> <span style="color:#d7827e">B</span><span style="color:#797593">&gt;</span><span style="color:#797593">(</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#797593">&amp;</span><span style="color:#d7827e">e</span>: <span style="color:#56949f">Expr</span><span style="color:#797593">&lt;</span><span style="color:#d7827e">A</span><span style="color:#797593">&gt;</span><span style="color:#797593">,</span>
@@ -457,7 +458,7 @@ The recursion crate does the same thing for recursive data structures. This post
 </span></span><span style="display:flex;"><span>    <span style="color:#797593">})</span>
 </span></span><span style="display:flex;"><span><span style="color:#797593">}</span>
 </span></span></code></pre></div><p>Note that the function passed to <code>collapse_frames</code> only collapses a single frame of type <code>ExprFrame&lt;bool&gt;</code> - <code>collapse_frames</code> handles the rest.</p>
-<p>Here&rsquo;s a GIF showing each stage of the evaluation of <code>false &amp;&amp; true || true</code> using this function</p>
+<p>Here&rsquo;s a GIF showing each step in the evaluation of <code>false &amp;&amp; true || true</code> using this function:</p>
 
 
 <div class="box" >
@@ -470,11 +471,17 @@ The recursion crate does the same thing for recursive data structures. This post
 </div>
 
 <h1 id="conclusions">Conclusions</h1>
-<h2 id="generating-visualizations">Generating Visualizations</h2>
+<h2 id="use-recursion">Use Recursion</h2>
+<p>The recursion crate is a perfect fit for working with recursive data structures. We&rsquo;ve seen how it can used to implement a lazily evaluated expression language, and how expression languages can be a powerful tool for expressing arbitrary logic (for example, <a href="https://github.com/nextest-rs/nextest/tree/main/nextest-filtering">test filtering expressions in nextest</a> are implemented using the recursion crate). Next time you&rsquo;re developing a tool, consider providing users with an expression language - it&rsquo;s easier than you might think.</p>
+<p>The crate is <a href="crates.io/recursion">here</a>, docs are <a href="https://docs.rs/recursion/0.5.1/recursion/">here</a>, the github repository is <a href="https://github.com/inanna-malick/recursion">here</a>.</p>
+<h2 id="use-detect">Use Detect</h2>
+<p>Detect is on <a href="crates.io/detect_rs">crates.io</a>. The most recent version of it supports multiple predicate stages (filename, file metadata, file contents, and even arbitrary subprocesses), and runs evaluation in multiple stages to minimize syscall use.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜  cargo install detect_rs
+</span></span><span style="display:flex;"><span>➜  detect <span style="color:#ea9d34">&#39;filename(detect) &amp;&amp; executable() || filename(.rs) &amp;&amp; contains(map_frame)&#39;</span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><h2 id="generating-visualizations">Generating Visualizations</h2>
 <p>All GIFs in this post were generated by a special <em>instrumented</em> version of the recursive machinery used by <code>collapse_frames</code>  that automatically generates animated &lsquo;stack traces&rsquo;. Source code for this is <a href="https://github.com/inanna-malick/detect/blob/94bcff1593c685dfee019c5caffbff6fa7ad6477/src/eval.rs">here</a>.</p>
 <p>This is a great example of the kind of thing that you can do once you&rsquo;ve separated the <em>logic</em> of recursion from the <em>machinery</em>.</p>
-<h2 id="the-detect-crate">The Detect crate</h2>
-<p>The <code>reduce_predicate_and_short_circuit</code> function is taken from my <code>detect</code> crate, which provides tools for finding files on the filesystem using an expression language matcher. The most recent version of it supports multiple predicate stages (filename, file metadata, file contents, and even arbitrary subprocesses), and runs evaluation in multiple stages to minimize syscall use.</p>
 
         
           <div class="blog-tags">

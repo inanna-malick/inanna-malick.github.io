@@ -14,7 +14,7 @@
 
   <meta name="description" content="In traditional low level languages such as C iteration is implemented manually, with users writing out  for (int idx = 0; idx &lt; items_len; &#43;&#43;idx) { do_thing(items[idx] } 
 , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic:   for item in items.iter() { do_thing(item) } .
-The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate. This post is an introduction to the new version of the recursion crate, but you don&rsquo;t have to read my earlier posts to understand it."><script type="application/ld+json">
+The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate, but you don&rsquo;t have to read my earlier posts to understand it."><script type="application/ld+json">
 {
     "@context": "http://schema.org",
     "@type": "WebSite",
@@ -62,9 +62,9 @@ The recursion crate does the same thing for recursive data structures. This post
     "name" : "Inanna Malick"
   },
   "headline": "Recursion: a quick introduction",
-  "description" : "In traditional low level languages such as C iteration is implemented manually, with users writing out for (int idx = 0; idx \u0026lt; items_len; \u002b\u002bidx) { do_thing(items[idx] } , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic: for item in items.iter() { do_thing(item) } .\nThe recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate. This post is an introduction to the new version of the recursion crate, but you don\u0026rsquo;t have to read my earlier posts to understand it.\n",
+  "description" : "In traditional low level languages such as C iteration is implemented manually, with users writing out for (int idx = 0; idx \u0026lt; items_len; \u002b\u002bidx) { do_thing(items[idx] } , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic: for item in items.iter() { do_thing(item) } .\nThe recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate, but you don\u0026rsquo;t have to read my earlier posts to understand it.\n",
   "inLanguage" : "en",
-  "wordCount":  1647 ,
+  "wordCount":  1634 ,
   "datePublished" : "2023-10-16T00:00:00",
   "dateModified" : "2023-10-16T00:00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -86,7 +86,7 @@ The recursion crate does the same thing for recursive data structures. This post
 <meta property="og:title" content="Recursion: a quick introduction" />
 <meta property="og:description" content="In traditional low level languages such as C iteration is implemented manually, with users writing out  for (int idx = 0; idx &lt; items_len; &#43;&#43;idx) { do_thing(items[idx] } 
 , every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the machinery of recursion from the logic:   for item in items.iter() { do_thing(item) } .
-The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate. This post is an introduction to the new version of the recursion crate, but you don&rsquo;t have to read my earlier posts to understand it.">
+The recursion crate does the same thing for recursive data structures. This post is an introduction to the new version of the recursion crate, but you don&rsquo;t have to read my earlier posts to understand it.">
 <meta property="og:image" content="https://recursion.wtf/img/avatar-icon.png" />
 <meta property="og:url" content="https://recursion.wtf/posts/recursion_lib_intro/" />
 <meta property="og:type" content="website" />
@@ -242,7 +242,7 @@ The recursion crate does the same thing for recursive data structures. This post
       <article role="main" class="blog-post">
         <p>In traditional low level languages such as C iteration is implemented manually, with users writing out <code class="code-inline language-c"> <span style="color:#286983">for</span> <span style="color:#797593">(</span><span style="color:#286983">int</span> <span style="color:#d7827e">idx</span> <span style="color:#797593">=</span> <span style="color:#ea9d34">0</span><span style="color:#797593">;</span> <span style="color:#d7827e">idx</span> <span style="color:#797593">&lt;</span> <span style="color:#d7827e">items_len</span><span style="color:#797593">;</span> <span style="color:#797593">++</span><span style="color:#d7827e">idx</span><span style="color:#797593">)</span> <span style="color:#797593">{</span> <span style="color:#d7827e">do_thing</span><span style="color:#797593">(</span><span style="color:#d7827e">items</span><span style="color:#797593">[</span><span style="color:#d7827e">idx</span><span style="color:#797593">]</span> <span style="color:#797593">}</span> 
 </code>, every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the <em>machinery</em> of recursion from the logic: <code class="code-inline language-rust">  <span style="color:#286983">for</span> <span style="color:#d7827e">item</span> <span style="color:#286983">in</span> <span style="color:#d7827e">items</span><span style="color:#797593">.</span><span style="color:#d7827e">iter</span><span style="color:#797593">()</span> <span style="color:#797593">{</span> <span style="color:#d7827e">do_thing</span><span style="color:#797593">(</span><span style="color:#d7827e">item</span><span style="color:#797593">)</span> <span style="color:#797593">}</span></code> .</p>
-<p>The <a href="https://crates.io/crates/recursion">recursion crate</a> does the same thing for recursive data structures. This post is an introduction to the new version of the <code>recursion</code> crate. This post is an introduction to the new version of the <code>recursion</code> crate, but you don&rsquo;t have to read <a href="https://recursion.wtf/posts/rust_schemes/">my</a> <a href="https://recursion.wtf/posts/rust_schemes_2/">earlier</a> <a href="https://recursion.wtf/posts/rust_schemes_3/">posts</a> to understand it.</p>
+<p>The <a href="https://crates.io/crates/recursion">recursion crate</a> does the same thing for recursive data structures. This post is an introduction to the new version of the <code>recursion</code> crate, but you don&rsquo;t have to read <a href="https://recursion.wtf/posts/rust_schemes/">my</a> <a href="https://recursion.wtf/posts/rust_schemes_2/">earlier</a> <a href="https://recursion.wtf/posts/rust_schemes_3/">posts</a> to understand it.</p>
 <h1 id="motivation-a-file-matching-tool">Motivation: a file matching tool</h1>
 <p>I often use the <code>find</code> tool to find files matching some set of criteria - name, metadata, file contents, that kind of thing. Almost every time I use it for something nontrivial, I end up having to google the right combination of command line flags to express my query. For example, let&rsquo;s say we want to list all files that fits one of the two following criteria:</p>
 <ol>

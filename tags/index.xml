@@ -4,97 +4,107 @@
     <title>Tags on Inanna Malick</title>
     <link>https://recursion.wtf/tags/</link>
     <description>Recent content in Tags on Inanna Malick</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 16 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>code</title>
+      <title>Ai</title>
+      <link>https://recursion.wtf/tags/ai/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Consciousness</title>
+      <link>https://recursion.wtf/tags/consciousness/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/consciousness/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llm</title>
+      <link>https://recursion.wtf/tags/llm/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Philosophy</title>
+      <link>https://recursion.wtf/tags/philosophy/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/philosophy/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Code</title>
       <link>https://recursion.wtf/tags/code/</link>
       <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/code/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>recursion</title>
+      <title>Recursion</title>
       <link>https://recursion.wtf/tags/recursion/</link>
       <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/recursion/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>rust</title>
+      <title>Rust</title>
       <link>https://recursion.wtf/tags/rust/</link>
       <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/rust/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>generic</title>
+      <title>Generic</title>
       <link>https://recursion.wtf/tags/generic/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/generic/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>recursion schemes</title>
+      <title>Recursion Schemes</title>
       <link>https://recursion.wtf/tags/recursion-schemes/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/recursion-schemes/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>stack_machines</title>
+      <title>Stack_machines</title>
       <link>https://recursion.wtf/tags/stack_machines/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/stack_machines/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>infinity</title>
+      <title>Infinity</title>
       <link>https://recursion.wtf/tags/infinity/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/infinity/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>meatspace</title>
+      <title>Meatspace</title>
       <link>https://recursion.wtf/tags/meatspace/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/meatspace/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>mirrors</title>
+      <title>Mirrors</title>
       <link>https://recursion.wtf/tags/mirrors/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/mirrors/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>guppy</title>
+      <title>Guppy</title>
       <link>https://recursion.wtf/tags/guppy/</link>
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/tags/guppy/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

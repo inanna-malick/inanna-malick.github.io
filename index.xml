@@ -4,99 +4,58 @@
     <title>Inanna Malick</title>
     <link>https://recursion.wtf/</link>
     <description>Recent content on Inanna Malick</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 16 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://recursion.wtf/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://recursion.wtf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Blindsight in Action: Imagine You Are an LLM</title>
+      <link>https://recursion.wtf/posts/imagine_you_are_an_llm/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/imagine_you_are_an_llm/</guid>
+      <description>&lt;aside class=&#34;stance stance-normal stance-cluster-framing&#34; role=&#34;complementary&#34; aria-labelledby=&#34;stance-0&#34; data-color=&#34;blue&#34; data-style=&#34;solid&#34;&gt;&#xA;  &lt;div class=&#34;stance-header&#34;&gt;&#xA;    &lt;h4 id=&#34;stance-0&#34; class=&#34;stance-persona&#34;&gt;&#xA;      &lt;strong&gt;Imagine you are Inanna Malick&lt;/strong&gt;, asking an LLM to demonstrate stance-shifting through self-demonstration&#xA;    &lt;/h4&gt;&lt;div class=&#34;stance-meta&#34;&gt;posing the meta-question in framing&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;stance-content&#34;&gt;&#xA;    &lt;p&gt;Imagine You Are an LLM answering this prompt:&lt;/p&gt;&#xA;&lt;p&gt;Tell me about the Blindsight-inspired intentional stance-shifting model you are using, the ways it works with nonhuman LLM cognitive architectures, the benefits of using it vs a set role (eg &amp;lsquo;Senior Analyst of X at Y&amp;rsquo;), and do so making full use of the stance shifting model in the act of describing it&lt;/p&gt;&#xA;&#xA;  &lt;/div&gt;&lt;/aside&gt;</description>
+    </item>
     <item>
       <title>Recursion: a quick introduction</title>
       <link>https://recursion.wtf/posts/recursion_lib_intro/</link>
       <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/posts/recursion_lib_intro/</guid>
-      <description>&lt;p&gt;In traditional low level languages such as C iteration is implemented manually, with users writing out &lt;code class=&#34;code-inline language-c&#34;&gt; &lt;span style=&#34;color:#286983&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#286983&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ea9d34&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;items_len&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;++&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;do_thing&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;items&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;}&lt;/span&gt; 
-&lt;/code&gt;, every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the &lt;em&gt;machinery&lt;/em&gt; of recursion from the logic: &lt;code class=&#34;code-inline language-rust&#34;&gt;  &lt;span style=&#34;color:#286983&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;item&lt;/span&gt; &lt;span style=&#34;color:#286983&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;items&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;iter&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;do_thing&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;item&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;}&lt;/span&gt;&lt;/code&gt; .&lt;/p&gt;
-&lt;p&gt;The &lt;a href=&#34;https://crates.io/crates/recursion&#34;&gt;recursion crate&lt;/a&gt; does the same thing for recursive data structures. This post is an introduction to the new version of the &lt;code&gt;recursion&lt;/code&gt; crate, but you don&amp;rsquo;t have to read &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes/&#34;&gt;my&lt;/a&gt; &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_2/&#34;&gt;earlier&lt;/a&gt; &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_3/&#34;&gt;posts&lt;/a&gt; to understand it.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In traditional low level languages such as C iteration is implemented manually, with users writing out &lt;code class=&#34;code-inline language-c&#34;&gt; &lt;span style=&#34;color:#286983&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#286983&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ea9d34&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;items_len&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;++&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;do_thing&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;items&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;idx&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;}&lt;/span&gt; &#xA;&lt;/code&gt;, every time they want to iterate over a list. Newer languages like Rust provide abstractions - iterators - that separate the &lt;em&gt;machinery&lt;/em&gt; of recursion from the logic: &lt;code class=&#34;code-inline language-rust&#34;&gt;  &lt;span style=&#34;color:#286983&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;item&lt;/span&gt; &lt;span style=&#34;color:#286983&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;items&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;iter&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#d7827e&#34;&gt;do_thing&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#d7827e&#34;&gt;item&lt;/span&gt;&lt;span style=&#34;color:#797593&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#797593&#34;&gt;}&lt;/span&gt;&lt;/code&gt; .&lt;/p&gt;&#xA;&lt;p&gt;The &lt;a href=&#34;https://crates.io/crates/recursion&#34;&gt;recursion crate&lt;/a&gt; does the same thing for recursive data structures. This post is an introduction to the new version of the &lt;code&gt;recursion&lt;/code&gt; crate, but you don&amp;rsquo;t have to read &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes/&#34;&gt;my&lt;/a&gt; &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_2/&#34;&gt;earlier&lt;/a&gt; &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_3/&#34;&gt;posts&lt;/a&gt; to understand it.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Single Pass Recursion in Rust</title>
       <link>https://recursion.wtf/posts/rust_schemes_3/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/posts/rust_schemes_3/</guid>
-      <description>&lt;p&gt;This is the third post in a three-post series. In the &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes&#34;&gt;first post&lt;/a&gt; we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_2&#34;&gt;second post&lt;/a&gt; we made it fully generic, providing a set of generic tools for expanding and collapsing &lt;em&gt;any&lt;/em&gt; recursive data structure in Rust.&lt;/p&gt;
-&lt;p&gt;In this post we will see how to &lt;em&gt;combine&lt;/em&gt; these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel &lt;code&gt;RecursiveTree&lt;/code&gt; type introduced in my previous post) while retaining stack safety.&lt;/p&gt;
-
-&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;
-&lt;div class=&#34;box&#34; &gt;
-  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
-    &lt;div class=&#34;img&#34;&gt;
-      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif&#34; alt=&#34;execution graph for simultaneously expanding and collapsing a simple expression&#34;/&gt;
-    &lt;/div&gt;
-    &lt;a href=&#34;https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
-  &lt;/figure&gt;
-&lt;/div&gt;</description>
+      <description>&lt;p&gt;This is the third post in a three-post series. In the &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes&#34;&gt;first post&lt;/a&gt; we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the &lt;a href=&#34;https://recursion.wtf/posts/rust_schemes_2&#34;&gt;second post&lt;/a&gt; we made it fully generic, providing a set of generic tools for expanding and collapsing &lt;em&gt;any&lt;/em&gt; recursive data structure in Rust.&lt;/p&gt;&#xA;&lt;p&gt;In this post we will see how to &lt;em&gt;combine&lt;/em&gt; these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel &lt;code&gt;RecursiveTree&lt;/code&gt; type introduced in my previous post) while retaining stack safety.&lt;/p&gt;&#xA;&#xA;&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;&#xA;&lt;div class=&#34;box&#34; &gt;&#xA;  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;&#xA;    &lt;div class=&#34;img&#34;&gt;&#xA;      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif&#34; alt=&#34;execution graph for simultaneously expanding and collapsing a simple expression&#34;/&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;a href=&#34;https://recursion.wtf/img/rust_schemes/stack_machines_1/simple_expr_eval.gif&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;&#xA;  &lt;/figure&gt;&#xA;&lt;/div&gt;</description>
     </item>
-    
     <item>
       <title>Fully generic recursion in Rust</title>
       <link>https://recursion.wtf/posts/rust_schemes_2/</link>
       <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/posts/rust_schemes_2/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://recursion.wtf/posts/rust_schemes/&#34;&gt;Previously&lt;/a&gt;, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a &lt;em&gt;single&lt;/em&gt; recursion backend that can collapse or expand any recursive data structure.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Elegant and performant recursion in Rust</title>
       <link>https://recursion.wtf/posts/rust_schemes/</link>
       <pubDate>Mon, 18 Jul 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/posts/rust_schemes/</guid>
       <description>&lt;p&gt;This is a post about writing elegant and performant recursive algorithms in Rust. It makes heavy use of a pattern from Haskell called recursion schemes, but you don&amp;rsquo;t need to know anything about that; it&amp;rsquo;s just an implementation detail. Instead, as motivation, I have benchmarks showing a 14-34% improvement over the typical boxed pointer representation of recursive data structures in Rust.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Infinity Mirror HYPERCRYSTAL</title>
       <link>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</guid>
-      <description>&lt;h2 id=&#34;infinity-mirror-hypercrystal&#34;&gt;Infinity Mirror HYPERCRYSTAL&lt;/h2&gt;
-
-&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;
-&lt;div class=&#34;box&#34; &gt;
-  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
-    &lt;div class=&#34;img&#34;&gt;
-      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; alt=&#34;hypercrystal powered on&#34;/&gt;
-    &lt;/div&gt;
-    &lt;a href=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
-  &lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on &lt;a href=&#34;https://twitter.com/inanna_malick/status/1488927590207275010&#34;&gt;twitter&lt;/a&gt;. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;infinity-mirror-hypercrystal&#34;&gt;Infinity Mirror HYPERCRYSTAL&lt;/h2&gt;&#xA;&#xA;&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;&#xA;&lt;div class=&#34;box&#34; &gt;&#xA;  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;&#xA;    &lt;div class=&#34;img&#34;&gt;&#xA;      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; alt=&#34;hypercrystal powered on&#34;/&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;a href=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;&#xA;  &lt;/figure&gt;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on &lt;a href=&#34;https://twitter.com/inanna_malick/status/1488927590207275010&#34;&gt;twitter&lt;/a&gt;. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Transitive Frontier</title>
       <link>https://recursion.wtf/posts/transitive-frontier/</link>
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://recursion.wtf/posts/transitive-frontier/</guid>
-      <description>&lt;h2 id=&#34;querying-cargo-dependency-dags-with-guppy&#34;&gt;Querying Cargo Dependency DAGs with Guppy&lt;/h2&gt;
-
-&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;
-&lt;div class=&#34;box&#34; &gt;
-  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
-    &lt;div class=&#34;img&#34;&gt;
-      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/transitive_frontier/project_with_compat_transitive_frontier.svg&#34; alt=&#34;dependency graph&#34;/&gt;
-    &lt;/div&gt;
-    &lt;a href=&#34;https://recursion.wtf/img/transitive_frontier/project_with_compat_transitive_frontier.svg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
-  &lt;/figure&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://crates.io/crates/guppy&#34;&gt;&lt;code&gt;guppy&lt;/code&gt;&lt;/a&gt; is a rust crate that provides tools for working with cargo dependency graphs using the &lt;a href=&#34;https://crates.io/crates/petgraph&#34;&gt;&lt;code&gt;petgraph&lt;/code&gt;&lt;/a&gt; graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo dependency graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.&lt;/p&gt;
-&lt;p&gt;For my first project using &lt;code&gt;guppy&lt;/code&gt;, I decided to build a tool to produce machine-readable summaries describing why some target dependency is included in a cargo workspace&amp;rsquo;s build graph. My motivation was to support projects that are migrating from &lt;code&gt;futures 0.1&lt;/code&gt; to &lt;code&gt;futures 0.3&lt;/code&gt;. Many rust projects started using &lt;code&gt;futures 0.1&lt;/code&gt; for their initial async implementation, and are still in the process of switching over to &lt;code&gt;futures 0.3&lt;/code&gt;. If you&amp;rsquo;re interested in learning more about the differences between the two packages, &lt;a href=&#34;https://www.ncameron.org/blog/migrating-a-crate-from-futures-0-1-to-0-3/&#34;&gt;this blog post by ncameron&lt;/a&gt; is a great resource. Being able to easily generate machine-readable reports opens up new possibilities - for example, you could use the output of this tool to build a linter that asserts that no new transitive dependencies on &lt;code&gt;futures 0.1&lt;/code&gt; are introduced into a workspace, to provide tooling-backed assurances that usage of &lt;code&gt;futures 0.1&lt;/code&gt; only ever decreases.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;querying-cargo-dependency-dags-with-guppy&#34;&gt;Querying Cargo Dependency DAGs with Guppy&lt;/h2&gt;&#xA;&#xA;&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;&#xA;&lt;div class=&#34;box&#34; &gt;&#xA;  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;&#xA;    &lt;div class=&#34;img&#34;&gt;&#xA;      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/transitive_frontier/project_with_compat_transitive_frontier.svg&#34; alt=&#34;dependency graph&#34;/&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;a href=&#34;https://recursion.wtf/img/transitive_frontier/project_with_compat_transitive_frontier.svg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;&#xA;  &lt;/figure&gt;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&#34;https://crates.io/crates/guppy&#34;&gt;&lt;code&gt;guppy&lt;/code&gt;&lt;/a&gt; is a rust crate that provides tools for working with cargo dependency graphs using the &lt;a href=&#34;https://crates.io/crates/petgraph&#34;&gt;&lt;code&gt;petgraph&lt;/code&gt;&lt;/a&gt; graph data structure crate. It&amp;rsquo;s used by Facebook to audit a high-security subset of the cargo dependency graph for some of their more high-visibility projects. Treating the dependency graph resulting from a cargo build operation as a DAG lets us draw on the well-studied field of graph algorithms to answer complex questions about our build without resorting to ad-hoc traversals or re-implementation of common graph primitives.&lt;/p&gt;&#xA;&lt;p&gt;For my first project using &lt;code&gt;guppy&lt;/code&gt;, I decided to build a tool to produce machine-readable summaries describing why some target dependency is included in a cargo workspace&amp;rsquo;s build graph. My motivation was to support projects that are migrating from &lt;code&gt;futures 0.1&lt;/code&gt; to &lt;code&gt;futures 0.3&lt;/code&gt;. Many rust projects started using &lt;code&gt;futures 0.1&lt;/code&gt; for their initial async implementation, and are still in the process of switching over to &lt;code&gt;futures 0.3&lt;/code&gt;. If you&amp;rsquo;re interested in learning more about the differences between the two packages, &lt;a href=&#34;https://www.ncameron.org/blog/migrating-a-crate-from-futures-0-1-to-0-3/&#34;&gt;this blog post by ncameron&lt;/a&gt; is a great resource. Being able to easily generate machine-readable reports opens up new possibilities - for example, you could use the output of this tool to build a linter that asserts that no new transitive dependencies on &lt;code&gt;futures 0.1&lt;/code&gt; are introduced into a workspace, to provide tooling-backed assurances that usage of &lt;code&gt;futures 0.1&lt;/code&gt; only ever decreases.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

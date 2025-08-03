@@ -476,10 +476,10 @@ The recursion crate does the same thing for recursive data structures. This post
 <h1 id="conclusions">Conclusions</h1>
 <h2 id="use-recursion">Use Recursion</h2>
 <p>The recursion crate is a perfect fit for working with recursive data structures. We&rsquo;ve seen how it can used to implement a lazily evaluated expression language, and how expression languages can be a powerful tool for expressing arbitrary logic (for example, <a href="https://github.com/nextest-rs/nextest/tree/main/nextest-filtering">test filtering expressions in nextest</a> are implemented using the recursion crate). Next time you&rsquo;re developing a tool, consider providing users with an expression language - it&rsquo;s easier than you might think.</p>
-<p>The crate is <a href="https://crates.io/recursion">here</a>, docs are <a href="https://docs.rs/recursion/0.5.1/recursion/">here</a>, the github repository is <a href="https://github.com/inanna-malick/recursion">here</a>.</p>
+<p>The crate is <a href="https://crates.io/crates/recursion">here</a>, docs are <a href="https://docs.rs/recursion/0.5.1/recursion/">here</a>, the github repository is <a href="https://github.com/inanna-malick/recursion">here</a>.</p>
 <h2 id="use-detect">Use Detect</h2>
-<p>Detect is on <a href="https://crates.io/detect_rs">crates.io</a>. The most recent version of it supports multiple predicate stages (filename, file metadata, file contents, and even arbitrary subprocesses), and runs evaluation in multiple stages to minimize syscall use.</p>
-<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜  cargo install detect_rs
+<p>Detect is on <a href="https://crates.io/crates/detect">crates.io</a>. The most recent version of it supports multiple predicate stages (filename, file metadata, file contents, and even arbitrary subprocesses), and runs evaluation in multiple stages to minimize syscall use.</p>
+<div class="highlight"><pre tabindex="0" style="color:#575279;background-color:#faf4ed;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜  cargo install detect
 </span></span><span style="display:flex;"><span>➜  detect <span style="color:#ea9d34">&#39;filename(detect) &amp;&amp; executable() || filename(.rs) &amp;&amp; contains(map_frame)&#39;</span>
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><h2 id="generating-visualizations">Generating Visualizations</h2>

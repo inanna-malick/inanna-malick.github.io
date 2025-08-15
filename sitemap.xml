@@ -2,6 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://recursion.wtf/tags/cli/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/detect/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/llms_as_ux_testers/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/llm/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/testing/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/tools/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/ux/</loc>
+    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://recursion.wtf/tags/ai/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
@@ -17,19 +47,7 @@
     <loc>https://recursion.wtf/tags/consciousness/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/</loc>
-    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/llm/</loc>
-    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://recursion.wtf/tags/philosophy/</loc>
-    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/posts/</loc>
-    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/code/</loc>

@@ -64,7 +64,7 @@
   "headline": "Fresh Eyes as a Service: Using LLMs to Test CLI Ergonomics",
   "description" : "An LLM\u0027s attempts to use your tool approximate what a statistically average user would try. You can use that to automate basic CLI tool UX testing.",
   "inLanguage" : "en",
-  "wordCount":  1194 ,
+  "wordCount":  1205 ,
   "datePublished" : "2025-08-15T00:00:00\u002b00:00",
   "dateModified" : "2025-08-15T00:00:00\u002b00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -247,7 +247,7 @@
 <p>Steve Klabnik @steveklabnik.com
 claude kept hallucinating CLI arguments to my compiler that every other compiler has but i hadn&rsquo;t implemented yet so i was like &ldquo;fine, ill bump that up the roadmap&rdquo;</p></blockquote>
 <h2 id="why-i-wrote-detect">Why I wrote detect</h2>
-<p>I could never remember command line flags for <code>find</code>. I was constantly searching stack overflow for useful snippets, reading man pages, etc. It just didn&rsquo;t stick. I prefer expression languages, so I wrote a tool that uses them instead: <a href="https://github.com/inanna-malick/detect">detect</a></p>
+<p>I could never remember command line flags for <code>find</code>. I was constantly searching stack overflow for useful snippets, reading man pages, etc. It just didn&rsquo;t stick. I prefer expression languages, so I wrote a tool that uses them instead: <a href="https://github.com/inanna-malick/detect">detect</a>. The first draft of this tool let me write:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;filename(detect) &amp;&amp; executable() || filename(.rs) &amp;&amp; contains(map_frame)&#39;</span>
 </span></span></code></pre></div><p>instead of</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">{</span>
@@ -298,8 +298,7 @@ understanding certain parts of the system.</p>
 <p>Here&rsquo;s a highlight reel of issues they found:</p>
 <ul>
 <li>removing the <code>@</code> prefix on selectors, to go from <code>@size</code> to just <code>size</code> (this one was obvious in hindsight, but I had spent too long using it to notice the friction)</li>
-<li>&lsquo;in set&rsquo; operators  - from <code>path.ext == js || path.ext == ts</code> to <code>path.ext in [js, ts]</code></li>
-<li>glob support (it kept trying to use them and getting confused)</li>
+<li>&lsquo;in set&rsquo; operators - from <code>ext == js || ext == ts</code> to <code>ext in [js, ts]</code></li>
 <li>parser flexibility:
 <ul>
 <li>&lsquo;5Kb&rsquo;, &lsquo;5 KB&rsquo; instead of <em>just</em> &lsquo;5kb&rsquo;</li>
@@ -307,11 +306,7 @@ understanding certain parts of the system.</p>
 <li>support AND/OR/NOT in addition to &lsquo;&amp;&amp;/||/!&rsquo;</li>
 </ul>
 </li>
-<li>hierarchical selectors (with alias support for shorthand)
-<ul>
-<li>path.full, path.name, path.ext, etc</li>
-</ul>
-</li>
+<li>glob support (it kept trying to write expressions like <code>detect '*.rs'</code> and getting confused)</li>
 </ul>
 <h3 id="when-to-stop">When to stop</h3>
 <p>Eventually, the UX bug reports started moving towards not-quite-feasible feature requests:</p>
@@ -324,6 +319,7 @@ understanding certain parts of the system.</p>
 <h2 id="you-should-try-this---heres-how">You should try this - here&rsquo;s how</h2>
 <p>Keep your prompts minimal, just the bare minimum required to use your tool + a scenario. Don&rsquo;t give it any hints or examples, just have it run <code>tool --help</code> and go from there. The whole point is seeing with fresh eyes, not pre-loading context window with hints. Let the LLM discover your tool, over and over again, and note how the LLM&rsquo;s experience changes as you improve your CLI ergonomics.</p>
 <p>First start with Sonnet - it gets confused more easily, it&rsquo;ll try a bunch of things and give you good reports about the rough edges. Then switch to Opus. It&rsquo;ll be more creative, more likely to ask for new features, but also more likely to ask for over-complex features (correlation, context-specific selectors, etc). I used Anthropic&rsquo;s monthly subscription (their Max plan), and this testing strategy was surprisingly affordable: it barely made a dent in my usage limits.</p>
+<p>Let me know how it goes! I&rsquo;m <a href="https://bsky.app/profile/inanna.recursion.wtf">inanna.recursion.wtf</a> on Bluesky.</p>
 
         
           <div class="blog-tags">

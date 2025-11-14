@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>Detect: a readable alternative to find/exec/grep - </title>
+
+  <meta name="description" content="A Rust CLI tool for querying filesystems using readable expressions instead of find/exec/grep"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Inanna Malick",
+    
+    "url": "http:\/\/localhost:1313\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "http:\/\/localhost:1313\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "http:\/\/localhost:1313\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "http:\/\/localhost:1313\/posts\/detect\/",
+          "name": "Detect a readable alternative to find exec grep"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Inanna Malick"
+  },
+  "headline": "Detect: a readable alternative to find\/exec\/grep",
+  "description" : "A Rust CLI tool for querying filesystems using readable expressions instead of find\/exec\/grep",
+  "inLanguage" : "en",
+  "wordCount":  931 ,
+  "datePublished" : "2025-11-13T00:00:00\u002b00:00",
+  "dateModified" : "2025-11-13T00:00:00\u002b00:00",
+  "image" : "http:\/\/localhost:1313\/img\/avatar-icon.png",
+  "keywords" : [ "rust, cli, tools" ],
+  "mainEntityOfPage" : "http:\/\/localhost:1313\/posts\/detect\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "http:\/\/localhost:1313\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "http:\/\/localhost:1313\/img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+
+<meta property="og:title" content="Detect: a readable alternative to find/exec/grep" />
+<meta property="og:description" content="A Rust CLI tool for querying filesystems using readable expressions instead of find/exec/grep">
+<meta property="og:image" content="http://localhost:1313/img/avatar-icon.png" />
+<meta property="og:url" content="http://localhost:1313/posts/detect/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inanna Malick" />
+
+  <meta name="twitter:title" content="Detect: a readable alternative to find/exec/grep" />
+  <meta name="twitter:description" content="A Rust CLI tool for querying filesystems using readable expressions instead of find/exec/grep">
+  <meta name="twitter:image" content="http://localhost:1313/img/avatar-icon.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link href='http://localhost:1313/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.147.8">
+  <link rel="alternate" href="http://localhost:1313/index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css" integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="http://localhost:1313/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="http://localhost:1313/css/syntax.css" /><link rel="stylesheet" href="http://localhost:1313/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><link rel="stylesheet" href="http://localhost:1313/css/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://localhost:1313/">Inanna Malick</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Inanna Malick" href="http://localhost:1313/">
+            <img class="avatar-img" src="http://localhost:1313/img/avatar-icon.png" alt="Inanna Malick" />
+           
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>Detect: a readable alternative to find/exec/grep</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="detect">Detect</h1>
+<p>I built <a href="https://crates.io/crates/detect">detect</a> because I was tired of looking up <code>find</code>/<code>grep</code>/<code>xargs</code> syntax on Stack Overflow every time I needed to search my filesystem in any nontrivial way. It&rsquo;s a Rust tool that uses a concise and readable expression language to build queries that output matching file paths.</p>
+<p>If you&rsquo;d like to follow along, run <code>cargo install detect</code> and try it yourself. You&rsquo;ll need the Rust toolchain, which you can install using <a href="https://rustup.rs/">rustup</a>.</p>
+<p>Here are some examples:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># every rust file modified in the last week that imports tokio _and_ serde (mean time: 179ms)</span>
+</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;ext == rs
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &amp;&amp; content contains &#34;use tokio&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &amp;&amp; content contains &#34;use serde&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &amp;&amp; modified &gt; -7d&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Cargo.toml files with package edition 2018 (mean time: 42ms)</span>
+</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;name == &#34;Cargo.toml&#34; &amp;&amp; toml:.package.edition == 2018&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># non-image files with size over 0.5MB (mean time: 303ms)</span>
+</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;size &gt; 0.5mb &amp;&amp; !ext in [png, jpeg, jpg]&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># frontend code referencing JIRA tickets (mean time: 43ms)</span>
+</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;ext in [ts, js, css] &amp;&amp; content ~= JIRA-[0-9]+&#39;</span>
+</span></span></code></pre></div><p>People have told me they don&rsquo;t really &lsquo;do&rsquo; complex filesystem queries. I think that&rsquo;s because it&rsquo;s <em>hard</em> with traditional tools. Detect makes it easy, and as a result I find myself using them without thinking.</p>
+<p>I had sonnet 4.5 write equivalent queries using find (and verified that they yield the same results, because they&rsquo;re borderline unreadable). You can see them here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># every rust file modified in the last week that imports tokio _and_ serde (mean time: 206ms)</span>
+</span></span><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#34;*.rs&#34;</span> -mtime -7 -type f | xargs grep -l <span style="color:#e6db74">&#39;use tokio&#39;</span> | xargs grep -l <span style="color:#e6db74">&#39;use serde&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Cargo.toml files with package edition 2018 (mean time: 355ms)</span>
+</span></span><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#34;Cargo.toml&#34;</span> -exec sh -c <span style="color:#e6db74">&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  tq -f &#34;$1&#34; -r &#34;.package.edition&#34; 2&gt;/dev/null | grep -q &#34;2018&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;</span> _ <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span> -print
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># non-image files with size over 0.5MB (mean time: 383ms)</span>
+</span></span><span style="display:flex;"><span>find . -type f -size +512k ! <span style="color:#ae81ff">\(</span> -name <span style="color:#e6db74">&#34;*.png&#34;</span> -o -name <span style="color:#e6db74">&#34;*.jpeg&#34;</span> -o -name <span style="color:#e6db74">&#34;*.jpg&#34;</span> <span style="color:#ae81ff">\)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># frontend code referencing JIRA tickets (mean time: 631ms)</span>
+</span></span><span style="display:flex;"><span>find . <span style="color:#ae81ff">\(</span>  -name <span style="color:#e6db74">&#34;*.ts&#34;</span> -o -name <span style="color:#e6db74">&#34;*.js&#34;</span> -o -name <span style="color:#e6db74">&#34;*.css&#34;</span> <span style="color:#ae81ff">\)</span> -type f -exec grep -l <span style="color:#e6db74">&#39;JIRA-[0-9]\+&#39;</span> <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span>
+</span></span></code></pre></div><p>And these are the <em>simple</em> examples. What if you want to run a compound query? Large source code files or stubbed-out documentation files, maybe. With detect, that&rsquo;s simple:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;(ext == rs &amp;&amp; size &gt; 64kb) || (name == &#34;README.md&#34; &amp;&amp; size &lt; 0.5kb)&#39;</span>
+</span></span></code></pre></div><p>With <code>find</code>, it&rsquo;s significantly more complex:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>  <span style="color:#f92672">{</span> find . -type f -name <span style="color:#e6db74">&#34;*.rs&#34;</span> -size +64k ! -path <span style="color:#e6db74">&#34;*/target/*&#34;</span>; <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    find . -type f -name <span style="color:#e6db74">&#34;README.md&#34;</span> -size -512c; <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#f92672">}</span> | sort -u
+</span></span></code></pre></div><p>There&rsquo;s no way to express that query in one find invocation, so you&rsquo;re forced to invoke find twice and take the unique results via <code>sort -u</code> (or more likely, to just give up and run two commands).</p>
+<p>Also, unlike detect, find does not default to respecting .gitignore files so you need to manually exclude large generated files in the target directory using <code>! -path &quot;*/target/*&quot;</code>. If you also want to include gitignored content, detect provides a <code>-i</code> flag for that purpose.</p>
+<h1 id="performance">Performance</h1>
+<p>For almost every one of the above examples, detect is significantly faster. I measured perf using <a href="https://crates.io/crates/hyperfine">hyperfine</a> using <code>--warmup 1</code>. The benefit ranges from small (~15% mean time reduction) in cases where the improvement is from ignoring gitignore&rsquo;d directories like ./target, to large (~90-95% mean time reductions) in cases where the improvement is from not having to invoke a subprocess (grep or tq) for each matching file.</p>
+<p>This is simply because instead of multiple passes and processes (<code>-exec</code> spawns a new process for every invocation), detect runs a single pass across each file in one process.</p>
+<p>Detect short-circuits wherever possible to avoid unnecessary syscalls by attempting evaluation at each stage: if the file path is sufficient, it will short-circuit at that stage. For example, <code>content ~= foo &amp;&amp; ext == rs</code> will, after examining the filename <code>frontend.ts</code>, be evaluated as <code>content ~= foo &amp;&amp; FALSE</code>. Since <code>FALSE &amp;&amp; *</code> is always false, it&rsquo;ll short-circuit and move on to the next file. If not, it&rsquo;ll run a syscall to read metadata, then attempt to short-circuit again, followed by streaming file contents and attempting to short-circuit after running streaming regexes against each chunk. For example: if a file contains a regex match sufficient to short-circuit an expression after reading the first chunk of a 1GB file, it&rsquo;ll short-circuit instead of reading the full file contents.</p>
+<p>This also made implementing structured data selectors easy: <code>detect 'toml:..port == 8080'</code> generates the expression <code>toml:..port == 8080 &amp;&amp; ext == toml &amp;&amp; size &lt; 10MB</code>: this way, we only attempt to read and parse the full contents of toml files instead of naively attempting to parse all files as toml. The maximum size is configurable via <code>--max-structured-size</code>.</p>
+<h1 id="future-work">Future work</h1>
+<p>Using an expression language instead of a series of tool-specific flags has other benefits: exploring a filesystem isn&rsquo;t the only scenario where one might need to filter files or file-shaped objects. The detect expression language and parser could easily be used as a component of other tools: scanning AWS S3 buckets, scanning the history of a git repo, building filter expressions, etc.</p>
+<p>The abstractions to support this haven&rsquo;t been implemented yet, but if you&rsquo;re interested in embedding the detect expression language in your project please reach out (or file an issue on <a href="https://github.com/inanna-malick/detect">the detect repo</a>), I&rsquo;d be happy to work with you on this.</p>
+<h1 id="get-in-touch">Get in touch</h1>
+<p>Finally, I&rsquo;m currently looking for Rust engineering roles: SF Bay Area, fully remote, or EU with visa sponsorship. If you&rsquo;re hiring, let&rsquo;s talk: my email is <a href="mailto:inanna@recursion.wtf">inanna@recursion.wtf</a></p>
+
+        
+          <div class="blog-tags">
+            
+              
+              <a href="http://localhost:1313/tags/rust/">rust</a>&nbsp;
+            
+              
+              <a href="http://localhost:1313/tags/cli/">cli</a>&nbsp;
+            
+              
+              <a href="http://localhost:1313/tags/tools/">tools</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdetect%2f&amp;text=Detect%3a%20a%20readable%20alternative%20to%20find%2fexec%2fgrep&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fdetect%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdetect%2f&amp;title=Detect%3a%20a%20readable%20alternative%20to%20find%2fexec%2fgrep" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdetect%2f&amp;title=Detect%3a%20a%20readable%20alternative%20to%20find%2fexec%2fgrep" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdetect%2f&amp;title=Detect%3a%20a%20readable%20alternative%20to%20find%2fexec%2fgrep" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdetect%2f&amp;description=Detect%3a%20a%20readable%20alternative%20to%20find%2fexec%2fgrep" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+              </div>
+            </section>
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also">See also</h4>
+                  <ul>
+                
+                
+                    <li><a href="/posts/llms_as_ux_testers/">Fresh Eyes as a Service: Using LLMs to Test CLI Ergonomics</a></li>
+                
+                    <li><a href="/posts/recursion_lib_intro/">Recursion: a quick introduction</a></li>
+                
+                    <li><a href="/posts/rust_schemes_3/">Single Pass Recursion in Rust</a></li>
+                
+                    <li><a href="/posts/rust_schemes_2/">Fully generic recursion in Rust</a></li>
+                
+                    <li><a href="/posts/rust_schemes/">Elegant and performant recursion in Rust</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="http://localhost:1313/posts/llms_as_ux_testers/" data-toggle="tooltip" data-placement="top" title="Fresh Eyes as a Service: Using LLMs to Test CLI Ergonomics">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+      
+      
+      
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      <footer>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2025
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="http://localhost:1313/">Inanna Malick</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.147.8</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+<script src="http://localhost:1313/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="http://localhost:1313/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+

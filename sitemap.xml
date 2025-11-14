@@ -2,100 +2,103 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://recursion.wtf/tags/cli/</loc>
+    <loc>http://localhost:1313/tags/cli/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/detect/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/rust/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/tools/</loc>
+    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/detect/</loc>
     <lastmod>2025-08-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/detect/</loc>
+    <loc>http://localhost:1313/posts/llms_as_ux_testers/</loc>
     <lastmod>2025-08-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/llms_as_ux_testers/</loc>
+    <loc>http://localhost:1313/tags/llm/</loc>
     <lastmod>2025-08-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/</loc>
+    <loc>http://localhost:1313/tags/testing/</loc>
     <lastmod>2025-08-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/llm/</loc>
+    <loc>http://localhost:1313/tags/ux/</loc>
     <lastmod>2025-08-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/</loc>
-    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/</loc>
-    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/testing/</loc>
-    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/tools/</loc>
-    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/ux/</loc>
-    <lastmod>2025-08-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/ai/</loc>
+    <loc>http://localhost:1313/tags/ai/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/categories/ai/</loc>
+    <loc>http://localhost:1313/categories/ai/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/imagine_you_are_an_llm/</loc>
+    <loc>http://localhost:1313/posts/imagine_you_are_an_llm/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/consciousness/</loc>
+    <loc>http://localhost:1313/tags/consciousness/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/philosophy/</loc>
+    <loc>http://localhost:1313/tags/philosophy/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/code/</loc>
+    <loc>http://localhost:1313/tags/code/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/recursion/</loc>
+    <loc>http://localhost:1313/tags/recursion/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/recursion_lib_intro/</loc>
+    <loc>http://localhost:1313/posts/recursion_lib_intro/</loc>
     <lastmod>2023-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/rust/</loc>
-    <lastmod>2023-10-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/generic/</loc>
+    <loc>http://localhost:1313/tags/generic/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/recursion-schemes/</loc>
+    <loc>http://localhost:1313/tags/recursion-schemes/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/rust_schemes_3/</loc>
+    <loc>http://localhost:1313/posts/rust_schemes_3/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/stack_machines/</loc>
+    <loc>http://localhost:1313/tags/stack_machines/</loc>
     <lastmod>2022-10-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/rust_schemes_2/</loc>
+    <loc>http://localhost:1313/posts/rust_schemes_2/</loc>
     <lastmod>2022-07-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/rust_schemes/</loc>
+    <loc>http://localhost:1313/posts/rust_schemes/</loc>
     <lastmod>2022-07-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/infinity/</loc>
+    <loc>http://localhost:1313/tags/infinity/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</loc>
+    <loc>http://localhost:1313/posts/infinity_mirror_hypercrystal/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/meatspace/</loc>
+    <loc>http://localhost:1313/tags/meatspace/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/mirrors/</loc>
+    <loc>http://localhost:1313/tags/mirrors/</loc>
     <lastmod>2022-02-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/tags/guppy/</loc>
+    <loc>http://localhost:1313/tags/guppy/</loc>
     <lastmod>2020-12-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/posts/transitive-frontier/</loc>
+    <loc>http://localhost:1313/posts/transitive-frontier/</loc>
     <lastmod>2020-12-30T00:00:00+00:00</lastmod>
   </url>
 </urlset>

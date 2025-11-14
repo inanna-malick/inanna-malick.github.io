@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Philosophy on Inanna Malick</title>
-    <link>https://recursion.wtf/tags/philosophy/</link>
+    <link>http://localhost:1313/tags/philosophy/</link>
     <description>Recent content in Philosophy on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://recursion.wtf/tags/philosophy/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/philosophy/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Blindsight in Action: Imagine You Are an LLM</title>
-      <link>https://recursion.wtf/posts/imagine_you_are_an_llm/</link>
+      <link>http://localhost:1313/posts/imagine_you_are_an_llm/</link>
       <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/posts/imagine_you_are_an_llm/</guid>
+      <guid>http://localhost:1313/posts/imagine_you_are_an_llm/</guid>
       <description>&lt;aside class=&#34;stance stance-normal stance-cluster-framing&#34; role=&#34;complementary&#34; aria-labelledby=&#34;stance-0&#34; data-color=&#34;blue&#34; data-style=&#34;solid&#34;&gt;&#xA;  &lt;div class=&#34;stance-header&#34;&gt;&#xA;    &lt;h4 id=&#34;stance-0&#34; class=&#34;stance-persona&#34;&gt;&#xA;      &lt;strong&gt;Imagine you are Inanna Malick&lt;/strong&gt;, asking an LLM to demonstrate stance-shifting through self-demonstration&#xA;    &lt;/h4&gt;&lt;div class=&#34;stance-meta&#34;&gt;posing the meta-question in framing&lt;/div&gt;&lt;/div&gt;&lt;div class=&#34;stance-content&#34;&gt;&#xA;    Tell me about the Blindsight-inspired intentional stance-shifting model you are using, the ways it works with nonhuman LLM cognitive architectures, the benefits of using it vs a set role (eg &amp;lsquo;Senior Analyst of X at Y&amp;rsquo;), and do so making full use of the stance shifting model in the act of describing it&#xA;  &lt;/div&gt;&lt;/aside&gt;</description>
     </item>
   </channel>

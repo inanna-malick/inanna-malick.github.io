@@ -2,143 +2,143 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Inanna Malick</title>
-    <link>https://recursion.wtf/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 15 Aug 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cli</title>
-      <link>https://recursion.wtf/tags/cli/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/cli/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Detect</title>
-      <link>https://recursion.wtf/tags/detect/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/detect/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Llm</title>
-      <link>https://recursion.wtf/tags/llm/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/llm/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Testing</title>
-      <link>https://recursion.wtf/tags/testing/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/testing/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tools</title>
-      <link>https://recursion.wtf/tags/tools/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/tools/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ux</title>
-      <link>https://recursion.wtf/tags/ux/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/ux/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ai</title>
-      <link>https://recursion.wtf/tags/ai/</link>
-      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Consciousness</title>
-      <link>https://recursion.wtf/tags/consciousness/</link>
-      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/consciousness/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Philosophy</title>
-      <link>https://recursion.wtf/tags/philosophy/</link>
-      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/philosophy/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Code</title>
-      <link>https://recursion.wtf/tags/code/</link>
-      <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/code/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Recursion</title>
-      <link>https://recursion.wtf/tags/recursion/</link>
-      <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/recursion/</guid>
+      <link>http://localhost:1313/tags/cli/</link>
+      <pubDate>Thu, 13 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/cli/</guid>
       <description></description>
     </item>
     <item>
       <title>Rust</title>
-      <link>https://recursion.wtf/tags/rust/</link>
+      <link>http://localhost:1313/tags/rust/</link>
+      <pubDate>Thu, 13 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/rust/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tools</title>
+      <link>http://localhost:1313/tags/tools/</link>
+      <pubDate>Thu, 13 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/tools/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Detect</title>
+      <link>http://localhost:1313/tags/detect/</link>
+      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/detect/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llm</title>
+      <link>http://localhost:1313/tags/llm/</link>
+      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Testing</title>
+      <link>http://localhost:1313/tags/testing/</link>
+      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/testing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ux</title>
+      <link>http://localhost:1313/tags/ux/</link>
+      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/ux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ai</title>
+      <link>http://localhost:1313/tags/ai/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Consciousness</title>
+      <link>http://localhost:1313/tags/consciousness/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/consciousness/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Philosophy</title>
+      <link>http://localhost:1313/tags/philosophy/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/philosophy/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Code</title>
+      <link>http://localhost:1313/tags/code/</link>
       <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/rust/</guid>
+      <guid>http://localhost:1313/tags/code/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Recursion</title>
+      <link>http://localhost:1313/tags/recursion/</link>
+      <pubDate>Mon, 16 Oct 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/recursion/</guid>
       <description></description>
     </item>
     <item>
       <title>Generic</title>
-      <link>https://recursion.wtf/tags/generic/</link>
+      <link>http://localhost:1313/tags/generic/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/generic/</guid>
+      <guid>http://localhost:1313/tags/generic/</guid>
       <description></description>
     </item>
     <item>
       <title>Recursion Schemes</title>
-      <link>https://recursion.wtf/tags/recursion-schemes/</link>
+      <link>http://localhost:1313/tags/recursion-schemes/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/recursion-schemes/</guid>
+      <guid>http://localhost:1313/tags/recursion-schemes/</guid>
       <description></description>
     </item>
     <item>
       <title>Stack_machines</title>
-      <link>https://recursion.wtf/tags/stack_machines/</link>
+      <link>http://localhost:1313/tags/stack_machines/</link>
       <pubDate>Wed, 05 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/stack_machines/</guid>
+      <guid>http://localhost:1313/tags/stack_machines/</guid>
       <description></description>
     </item>
     <item>
       <title>Infinity</title>
-      <link>https://recursion.wtf/tags/infinity/</link>
+      <link>http://localhost:1313/tags/infinity/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/infinity/</guid>
+      <guid>http://localhost:1313/tags/infinity/</guid>
       <description></description>
     </item>
     <item>
       <title>Meatspace</title>
-      <link>https://recursion.wtf/tags/meatspace/</link>
+      <link>http://localhost:1313/tags/meatspace/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/meatspace/</guid>
+      <guid>http://localhost:1313/tags/meatspace/</guid>
       <description></description>
     </item>
     <item>
       <title>Mirrors</title>
-      <link>https://recursion.wtf/tags/mirrors/</link>
+      <link>http://localhost:1313/tags/mirrors/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/mirrors/</guid>
+      <guid>http://localhost:1313/tags/mirrors/</guid>
       <description></description>
     </item>
     <item>
       <title>Guppy</title>
-      <link>https://recursion.wtf/tags/guppy/</link>
+      <link>http://localhost:1313/tags/guppy/</link>
       <pubDate>Wed, 30 Dec 2020 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/guppy/</guid>
+      <guid>http://localhost:1313/tags/guppy/</guid>
       <description></description>
     </item>
   </channel>

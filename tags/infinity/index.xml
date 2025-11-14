@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Infinity on Inanna Malick</title>
-    <link>https://recursion.wtf/tags/infinity/</link>
+    <link>http://localhost:1313/tags/infinity/</link>
     <description>Recent content in Infinity on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Sat, 05 Feb 2022 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://recursion.wtf/tags/infinity/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/infinity/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Infinity Mirror HYPERCRYSTAL</title>
-      <link>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</link>
+      <link>http://localhost:1313/posts/infinity_mirror_hypercrystal/</link>
       <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/posts/infinity_mirror_hypercrystal/</guid>
-      <description>&lt;h2 id=&#34;infinity-mirror-hypercrystal&#34;&gt;Infinity Mirror HYPERCRYSTAL&lt;/h2&gt;&#xA;&#xA;&lt;link rel=&#34;stylesheet&#34; href=&#34;https://recursion.wtf/css/hugo-easy-gallery.css&#34; /&gt;&#xA;&lt;div class=&#34;box&#34; &gt;&#xA;  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;&#xA;    &lt;div class=&#34;img&#34;&gt;&#xA;      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; alt=&#34;hypercrystal powered on&#34;/&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;a href=&#34;https://recursion.wtf/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;&#xA;  &lt;/figure&gt;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on &lt;a href=&#34;https://twitter.com/inanna_malick/status/1488927590207275010&#34;&gt;twitter&lt;/a&gt;. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:&lt;/p&gt;</description>
+      <guid>http://localhost:1313/posts/infinity_mirror_hypercrystal/</guid>
+      <description>&lt;h2 id=&#34;infinity-mirror-hypercrystal&#34;&gt;Infinity Mirror HYPERCRYSTAL&lt;/h2&gt;&#xA;&#xA;&lt;link rel=&#34;stylesheet&#34; href=&#34;http://localhost:1313/css/hugo-easy-gallery.css&#34; /&gt;&#xA;&lt;div class=&#34;box&#34; &gt;&#xA;  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;&#xA;    &lt;div class=&#34;img&#34;&gt;&#xA;      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;http://localhost:1313/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; alt=&#34;hypercrystal powered on&#34;/&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;a href=&#34;http://localhost:1313/img/infinity_mirror_hypercrystal/powered_on_front_header.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;&#xA;  &lt;/figure&gt;&#xA;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;This object is the result of a series of algorithmic/generative art techniques I&amp;rsquo;ve been working on, on and off, for the last decade. I was really excited to see my latest build get a lot of attention on &lt;a href=&#34;https://twitter.com/inanna_malick/status/1488927590207275010&#34;&gt;twitter&lt;/a&gt;. I&amp;rsquo;ve written up a build log with details on how I generated and constructed this object:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

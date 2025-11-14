@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Testing on Inanna Malick</title>
-    <link>http://localhost:1313/tags/testing/</link>
+    <link>https://recursion.wtf/tags/testing/</link>
     <description>Recent content in Testing on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Fri, 15 Aug 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/testing/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://recursion.wtf/tags/testing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Fresh Eyes as a Service: Using LLMs to Test CLI Ergonomics</title>
-      <link>http://localhost:1313/posts/llms_as_ux_testers/</link>
+      <link>https://recursion.wtf/posts/llms_as_ux_testers/</link>
       <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/llms_as_ux_testers/</guid>
+      <guid>https://recursion.wtf/posts/llms_as_ux_testers/</guid>
       <description>&lt;p&gt;Every tool has a complexity budget. Users will only devote so much time to understanding what a tool does and how before they give up. You want to use that budget on your innovative new features, not on arbitrary or idiosyncratic syntax choices.&lt;/p&gt;&#xA;&lt;p&gt;Here&amp;rsquo;s the problem: you can&amp;rsquo;t look at it with fresh eyes and analyze it from that perspective. Finding users for a new CLI tool is hard, especially if the user experience isn&amp;rsquo;t polished. But to polish the user experience, you need users, you need user feedback, and not just from a small group of power users. Many tools fail to grow past this stage.&lt;/p&gt;&#xA;&lt;p&gt;What you really need is a vast farm of test users that don&amp;rsquo;t retain memories between runs. Ideally, you would be able to tweak a dial and set their cognitive capacity, press a button and have them drop their short term memory. But you can&amp;rsquo;t have this, because of &amp;lsquo;The Geneva Convention&amp;rsquo; and &amp;rsquo;ethics&amp;rsquo;. Fine.&lt;/p&gt;&#xA;&lt;p&gt;LLMs provide exactly this. Fresh eyes every time (just clear their context window), adjustable cognitive capacity (just switch models), infinite patience, and no feelings to hurt. Best of all, they approximate the statistically average hypothetical user - their training data includes millions of lines of humans interacting with a wide variety of CLI tools. Sure, they get confused sometimes, but that&amp;rsquo;s exactly what you want. That confusion is data, and the reasoning chain that led to it is available in the LLM&amp;rsquo;s context window.&lt;/p&gt;</description>
     </item>
   </channel>

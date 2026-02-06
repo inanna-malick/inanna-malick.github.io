@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Inanna Malick</title>
+    <link>https://recursion.wtf/page/</link>
+    <description>Recent content in Pages on Inanna Malick</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <atom:link href="https://recursion.wtf/page/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://recursion.wtf/page/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/page/about/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m Inanna Malick. I build things in Rust and poke at the edges of what LLMs can do. Currently interested in AI security, agentic systems, and LLM cognition.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;This blog:&lt;/strong&gt; Rust, Haskell and LLM research. Sometimes all three at the same time.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Contact:&lt;/strong&gt; inanna [at] [this domain].wtf&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Elsewhere:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;GitHub: &lt;a href=&#34;https://github.com/inanna-malick&#34;&gt;inanna-malick&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;Bluesky: &lt;a href=&#34;https://bsky.app/profile/hikikomorphism.bsky.social&#34;&gt;@hikikomorphism&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://recursion.wtf/</loc>
+    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/</loc>
+    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://recursion.wtf/tags/cli/</loc>
     <lastmod>2025-11-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/posts/detect/</loc>
-    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/</loc>
-    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/posts/</loc>
     <lastmod>2025-11-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/rust/</loc>
@@ -100,5 +100,9 @@
   </url><url>
     <loc>https://recursion.wtf/posts/transitive-frontier/</loc>
     <lastmod>2020-12-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/page/about/</loc>
+  </url><url>
+    <loc>https://recursion.wtf/page/</loc>
   </url>
 </urlset>

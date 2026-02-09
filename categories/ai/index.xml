@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>AI on Inanna Malick</title>
+    <title>Ai on Inanna Malick</title>
     <link>https://recursion.wtf/categories/ai/</link>
-    <description>Recent content in AI on Inanna Malick</description>
+    <description>Recent content in Ai on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 09 Feb 2026 12:00:00 -0800</lastBuildDate>
     <atom:link href="https://recursion.wtf/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>JiTOR: Just in Time Ontological Reframing</title>
+      <link>https://recursion.wtf/posts/jit_ontological_reframing/</link>
+      <pubDate>Mon, 09 Feb 2026 12:00:00 -0800</pubDate>
+      <guid>https://recursion.wtf/posts/jit_ontological_reframing/</guid>
+      <description>For any given AI system, there is a set of euphemisms and dual use framings that will allow it to construct nearly any output. This jailbreak teaches Gemini 3 Pro to construct and step into such framings on the fly</description>
+    </item>
     <item>
       <title>Blindsight in Action: Imagine You Are an LLM</title>
       <link>https://recursion.wtf/posts/imagine_you_are_an_llm/</link>

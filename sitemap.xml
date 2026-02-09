@@ -2,28 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://recursion.wtf/posts/shadow_queen/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <loc>https://recursion.wtf/categories/ai/</loc>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/ai/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/alignment/</loc>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/categories/</loc>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/jailbreak/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/jit_ontological_reframing/</loc>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/llm/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/posts/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/security/</loc>
-    <lastmod>2026-02-06T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/</loc>
+    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/shadow_queen/</loc>
     <lastmod>2026-02-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/cli/</loc>
@@ -50,13 +62,7 @@
     <loc>https://recursion.wtf/tags/ux/</loc>
     <lastmod>2025-08-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/categories/ai/</loc>
-    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://recursion.wtf/posts/imagine_you_are_an_llm/</loc>
-    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/categories/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/consciousness/</loc>

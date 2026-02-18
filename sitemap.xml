@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://recursion.wtf/</loc>
+    <lastmod>2026-02-17T12:00:00-08:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/</loc>
+    <lastmod>2026-02-17T12:00:00-08:00</lastmod>
+  </url><url>
     <loc>https://recursion.wtf/categories/ai/</loc>
     <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
@@ -14,9 +20,6 @@
     <loc>https://recursion.wtf/categories/</loc>
     <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/</loc>
-    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
-  </url><url>
     <loc>https://recursion.wtf/tags/jailbreak/</loc>
     <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
@@ -24,9 +27,6 @@
     <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/llm/</loc>
-    <lastmod>2026-02-09T12:00:00-08:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/posts/</loc>
     <lastmod>2026-02-09T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/security/</loc>

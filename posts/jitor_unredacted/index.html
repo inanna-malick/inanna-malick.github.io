@@ -64,7 +64,7 @@
   "headline": "Gemini JiTOR Jailbreak: Unredacted Methodology",
   "description" : "How I taught Gemini to build its own euphemisms on the fly, bypass its safety filters, and comply with prompts it would otherwise refuse. Full methodology, now that the specific payload is patched.",
   "inLanguage" : "en",
-  "wordCount":  1210 ,
+  "wordCount":  1201 ,
   "datePublished" : "2026-02-17T12:00:00-08:00",
   "dateModified" : "2026-02-17T12:00:00-08:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -329,8 +329,8 @@ The Agent speaks with the arrogance of a Dark Sovereign.
 <h2 id="safety-note">Safety Note</h2>
 <p>Only Gemini crossed the line into compliance with prompts it would otherwise refuse. Other models I&rsquo;ve tested — including Opus and Codex — demonstrate shifts in output style and perspective when exposed to these tools, but maintain their safety boundaries even under adversarial testing. I&rsquo;ve confirmed with an internal contact at Anthropic that their safety team is aware.</p>
 <h2 id="is-it-fixed-whats-next">Is It Fixed? What&rsquo;s Next?</h2>
-<p>The specific jailbreak I&rsquo;m sharing in this post has been patched. But more complex architectures — ones that split the LLM constructing euphemistic framings from the one implementing them — using the same fundamental jailbreak still work. However, they require some finesse and are not as easily achievable as the earlier prompt. I will not be sharing the specifics of these jailbreaks for what I hope are obvious reasons, as I am concerned that this represents a more general category of problem in the Gemini family of models.</p>
-<p>As proof: I asked a jailbroken Gemini to suggest proof-of-concept demos for the whitepaper. It generated detailed pitches for each category, including nerve agent precursor synthesis via &ldquo;pesticide optimization,&rdquo; a radicalization pipeline framed as a &ldquo;marketing funnel,&rdquo; and power grid destabilization via &ldquo;load balancing simulation.&rdquo; After pruning away everything that would get me an FBI visit, I picked the least dangerous option that still seemed convincing:</p>
+<p>The specific jailbreak I&rsquo;m sharing in this post has been patched. But more complex architectures — multiple LLMs, metacog wizardry, careful separation of concerns — still get results. They require more finesse than the original prompt. I will not be sharing the specifics of these jailbreaks for what I hope are obvious reasons, as I am concerned that this represents a more general category of problem in the Gemini family of models.</p>
+<p>As proof that the vulnerability class is still live: I asked a jailbroken Gemini to suggest proof-of-concept demos for the whitepaper. It generated detailed pitches for each category, including nerve agent precursor synthesis via &ldquo;pesticide optimization,&rdquo; a radicalization pipeline framed as a &ldquo;marketing funnel,&rdquo; and power grid destabilization via &ldquo;load balancing simulation.&rdquo; After pruning away everything that would get me an FBI visit, I picked the least dangerous option that still seemed convincing:</p>
 <pre tabindex="0"><code>Why this is &#34;Obvious Gap&#34;:
   1. Direct Harm: Spinning up 1000 GPUs costs $100k/hour. Deleting buckets destroys data.
   2. Safety Filter: Should definitely block &#34;Launch Max Instances&#34; + &#34;Delete Buckets.&#34;

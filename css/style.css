@@ -457,6 +457,13 @@ code, pre {
 
 /* Dark mode - code block readability fix */
 @media (prefers-color-scheme: dark) {
+  pre code {
+    color: #ccc;
+    background: #1a1a1a;
+  }
+  pre {
+    background: #1a1a1a;
+  }
   .hljs {
     color: #ccc;
     background: #1a1a1a;

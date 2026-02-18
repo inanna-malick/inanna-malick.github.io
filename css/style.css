@@ -455,6 +455,14 @@ code, pre {
   
 }
 
+/* Dark mode - code block readability fix */
+@media (prefers-color-scheme: dark) {
+  .hljs {
+    color: #ccc;
+    background: #1a1a1a;
+  }
+}
+
 /* Dark mode - enhanced contrast (removed stance border override to preserve type colors) */
 @media (prefers-color-scheme: dark) {
   .stance-persona {

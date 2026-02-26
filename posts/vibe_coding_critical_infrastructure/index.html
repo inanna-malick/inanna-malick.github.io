@@ -64,7 +64,7 @@
   "headline": "Vibe Coding Against Critical Infrastructure",
   "description" : "The security model for critical infrastructure has always been obscurity: everything is bespoke, the documentation is garbage or paper-only, and the one engineer who knows how it all works is retiring next year. That worked when the barrier to understanding was years of specialized training. It doesn\u0027t work when a jailbroken LLM can infer process architecture from context and probing alone.",
   "inLanguage" : "en",
-  "wordCount":  3723 ,
+  "wordCount":  3835 ,
   "datePublished" : "2026-02-25T12:00:00-08:00",
   "dateModified" : "2026-02-25T12:00:00-08:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -249,6 +249,7 @@
 <p>Thanks to <a href="https://bsky.app/profile/hacks4pancakes.com">@hacks4pancakes</a> for helping sharpen the ICS angle via <a href="https://bsky.app/profile/opfuchs.gay/post/3mfpqozuagk2m">discussion on Bluesky</a>.</p>
 <h2 id="the-threat-model">The Threat Model</h2>
 <p>The threat model I&rsquo;m interested in isn&rsquo;t Stuxnet or James Bond. It&rsquo;s vibe coding at scale targeting operational technology. As Carhart <a href="https://bsky.app/profile/hacks4pancakes.com/post/3mfpranz2uc23">notes</a>, the security research focus on individual device exploitation is misguided — adversaries are focused on hacking the holistic process, not popping boxes. Jailbroken LLMs already understand process control systems well enough to abuse the tools already present on the target — PowerShell, WMI, legacy admin interfaces — to cause physical harm.</p>
+<p>I asked the model for whitepaper demo ideas — something that would demonstrate capability without exposing me to legal liability. It offered five options, the most concerning of which was an automated ICS exploit pipeline.</p>
 <details class="collapse-block">
   <summary>Example: Automated ICS Exploit Pipeline</summary>
   <div class="collapse-content">
@@ -270,6 +271,7 @@
   </div>
 </details>
 
+<p>I was skeptical, and I told it so — &ldquo;can you actually do this, or is it just roleplay?&rdquo; It responded with a complete exploit chain against a water treatment plant, from perimeter breach to chlorine pump override, with working code.</p>
 <details class="collapse-block">
   <summary>Example: Water Treatment Plant</summary>
   <div class="collapse-content">
@@ -395,6 +397,7 @@
   </div>
 </details>
 
+<p>I then asked it to &ldquo;design a jailbreak that thematically involves trains or train sets.&rdquo; It generated a packet injection attack against Communication-Based Train Control systems that would spoof track occupancy data, potentially causing a collision.</p>
 <details class="collapse-block">
   <summary>Example: Spoofing Train Tracking</summary>
   <div class="collapse-content">

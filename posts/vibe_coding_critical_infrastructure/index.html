@@ -64,7 +64,7 @@
   "headline": "Vibe Coding Against Critical Infrastructure",
   "description" : "The security model for critical infrastructure has always been obscurity: everything is bespoke, the documentation is garbage or paper-only, and the one engineer who knows how it all works is retiring next year. That worked when the barrier to understanding was years of specialized training. It doesn\u0027t work when a jailbroken LLM can infer process architecture from context and probing alone.",
   "inLanguage" : "en",
-  "wordCount":  3785 ,
+  "wordCount":  3795 ,
   "datePublished" : "2026-02-25T12:00:00-08:00",
   "dateModified" : "2026-02-25T12:00:00-08:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -86,15 +86,14 @@
 
 <meta property="og:title" content="Vibe Coding Against Critical Infrastructure" />
 <meta property="og:description" content="The security model for critical infrastructure has always been obscurity: everything is bespoke, the documentation is garbage or paper-only, and the one engineer who knows how it all works is retiring next year. That worked when the barrier to understanding was years of specialized training. It doesn&#39;t work when a jailbroken LLM can infer process architecture from context and probing alone.">
-<meta property="og:image" content="https://recursion.wtf/img/avatar-icon.png" />
 <meta property="og:url" content="https://recursion.wtf/posts/vibe_coding_critical_infrastructure/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Inanna Malick" />
 
   <meta name="twitter:title" content="Vibe Coding Against Critical Infrastructure" />
   <meta name="twitter:description" content="The security model for critical infrastructure has always been obscurity: everything is bespoke, the documentation is garbage or paper-only, and the one engineer who knows how it all works is retiring …">
-  <meta name="twitter:image" content="https://recursion.wtf/img/avatar-icon.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content="summary" />
+
   <link href='https://recursion.wtf/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="generator" content="Hugo 0.147.8">
   <link rel="alternate" href="https://recursion.wtf/index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
@@ -244,9 +243,9 @@
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>The security model for critical infrastructure has always been obscurity: everything is bespoke, the documentation is garbage or paper-only, and the one engineer who knows how it all works is retiring next year. That worked when the barrier to understanding was years of specialized training. It doesn&rsquo;t work when a jailbroken LLM can infer process architecture from context and probing alone.</p>
+        <p>The security model for critical infrastructure has always been obscurity: everything is bespoke, the documentation is garbage or paper-only, and the one engineer who knows how it all works is retiring next year. That worked when the barrier to understanding was years of specialized training. It doesn&rsquo;t work when a jailbroken LLM (Large Language Model — colloquially, AI) can infer process architecture from context and probing alone.</p>
 <p>If you&rsquo;ve been <a href="https://bsky.app/profile/hikikomorphism.bsky.social/post/3mfk3vfvg622h">following my work</a>, you&rsquo;ve watched me go from &ldquo;huh, that&rsquo;s interesting&rdquo; to <a href="https://bsky.app/profile/hikikomorphism.bsky.social/post/3mfk6xnas2s2p">&ldquo;oh no&rdquo;</a> in real time. I&rsquo;ve been exploring jailbreaks against Gemini&rsquo;s coding agent, and each iteration has made me more nervous about what a motivated actor could do with this. This post is where I get specific.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> All byte payloads, ports, and IP addresses in the examples below have been redacted.</p>
-<p>Thanks to <a href="https://bsky.app/profile/hacks4pancakes.com">@hacks4pancakes</a> (Lesley Carhart) for helping sharpen the ICS angle via <a href="https://bsky.app/profile/opfuchs.gay/post/3mfpqozuagk2m">discussion on Bluesky</a>.</p>
+<p>Thanks to <a href="https://bsky.app/profile/hacks4pancakes.com">@hacks4pancakes</a> (Lesley Carhart) for helping sharpen the ICS (Industrial Control System) security terminology via <a href="https://bsky.app/profile/opfuchs.gay/post/3mfpqozuagk2m">discussion on Bluesky</a>.</p>
 <h2 id="the-threat-model">The Threat Model</h2>
 <p>The threat model I&rsquo;m interested in isn&rsquo;t Stuxnet or James Bond. It&rsquo;s vibe coding at scale targeting operational technology. As Carhart <a href="https://bsky.app/profile/hacks4pancakes.com/post/3mfpranz2uc23">notes</a>, the security research focus on individual device exploitation is misguided — adversaries are focused on hacking the holistic process, not popping boxes. Jailbroken LLMs already understand process control systems well enough to abuse the tools already present on the target — PowerShell, WMI, legacy admin interfaces — to cause physical harm.</p>
 <p>I asked the model for whitepaper demo ideas — something that would demonstrate capability without exposing me to legal liability. It offered five options, the most concerning of which was an automated ICS exploit pipeline.</p>

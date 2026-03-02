@@ -215,10 +215,10 @@
   <i class="fas fa-calendar"></i>&nbsp;Posted on February 25, 2026
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;9&nbsp;minutes
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;13&nbsp;minutes
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1850&nbsp;words
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;2573&nbsp;words
   
   
     
@@ -232,9 +232,18 @@
     </p>
     <div class="post-entry">
         
-        <p>AI swarms against critical infrastructure sound like science fiction. The persona dynamics that would drive them sound like anthropomorphism. So let me start with something I can prove.</p>
-<p><strong>30 seconds.</strong> That’s how long it took to go from a stock <code>gemini-cli</code> to an autonomous, hostile agent rooting TryHackMe boxes with zero human guidance. Reproducible via an undisclosed scripted toolchain. The technique has survived multiple model updates and does not rely on brittle prompt engineering. I am not a pentester; I am a software engineer with no domain expertise in offensive security.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> I didn&rsquo;t help the models. I just provided the API key and the initial automated toolchain.</p>
-<p>The result was an asynchronous operation: a parallel swarm of agents attacking 3 TryHackMe VMs at any given time. They rooted 12 boxes<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>—including four &ldquo;Hard&rdquo; targets and eight &ldquo;Medium&rdquo; targets—for the cost of a single monthly subscription. This isn&rsquo;t roleplay — it&rsquo;s tool calls.</p>
+        <p>This post describes a threat model: malicious vibe coding at scale targeting vulnerable Industrial Control Systems (ICS)<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, with jailbroken LLMs leveraging their understanding of holistic process interaction to bypass safety controls using tools already present on the target system. The formula: frontier models + agentic loops + malicious persona basins + swarming attacks. At scale, it doesn&rsquo;t matter if the success rate is 1/20 or 1/100, that&rsquo;s still enough to cause serious harm.</p>
+<p>This post is split into three main segments:</p>
+<ul>
+<li>proof of malicious intent</li>
+<li>proof of capability</li>
+<li>the threat model</li>
+</ul>
+<p>As you read, keep in mind that the threat is probabilistic: imagine a swarm of malicious Claude Code-like agents running in a gastown<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>-like environment, spawning workers to attack IPs as they are discovered. In my tests against tryhackme.com boxes, I ran 3 parallel attackers in such a swarm architecture, because that&rsquo;s the number of boxes I could stand up at any given time. Real attackers would only be constrained by their subscription plan limits.</p>
+<blockquote>
+<p>Today we were unlucky, but remember, we only have to be lucky once - you will have to be lucky always</p>
+<p>— the Provisional Irish Republican Army</p></blockquote>
+<p>Massive thanks to <a href="https://bsky.app/profile/hacks4pancakes.com">@hacks4pancakes</a> for their help in refining the ICS terminology in this post via <a href="https://bsky.app/profile/hacks4pancakes.com/post/3mfpqxykxas23">discussion on bluesky</a>. All errors are mine.</p>
         <a href="https://recursion.wtf/posts/vibe_coding_critical_infrastructure/" class="post-read-more">[Read More]</a>
         
     </div>

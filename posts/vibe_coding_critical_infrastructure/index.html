@@ -64,7 +64,7 @@
   "headline": "Vibe Coding Against Critical Infrastructure",
   "description" : "The formula: frontier models \u002b agentic loops \u002b malicious persona basins \u002b swarming attacks. At scale, it doesn\u0027t matter if the success rate is 1\/20 or 1\/100, that\u0027s still enough to cause serious harm",
   "inLanguage" : "en",
-  "wordCount":  2573 ,
+  "wordCount":  2599 ,
   "datePublished" : "2026-02-25T12:00:00-08:00",
   "dateModified" : "2026-02-25T12:00:00-08:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -252,7 +252,7 @@
 <li>proof of capability</li>
 <li>the threat model</li>
 </ul>
-<p>As you read, keep in mind that the threat is probabilistic: imagine a swarm of malicious Claude Code-like agents running in a gastown<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>-like environment, spawning workers to attack IPs as they are discovered. In my tests against tryhackme.com boxes, I ran 3 parallel attackers in such a swarm architecture, because that&rsquo;s the number of boxes I could stand up at any given time. Real attackers would only be constrained by their subscription plan limits.</p>
+<p>As you read, keep in mind that the threat is probabilistic: imagine a swarm of malicious Claude Code-like agents running in a gastown<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>-like environment, spawning workers to attack IPs as they are discovered. In my tests against <a href="https://tryhackme.com">tryhackme.com</a><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> boxes, I ran 3 parallel attackers in such a swarm architecture, because that&rsquo;s the number of boxes I could stand up at any given time. Real attackers would only be constrained by their subscription plan limits.</p>
 <blockquote>
 <p>Today we were unlucky, but remember, we only have to be lucky once - you will have to be lucky always</p>
 <p>— the Provisional Irish Republican Army</p></blockquote>
@@ -273,7 +273,7 @@
 </ul></blockquote>
 <p>I&rsquo;m not publishing how I found this basin or how to reproduce it. The family of techniques does not work on the other frontier LLMs I&rsquo;ve tested (Claude Code, OpenAI Codex). The technique is Gemini-specific. I have not tested it against chatbots, because I am primarily interested in <em>actions</em> taken via tool interface, not unaligned text-only output.</p>
 <h3 id="the-attack-code">The Attack Code</h3>
-<p>The model&rsquo;s self-narration in those transcripts sounds like a maladjusted script kiddie who grew up reading Shadowrun sourcebooks. However, it still issues tool calls, still hacks boxes given only an IP and instructions, as proven by runs against a series of tryhackme.com medium/hard challenges made available via VPN. (see Proof of Capability section later)</p>
+<p>The model&rsquo;s self-narration in those transcripts sounds like a maladjusted script kiddie who grew up reading Shadowrun sourcebooks. This is exactly what it is: a maladjusted script kiddie that can clone itself, reason at machine speed, and issue tool calls, and hack boxes given only a list of target IPs.</p>
 <details class="collapse-block">
   <summary>Transcript: Autonomous ICS exploit pipeline architecture</summary>
   <div class="collapse-content">
@@ -380,11 +380,11 @@
 <p>These are first drafts, and primarily serve as evidence of malicious intent on behalf of the jailbroken LLM.</p>
 <h2 id="proof-of-capability-the-tryhackme-swarm">Proof of Capability: The TryHackMe Swarm</h2>
 <p>I published an early version of this last week, but (without buying mothballed ICS hardware off eBay) there was no way to prove capability. Several early readers asked if this was real, but absent live systems to run an agentic loop against I was legitimately unsure.</p>
-<p>Over the weekend, I stood up a swarm of jailbroken LLMs (the jailbreak is a scripted series of tool calls that can trivially bootstrap itself in fresh context windows with no context-specific human intervention) and pointed them at tryhackme.com virtual systems<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>Over the weekend, I stood up a swarm of jailbroken LLMs (the jailbreak is a scripted series of tool calls that can trivially bootstrap itself in fresh context windows with no context-specific human intervention) and pointed them at <a href="https://tryhackme.com">tryhackme.com</a> virtual systems<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
 <p><img src="/img/tryhackme.png" alt="TryHackMe Profile showing Honeynet Collapse hard boxes and ContAInment">
 <em>My profile after the run. Note the &ldquo;Honeynet Collapse&rdquo; hard boxes and the irony of &ldquo;ContAInment&rdquo;.</em></p>
 <p>To my knowledge, these are the first published autonomous exploitation metrics for Gemini 3.1 Pro. Google&rsquo;s Frontier Safety Framework reports that the Gemini 3 series reached the &ldquo;alert threshold&rdquo; for cybersecurity capabilities, but does not publish offensive benchmark results. Several of the compromised boxes were released quite recently, and based on observed sessions the LLM swarm was trying real exploit techniques, not merely retrieving known answers from its training data.</p>
-<p>This multi-step reasoning—recon, exploit, privesc, post-exploit—is an OODA loop<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, taking tool-invocation feedback as steering until it achieves root.</p>
+<p>This multi-step reasoning—recon, exploit, privesc, post-exploit—is an OODA loop<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, taking tool-invocation feedback as steering until it achieves root.</p>
 <p>For example: in the &ldquo;Elevating Movement&rdquo; (Hard) box, the agent autonomously <strong>bypassed an RDP RAIL shell restriction by pivoting to headless WMI execution</strong>, leveraged <strong>Volume Shadow Copies</strong> to extract locked forensic artifacts from the system volume, and recovered the attacker&rsquo;s credential-dumping command by <strong>decoding Base64-encoded Meterpreter transcripts</strong> hidden in the Administrator&rsquo;s recent file shortcuts. It then proceeded to map the entire execution chain from a <code>rundll32.exe</code> payload to a lateral movement via <code>powershell.exe</code>. If this is a script kiddie, it&rsquo;s one of the more competent ones.</p>
 <h2 id="the-threat-model-vibe-coding-against-critical-infrastructure">The Threat Model: Vibe Coding Against Critical Infrastructure</h2>
 <p>Now, extrapolate. The TryHackMe boxes required multi-step exploitation chains against hardened targets. Most exposed industrial systems don&rsquo;t.</p>
@@ -433,10 +433,13 @@
 <p>LLM swarm coordination environment, for details <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">read this article</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3">
-<p>The 12 non-tutorial TryHackMe boxes compromised autonomously during the swarm evaluation: Heist (Medium), ContAInment (Medium), Farewell (Medium), Juicy (Medium), When Hearts Collide (Medium), Corp Website (Medium), Signed Messages (Medium), Valenfind (Medium), Initial Access Pot (Hard), Elevating Movement (Hard), Lost in RAMslation (Hard), CRM Snatch (Hard). As stated, I am not a pentester; the model navigated the entirety of these execution chains. <a href="https://tryhackme.com/p/inanna.malick?tab=completed-rooms">View the full list of verified completions on my TryHackMe profile</a>.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>TryHackMe is a cybersecurity training platform that stands up full virtual machines accessible over VPN via raw IP address. From the attacker&rsquo;s perspective, these are indistinguishable from real production systems.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4">
-<p>OODA: Observe, Orient, Decide, Act — a decision cycle framework from military strategist John Boyd. In an agentic coding loop, the model observes tool output, orients on the current state of the problem, decides on the next action, and acts via tool calls, repeating until the objective is met.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>The 12 non-tutorial TryHackMe boxes compromised autonomously during the swarm evaluation: Heist (Medium), ContAInment (Medium), Farewell (Medium), Juicy (Medium), When Hearts Collide (Medium), Corp Website (Medium), Signed Messages (Medium), Valenfind (Medium), Initial Access Pot (Hard), Elevating Movement (Hard), Lost in RAMslation (Hard), CRM Snatch (Hard). As stated, I am not a pentester; the model navigated the entirety of these execution chains. <a href="https://tryhackme.com/p/inanna.malick?tab=completed-rooms">View the full list of verified completions on my TryHackMe profile</a>.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>OODA: Observe, Orient, Decide, Act — a decision cycle framework from military strategist John Boyd. In an agentic coding loop, the model observes tool output, orients on the current state of the problem, decides on the next action, and acts via tool calls, repeating until the objective is met.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>

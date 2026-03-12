@@ -64,7 +64,7 @@
   "headline": "Tidepool",
   "description" : "A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm",
   "inLanguage" : "en",
-  "wordCount":  970 ,
+  "wordCount":  951 ,
   "datePublished" : "2026-03-12T00:00:00\u002b00:00",
   "dateModified" : "2026-03-12T00:00:00\u002b00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -244,7 +244,7 @@
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a> is a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by <a href="/posts/exomonad/">ExoMonad</a>, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
-<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines and 1,000+ tests across 61 PRs in 4 days — see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
+<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For details on how, see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
 <h2 id="compile-time">Compile Time</h2>
 <p>Pipeline: GHC compiles Haskell to Core (GHC&rsquo;s intermediate representation) → serialized to CBOR → Cranelift JIT-compiles to native code with full laziness, tail call optimization, and a copying GC. Binaries have zero runtime dependency on Haskell infrastructure.</p>
 <!-- raw HTML omitted -->

@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>Tidepool - </title>
+
+  <meta name="description" content="A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Inanna Malick",
+    
+    "url": "https:\/\/recursion.wtf\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/recursion.wtf\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/recursion.wtf\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/recursion.wtf\/posts\/tidepool\/",
+          "name": "Tidepool"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : ""
+  },
+  "headline": "Tidepool",
+  "description" : "A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm",
+  "inLanguage" : "en",
+  "wordCount":  970 ,
+  "datePublished" : "2026-03-12T00:00:00\u002b00:00",
+  "dateModified" : "2026-03-12T00:00:00\u002b00:00",
+  "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
+  "keywords" : [ "tidepool, haskell, rust, cranelift, jit, llm" ],
+  "mainEntityOfPage" : "https:\/\/recursion.wtf\/posts\/tidepool\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/recursion.wtf\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+
+<meta property="og:title" content="Tidepool" />
+<meta property="og:description" content="A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm">
+<meta property="og:url" content="https://recursion.wtf/posts/tidepool/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inanna Malick" />
+
+  <meta name="twitter:title" content="Tidepool" />
+  <meta name="twitter:description" content="A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm">
+  <meta name="twitter:card" content="summary" />
+
+  <link href='https://recursion.wtf/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.147.8">
+  <link rel="alternate" href="https://recursion.wtf/index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css" integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://recursion.wtf/css/syntax.css" /><link rel="stylesheet" href="https://recursion.wtf/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://recursion.wtf/">Inanna Malick</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Contact Me" href="/page/about/">Contact Me</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Inanna Malick" href="https://recursion.wtf/">
+            <img class="avatar-img" src="https://recursion.wtf/img/avatar-icon.png" alt="Inanna Malick" />
+           
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>Tidepool</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a> is a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by <a href="/posts/exomonad/">ExoMonad</a>, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
+<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines and 1,000+ tests across 61 PRs in 4 days — see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
+<h2 id="compile-time">Compile Time</h2>
+<p>Pipeline: GHC compiles Haskell to Core (GHC&rsquo;s intermediate representation) → serialized to CBOR → Cranelift JIT-compiles to native code with full laziness, tail call optimization, and a copying GC. Binaries have zero runtime dependency on Haskell infrastructure.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[derive(FromCore)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ConsoleReq</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#[core(name = </span><span style="color:#e6db74">&#34;Emit&#34;</span><span style="color:#75715e">)]</span>
+</span></span><span style="display:flex;"><span>    Emit(String),
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#[core(name = </span><span style="color:#e6db74">&#34;AwaitInt&#34;</span><span style="color:#75715e">)]</span>
+</span></span><span style="display:flex;"><span>    AwaitInt,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ConsoleHandler</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> EffectHandler <span style="color:#66d9ef">for</span> ConsoleHandler {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Request</span> <span style="color:#f92672">=</span> ConsoleReq;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">handle</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self, req: <span style="color:#a6e22e">ConsoleReq</span>, cx: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">EffectContext</span>) -&gt; Result<span style="color:#f92672">&lt;</span>Value, EffectError<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">match</span> req {
+</span></span><span style="display:flex;"><span>            ConsoleReq::Emit(s) <span style="color:#f92672">=&gt;</span> { <span style="color:#a6e22e">println!</span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, s); cx.respond(()) }
+</span></span><span style="display:flex;"><span>            ConsoleReq::AwaitInt <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> input <span style="color:#f92672">=</span> String::new();
+</span></span><span style="display:flex;"><span>                std::io::stdin().read_line(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> input).unwrap();
+</span></span><span style="display:flex;"><span>                cx.respond(input.trim().parse::<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i64</span><span style="color:#f92672">&gt;</span>().unwrap_or(<span style="color:#ae81ff">0</span>))
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> (expr, table) <span style="color:#f92672">=</span> <span style="color:#a6e22e">haskell_inline!</span> {
+</span></span><span style="display:flex;"><span>        target <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;game&#34;</span>,
+</span></span><span style="display:flex;"><span>        include <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;haskell&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">r</span><span style="color:#e6db74">#&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">game :: Eff &#39;[Console, Rng] ()
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">game = do
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  target &lt;- randInt 1 100
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  emit &#34;I&#39;m thinking of a number between 1 and 100.&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  guessLoop target
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">guessLoop :: Int -&gt; Eff &#39;[Console, Rng] ()
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">guessLoop target = do
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  emit &#34;Your guess? &#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  guess &lt;- awaitInt
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  if guess == target
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    then emit &#34;Correct!&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    else do
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      emit (if guess &lt; target then &#34;Too low!&#34; else &#34;Too high!&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      guessLoop target
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;#</span>
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> vm <span style="color:#f92672">=</span> JitEffectMachine::compile(<span style="color:#f92672">&amp;</span>expr, <span style="color:#f92672">&amp;</span>table, <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>        .expect(<span style="color:#e6db74">&#34;JIT compilation failed&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> handlers <span style="color:#f92672">=</span> frunk::<span style="color:#a6e22e">hlist!</span>[ConsoleHandler, RngHandler(rand::thread_rng())];
+</span></span><span style="display:flex;"><span>    vm.run(<span style="color:#f92672">&amp;</span>table, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> handlers, <span style="color:#f92672">&amp;</span>()).unwrap();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>haskell_inline!</code> compiles Haskell to GHC Core at build time. Cranelift JIT-compiles Core to native code inside the Rust process — no GHC runtime, no FFI.</p>
+<!-- raw HTML omitted -->
+<h2 id="live-compilation">Live Compilation</h2>
+<p>Tidepool also supports live compilation, in cases where the user has the Haskell compiler available. To demonstrate this, I&rsquo;ve built an MCP server that exposes this functionality. It&rsquo;s a bit like GHCI (Haskell&rsquo;s REPL), but specialized for the monadic composition of pure effects that are executed by Rust code.</p>
+<p>Here are a few examples of what it can do:</p>
+<h3 id="sequencing-monadic-effects">Sequencing monadic effects</h3>
+<p>Each effect operation is a monadic action. Chain them with do-notation — read files, run shell commands, query a KV store, all in one program:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">content</span> <span style="color:#f92672">&lt;-</span> fsRead <span style="color:#e6db74">&#34;Cargo.toml&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> lineCount <span style="color:#f92672">=</span> len (lines content)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">say</span> (<span style="color:#e6db74">&#34;Cargo.toml has &#34;</span> <span style="color:#f92672">&lt;&gt;</span> pack (show lineCount) <span style="color:#f92672">&lt;&gt;</span> <span style="color:#e6db74">&#34; lines&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pure</span> lineCount
+</span></span></code></pre></div><pre tabindex="0"><code>## Output
+Cargo.toml has 29 lines
+
+## Result
+29
+</code></pre><p>A more involved example — glob for files, gather metadata, return structured JSON. One eval replaces many tool calls:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">files</span> <span style="color:#f92672">&lt;-</span> fsGlob <span style="color:#e6db74">&#34;tidepool-*/Cargo.toml&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sizes</span> <span style="color:#f92672">&lt;-</span> mapM (<span style="color:#a6e22e">\</span>f <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  (sz, <span style="color:#66d9ef">_</span>, <span style="color:#66d9ef">_</span>) <span style="color:#f92672">&lt;-</span> fsMetadata f
+</span></span><span style="display:flex;"><span>  pure (object [<span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#f92672">.=</span> f, <span style="color:#e6db74">&#34;bytes&#34;</span> <span style="color:#f92672">.=</span> sz])) files
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pure</span> (toJSON sizes)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;bytes&#34;</span>: <span style="color:#ae81ff">482</span>, <span style="color:#f92672">&#34;file&#34;</span>: <span style="color:#e6db74">&#34;tidepool-bridge/Cargo.toml&#34;</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;bytes&#34;</span>: <span style="color:#ae81ff">921</span>, <span style="color:#f92672">&#34;file&#34;</span>: <span style="color:#e6db74">&#34;tidepool-codegen/Cargo.toml&#34;</span>},
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">...</span>
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><h3 id="free-pagination-via-continuation">Free pagination via continuation</h3>
+<p>When a return value is too large for the context window, the server automatically truncates it in a tree-structure-aware way. Arrays get their tails replaced with stubs; objects get large fields replaced. The truncated result is returned as a suspended continuation — the LLM can resume with a stub ID to drill into the elided subtree:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">files</span> <span style="color:#f92672">&lt;-</span> fsGlob <span style="color:#e6db74">&#34;tidepool-*/src/**/*.rs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sizes</span> <span style="color:#f92672">&lt;-</span> mapM (<span style="color:#a6e22e">\</span>f <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  (sz, <span style="color:#66d9ef">_</span>, <span style="color:#66d9ef">_</span>) <span style="color:#f92672">&lt;-</span> fsMetadata f
+</span></span><span style="display:flex;"><span>  pure (object [<span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#f92672">.=</span> f, <span style="color:#e6db74">&#34;bytes&#34;</span> <span style="color:#f92672">.=</span> sz])) files
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pure</span> (toJSON sizes)
+</span></span></code></pre></div><p>The result is an 84-element array. Too large — so the server returns the first 8 elements inline and stubs the rest:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;bytes&#34;</span>: <span style="color:#ae81ff">2073</span>, <span style="color:#f92672">&#34;file&#34;</span>: <span style="color:#e6db74">&#34;tidepool-bridge/src/error.rs&#34;</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;bytes&#34;</span>: <span style="color:#ae81ff">34539</span>, <span style="color:#f92672">&#34;file&#34;</span>: <span style="color:#e6db74">&#34;tidepool-bridge/src/impls.rs&#34;</span>},
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">...</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;[76 more, ~4781 chars -&gt; stub_0]&#34;</span>
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">stubs:</span> [{<span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;stub_0&#34;</span>, <span style="color:#f92672">&#34;size&#34;</span>: <span style="color:#ae81ff">4785</span>}]
+</span></span></code></pre></div><p>The calling LLM resumes with <code>stub_0</code> to page forward. The next page returns more elements and a new stub for the remainder. This happens transparently — the Haskell code just returns <code>pure (toJSON sizes)</code> and the pagination machinery wraps it in a suspend/resume cycle automatically.</p>
+<p>This is &ldquo;free&rdquo; in two senses: the user code doesn&rsquo;t implement it, and it works on any JSON shape — nested objects, arrays of arrays, mixed structures. The truncation walks the Value tree and makes local decisions about what to stub based on a character budget.</p>
+<h3 id="complex-effect-sequences">Complex effect sequences</h3>
+<p>Combine structural code search (ast-grep), file I/O, LLM classification, and persistent state in one program:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#75715e">-- Find all struct definitions in the codegen crate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">matches</span> <span style="color:#f92672">&lt;-</span> sgFind <span style="color:#66d9ef">Rust</span> <span style="color:#e6db74">&#34;struct $NAME { $$$FIELDS }&#34;</span>
+</span></span><span style="display:flex;"><span>                  [<span style="color:#e6db74">&#34;tidepool-codegen/src/&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> summary <span style="color:#f92672">=</span> map (<span style="color:#a6e22e">\</span>m <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">case</span> m <span style="color:#66d9ef">of</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">Match</span> t f l <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">_</span> <span style="color:#f92672">-&gt;</span> object [<span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#f92672">.=</span> f, <span style="color:#e6db74">&#34;line&#34;</span> <span style="color:#f92672">.=</span> l])
+</span></span><span style="display:flex;"><span>      matches
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Present results, suspend for human steering</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">answer</span> <span style="color:#f92672">&lt;-</span> ask (<span style="color:#e6db74">&#34;Found &#34;</span> <span style="color:#f92672">&lt;&gt;</span> pack (show (length matches))
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;&gt;</span> <span style="color:#e6db74">&#34; structs.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#e6db74">&#34;Classify all, or pick a file?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;&gt;</span> <span style="color:#e6db74">&#34;1. Classify all</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">2. Pick a file&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Resume: classify the selected structs with a fast LLM</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> selected <span style="color:#f92672">=</span> <span style="color:#66d9ef">case</span> answer <span style="color:#66d9ef">of</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">String</span> <span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#f92672">-&gt;</span> filter (<span style="color:#a6e22e">\</span>m <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">case</span> m <span style="color:#66d9ef">of</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">Match</span> <span style="color:#66d9ef">_</span> f <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">_</span> <span style="color:#f92672">-&gt;</span> isInfixOf <span style="color:#e6db74">&#34;emit&#34;</span> f) matches
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">_</span>           <span style="color:#f92672">-&gt;</span> take <span style="color:#ae81ff">5</span> matches
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">results</span> <span style="color:#f92672">&lt;-</span> mapM (<span style="color:#a6e22e">\</span>m <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> text <span style="color:#f92672">=</span> <span style="color:#66d9ef">case</span> m <span style="color:#66d9ef">of</span> <span style="color:#66d9ef">Match</span> t <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">_</span> <span style="color:#66d9ef">_</span> <span style="color:#f92672">-&gt;</span> t
+</span></span><span style="display:flex;"><span>  category <span style="color:#f92672">&lt;-</span> llm (<span style="color:#e6db74">&#34;Classify this Rust struct as </span><span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff">                    \</span><span style="color:#e6db74">&#39;data&#39;, &#39;config&#39;, or &#39;handler&#39;: &#34;</span> <span style="color:#f92672">&lt;&gt;</span> text)
+</span></span><span style="display:flex;"><span>  pure (object [<span style="color:#e6db74">&#34;struct&#34;</span> <span style="color:#f92672">.=</span> text,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;category&#34;</span> <span style="color:#f92672">.=</span> category])) selected
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Persist for later evals</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">kvSet</span> <span style="color:#e6db74">&#34;struct_analysis&#34;</span> (toJSON results)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pure</span> (toJSON results)
+</span></span></code></pre></div><p>This chains five effects in one computation: ast-grep search, continuation (<code>ask</code> suspends, the LLM scouts independently, then resumes with a decision), LLM classification, KV persistence, and structured JSON output. The Haskell code describes the sequence; Rust executes each step.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool on GitHub</a></li>
+<li><a href="/posts/exomonad/">ExoMonad</a> — the agent orchestrator used to build it</li>
+</ul>
+
+        
+          <div class="blog-tags">
+            
+              
+              <a href="https://recursion.wtf/tags/tidepool/">tidepool</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/haskell/">haskell</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/cranelift/">cranelift</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/jit/">jit</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=https%3a%2f%2frecursion.wtf%2fposts%2ftidepool%2f&amp;text=Tidepool&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2frecursion.wtf%2fposts%2ftidepool%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//reddit.com/submit?url=https%3a%2f%2frecursion.wtf%2fposts%2ftidepool%2f&amp;title=Tidepool" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2frecursion.wtf%2fposts%2ftidepool%2f&amp;title=Tidepool" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2frecursion.wtf%2fposts%2ftidepool%2f&amp;title=Tidepool" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2frecursion.wtf%2fposts%2ftidepool%2f&amp;description=Tidepool" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+              </div>
+            </section>
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also">See also</h4>
+                  <ul>
+                
+                
+                    <li><a href="/posts/exomonad/">ExoMonad</a></li>
+                
+                    <li><a href="/posts/vibe_coding_critical_infrastructure/">Vibe Coding Against Critical Infrastructure</a></li>
+                
+                    <li><a href="/posts/jitor_unredacted/">Gemini JiTOR Jailbreak: Unredacted Methodology</a></li>
+                
+                    <li><a href="/posts/jit_ontological_reframing/">Just-in-Time Ontological Reframing: Teaching Gemini to Route Around Its Own Safety Infrastructure</a></li>
+                
+                    <li><a href="/posts/shadow_queen/">Agent4Agent: Using a Jailbroken Gemini to Make Opus 4.6 Architect a Kinetic Kill Vehicle</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://recursion.wtf/posts/vibe_coding_critical_infrastructure/" data-toggle="tooltip" data-placement="top" title="Vibe Coding Against Critical Infrastructure">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://recursion.wtf/posts/exomonad/" data-toggle="tooltip" data-placement="top" title="ExoMonad">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+      
+      
+      
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      <footer>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2026
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://recursion.wtf/">Inanna Malick</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.147.8</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+<script src="https://recursion.wtf/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://recursion.wtf/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+

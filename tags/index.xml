@@ -6,8 +6,64 @@
     <description>Recent content in Tags on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 25 Feb 2026 12:00:00 -0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent-Orchestration</title>
+      <link>https://recursion.wtf/tags/agent-orchestration/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/agent-orchestration/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cranelift</title>
+      <link>https://recursion.wtf/tags/cranelift/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/cranelift/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Exomonad</title>
+      <link>https://recursion.wtf/tags/exomonad/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/exomonad/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Haskell</title>
+      <link>https://recursion.wtf/tags/haskell/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/haskell/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Jit</title>
+      <link>https://recursion.wtf/tags/jit/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/jit/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llm</title>
+      <link>https://recursion.wtf/tags/llm/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rust</title>
+      <link>https://recursion.wtf/tags/rust/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/rust/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tidepool</title>
+      <link>https://recursion.wtf/tags/tidepool/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/tidepool/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Ai</title>
       <link>https://recursion.wtf/tags/ai/</link>
@@ -27,13 +83,6 @@
       <link>https://recursion.wtf/tags/jailbreak/</link>
       <pubDate>Wed, 25 Feb 2026 12:00:00 -0800</pubDate>
       <guid>https://recursion.wtf/tags/jailbreak/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Llm</title>
-      <link>https://recursion.wtf/tags/llm/</link>
-      <pubDate>Wed, 25 Feb 2026 12:00:00 -0800</pubDate>
-      <guid>https://recursion.wtf/tags/llm/</guid>
       <description></description>
     </item>
     <item>
@@ -69,13 +118,6 @@
       <link>https://recursion.wtf/tags/cli/</link>
       <pubDate>Thu, 13 Nov 2025 00:00:00 +0000</pubDate>
       <guid>https://recursion.wtf/tags/cli/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Rust</title>
-      <link>https://recursion.wtf/tags/rust/</link>
-      <pubDate>Thu, 13 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/rust/</guid>
       <description></description>
     </item>
     <item>

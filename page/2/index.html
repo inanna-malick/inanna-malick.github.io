@@ -199,6 +199,138 @@
           
           
             <article class="post-preview">
+    <a href="https://recursion.wtf/posts/rust_schemes_3/">
+        <h2 class="post-title">Single Pass Recursion in Rust</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on October 5, 2022
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;8&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1517&nbsp;words
+  
+  
+    
+      
+        &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Inanna Malick
+      
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p>This is the third post in a three-post series. In the <a href="https://recursion.wtf/posts/rust_schemes">first post</a> we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the <a href="https://recursion.wtf/posts/rust_schemes_2">second post</a> we made it fully generic, providing a set of generic tools for expanding and collapsing <em>any</em> recursive data structure in Rust.</p>
+<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel <code>RecursiveTree</code> type introduced in my previous post) while retaining stack safety.</p>
+
+<link rel="stylesheet" href="https://recursion.wtf/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" alt="execution graph for simultaneously expanding and collapsing a simple expression"/>
+    </div>
+    <a href="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" itemprop="contentUrl"></a>
+  </figure>
+</div>
+        <a href="https://recursion.wtf/posts/rust_schemes_3/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/generic/">generic</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/stack_machines/">stack_machines</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
+    <a href="https://recursion.wtf/posts/rust_schemes_2/">
+        <h2 class="post-title">Fully generic recursion in Rust</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on July 28, 2022
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;8&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1502&nbsp;words
+  
+  
+    
+      
+        &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Inanna Malick
+      
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p><a href="https://recursion.wtf/posts/rust_schemes/">Previously</a>, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a <em>single</em> recursion backend that can collapse or expand any recursive data structure.</p>
+        <a href="https://recursion.wtf/posts/rust_schemes_2/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/generic/">generic</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
     <a href="https://recursion.wtf/posts/rust_schemes/">
         <h2 class="post-title">Elegant and performant recursion in Rust</h2>
         

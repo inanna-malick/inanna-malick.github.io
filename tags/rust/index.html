@@ -194,6 +194,135 @@
         <div class="posts-list">
           
             <article class="post-preview">
+    <a href="https://recursion.wtf/posts/exomonad/">
+        <h2 class="post-title">ExoMonad</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on March 12, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;7&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1406&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for GitHub PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
+<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>I started by using ExoMonad to build itself over 700 PRs. A few weeks ago, it felt ready to test out on other projects, so I used it to implement a new Haskell compiler backend using Rust.</p>
+        <a href="https://recursion.wtf/posts/exomonad/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/exomonad/">exomonad</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/tidepool/">tidepool</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/agent-orchestration/">agent-orchestration</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/haskell/">haskell</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
+    <a href="https://recursion.wtf/posts/tidepool/">
+        <h2 class="post-title">Tidepool</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on March 12, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;5&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;970&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a> is a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by <a href="/posts/exomonad/">ExoMonad</a>, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
+<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines and 1,000+ tests across 61 PRs in 4 days — see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
+        <a href="https://recursion.wtf/posts/tidepool/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/tidepool/">tidepool</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/haskell/">haskell</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/cranelift/">cranelift</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/jit/">jit</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
     <a href="https://recursion.wtf/posts/detect/">
         <h2 class="post-title">Detect: a readable alternative to find/exec/grep</h2>
         

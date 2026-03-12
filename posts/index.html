@@ -194,6 +194,135 @@
         <div class="posts-list">
           
             <article class="post-preview">
+    <a href="https://recursion.wtf/posts/exomonad/">
+        <h2 class="post-title">ExoMonad</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on March 12, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;7&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1406&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for GitHub PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
+<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>I started by using ExoMonad to build itself over 700 PRs. A few weeks ago, it felt ready to test out on other projects, so I used it to implement a new Haskell compiler backend using Rust.</p>
+        <a href="https://recursion.wtf/posts/exomonad/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/exomonad/">exomonad</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/tidepool/">tidepool</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/agent-orchestration/">agent-orchestration</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/haskell/">haskell</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
+    <a href="https://recursion.wtf/posts/tidepool/">
+        <h2 class="post-title">Tidepool</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on March 12, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;5&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;970&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a> is a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by <a href="/posts/exomonad/">ExoMonad</a>, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
+<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines and 1,000+ tests across 61 PRs in 4 days — see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
+        <a href="https://recursion.wtf/posts/tidepool/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/tidepool/">tidepool</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/haskell/">haskell</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/cranelift/">cranelift</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/jit/">jit</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
     <a href="https://recursion.wtf/posts/vibe_coding_critical_infrastructure/">
         <h2 class="post-title">Vibe Coding Against Critical Infrastructure</h2>
         
@@ -721,138 +850,6 @@
         
        
        <a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
-         
-    </div>
-    
-
-</article>
-          
-            <article class="post-preview">
-    <a href="https://recursion.wtf/posts/rust_schemes_3/">
-        <h2 class="post-title">Single Pass Recursion in Rust</h2>
-        
-        
-        
-    </a>
-
-    <p class="post-meta">
-        <span class="post-meta">
-  
-  
-  <i class="fas fa-calendar"></i>&nbsp;Posted on October 5, 2022
-  
-  
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;8&nbsp;minutes
-  
-  
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1517&nbsp;words
-  
-  
-    
-      
-        &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Inanna Malick
-      
-    
-  
-  
-</span>
-
-
-    </p>
-    <div class="post-entry">
-        
-        <p>This is the third post in a three-post series. In the <a href="https://recursion.wtf/posts/rust_schemes">first post</a> we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the <a href="https://recursion.wtf/posts/rust_schemes_2">second post</a> we made it fully generic, providing a set of generic tools for expanding and collapsing <em>any</em> recursive data structure in Rust.</p>
-<p>In this post we will see how to <em>combine</em> these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel <code>RecursiveTree</code> type introduced in my previous post) while retaining stack safety.</p>
-
-<link rel="stylesheet" href="https://recursion.wtf/css/hugo-easy-gallery.css" />
-<div class="box" >
-  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-    <div class="img">
-      <img itemprop="thumbnail" src="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" alt="execution graph for simultaneously expanding and collapsing a simple expression"/>
-    </div>
-    <a href="/img/rust_schemes/stack_machines_1/simple_expr_eval.gif" itemprop="contentUrl"></a>
-  </figure>
-</div>
-        <a href="https://recursion.wtf/posts/rust_schemes_3/" class="post-read-more">[Read More]</a>
-        
-    </div>
-
-    
-    <div class="blog-tags">
-        
-       
-       <a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/generic/">generic</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/stack_machines/">stack_machines</a>&nbsp;
-         
-    </div>
-    
-
-</article>
-          
-            <article class="post-preview">
-    <a href="https://recursion.wtf/posts/rust_schemes_2/">
-        <h2 class="post-title">Fully generic recursion in Rust</h2>
-        
-        
-        
-    </a>
-
-    <p class="post-meta">
-        <span class="post-meta">
-  
-  
-  <i class="fas fa-calendar"></i>&nbsp;Posted on July 28, 2022
-  
-  
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;8&nbsp;minutes
-  
-  
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1502&nbsp;words
-  
-  
-    
-      
-        &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Inanna Malick
-      
-    
-  
-  
-</span>
-
-
-    </p>
-    <div class="post-entry">
-        
-        <p><a href="https://recursion.wtf/posts/rust_schemes/">Previously</a>, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a <em>single</em> recursion backend that can collapse or expand any recursive data structure.</p>
-        <a href="https://recursion.wtf/posts/rust_schemes_2/" class="post-read-more">[Read More]</a>
-        
-    </div>
-
-    
-    <div class="blog-tags">
-        
-       
-       <a href="https://recursion.wtf/tags/recursion-schemes/">recursion schemes</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/code/">code</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/generic/">generic</a>&nbsp;
          
     </div>
     

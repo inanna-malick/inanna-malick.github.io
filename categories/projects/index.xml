@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Inanna Malick</title>
+    <link>https://recursion.wtf/categories/projects/</link>
+    <description>Recent content in Projects on Inanna Malick</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 12 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://recursion.wtf/categories/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ExoMonad</title>
+      <link>https://recursion.wtf/posts/exomonad/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/exomonad/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/tidepool-heavy-industries/exomonad&#34;&gt;ExoMonad&lt;/a&gt; builds on &lt;a href=&#34;https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04&#34;&gt;Gastown&amp;rsquo;s worktree model&lt;/a&gt;, replacing &amp;ldquo;swarm of agents ramming PRs into main&amp;rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&amp;rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for GitHub PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.&lt;/p&gt;&#xA;&lt;p&gt;ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but &lt;a href=&#34;https://recursion.wtf/posts/vibe_coding_critical_infrastructure/&#34;&gt;when I needed a red team test harness&lt;/a&gt;, I just wrote another exomonad config and threw one together overnight &lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;p&gt;I started by using ExoMonad to build itself over 700 PRs. A few weeks ago, it felt ready to test out on other projects, so I used it to implement a new Haskell compiler backend using Rust.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Tidepool</title>
+      <link>https://recursion.wtf/posts/tidepool/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/tidepool/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/tidepool-heavy-industries/tidepool&#34;&gt;Tidepool&lt;/a&gt; is a lazily evaluated Haskell-in-Rust runtime with native interop. It&amp;rsquo;s very similar to the WASM sandbox used by &lt;a href=&#34;https://recursion.wtf/posts/exomonad/&#34;&gt;ExoMonad&lt;/a&gt;, except instead of WebAssembly it uses Rust&amp;rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.&lt;/p&gt;&#xA;&lt;p&gt;I built Tidepool using &lt;a href=&#34;https://recursion.wtf/posts/exomonad/&#34;&gt;ExoMonad&lt;/a&gt; over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines and 1,000+ tests across 61 PRs in 4 days — see the &lt;a href=&#34;https://recursion.wtf/posts/exomonad/&#34;&gt;ExoMonad post&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

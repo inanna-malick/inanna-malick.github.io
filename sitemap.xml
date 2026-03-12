@@ -2,37 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://recursion.wtf/tags/agent-orchestration/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/categories/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/cranelift/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/exomonad/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/exomonad/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/haskell/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/jit/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/llm/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/categories/projects/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/rust/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/tidepool/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/tidepool/</loc>
+    <lastmod>2026-03-12T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://recursion.wtf/categories/ai/</loc>
     <lastmod>2026-02-25T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/ai/</loc>
     <lastmod>2026-02-25T12:00:00-08:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/categories/</loc>
-    <lastmod>2026-02-25T12:00:00-08:00</lastmod>
-  </url><url>
     <loc>https://recursion.wtf/tags/ics/</loc>
     <lastmod>2026-02-25T12:00:00-08:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/</loc>
-    <lastmod>2026-02-25T12:00:00-08:00</lastmod>
-  </url><url>
     <loc>https://recursion.wtf/tags/jailbreak/</loc>
-    <lastmod>2026-02-25T12:00:00-08:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/llm/</loc>
-    <lastmod>2026-02-25T12:00:00-08:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/posts/</loc>
     <lastmod>2026-02-25T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/scada/</loc>
     <lastmod>2026-02-25T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/security/</loc>
-    <lastmod>2026-02-25T12:00:00-08:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/</loc>
     <lastmod>2026-02-25T12:00:00-08:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/posts/vibe_coding_critical_infrastructure/</loc>
@@ -57,9 +87,6 @@
     <lastmod>2025-11-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/posts/detect/</loc>
-    <lastmod>2025-11-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/rust/</loc>
     <lastmod>2025-11-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/tools/</loc>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cranelift on Inanna Malick</title>
+    <link>https://recursion.wtf/tags/cranelift/</link>
+    <description>Recent content in Cranelift on Inanna Malick</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 12 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://recursion.wtf/tags/cranelift/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tidepool</title>
+      <link>https://recursion.wtf/posts/tidepool/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/tidepool/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/tidepool-heavy-industries/tidepool&#34;&gt;Tidepool&lt;/a&gt; is a lazily evaluated Haskell-in-Rust runtime with native interop. It&amp;rsquo;s very similar to the WASM sandbox used by &lt;a href=&#34;https://recursion.wtf/posts/exomonad/&#34;&gt;ExoMonad&lt;/a&gt;, except instead of WebAssembly it uses Rust&amp;rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.&lt;/p&gt;&#xA;&lt;p&gt;I built Tidepool using &lt;a href=&#34;https://recursion.wtf/posts/exomonad/&#34;&gt;ExoMonad&lt;/a&gt; over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines and 1,000+ tests across 61 PRs in 4 days — see the &lt;a href=&#34;https://recursion.wtf/posts/exomonad/&#34;&gt;ExoMonad post&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

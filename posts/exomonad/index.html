@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>ExoMonad - </title>
+
+  <meta name="description" content="ExoMonad stitches frontier model binaries together into reconfigurable agent swarms"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Inanna Malick",
+    
+    "url": "https:\/\/recursion.wtf\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/recursion.wtf\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/recursion.wtf\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/recursion.wtf\/posts\/exomonad\/",
+          "name": "Exo monad"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : ""
+  },
+  "headline": "ExoMonad",
+  "description" : "ExoMonad stitches frontier model binaries together into reconfigurable agent swarms",
+  "inLanguage" : "en",
+  "wordCount":  1406 ,
+  "datePublished" : "2026-03-12T00:00:00\u002b00:00",
+  "dateModified" : "2026-03-12T00:00:00\u002b00:00",
+  "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
+  "keywords" : [ "exomonad, tidepool, agent-orchestration, haskell, rust, llm" ],
+  "mainEntityOfPage" : "https:\/\/recursion.wtf\/posts\/exomonad\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/recursion.wtf\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+
+<meta property="og:title" content="ExoMonad" />
+<meta property="og:description" content="ExoMonad stitches frontier model binaries together into reconfigurable agent swarms">
+<meta property="og:url" content="https://recursion.wtf/posts/exomonad/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inanna Malick" />
+
+  <meta name="twitter:title" content="ExoMonad" />
+  <meta name="twitter:description" content="ExoMonad stitches frontier model binaries together into reconfigurable agent swarms">
+  <meta name="twitter:card" content="summary" />
+
+  <link href='https://recursion.wtf/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.147.8">
+  <link rel="alternate" href="https://recursion.wtf/index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css" integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://recursion.wtf/css/syntax.css" /><link rel="stylesheet" href="https://recursion.wtf/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://recursion.wtf/">Inanna Malick</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Contact Me" href="/page/about/">Contact Me</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Inanna Malick" href="https://recursion.wtf/">
+            <img class="avatar-img" src="https://recursion.wtf/img/avatar-icon.png" alt="Inanna Malick" />
+           
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>ExoMonad</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for GitHub PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
+<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>I started by using ExoMonad to build itself over 700 PRs. A few weeks ago, it felt ready to test out on other projects, so I used it to implement a new Haskell compiler backend using Rust.</p>
+<p>To get started:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/tidepool-heavy-industries/exomonad
+</span></span><span style="display:flex;"><span>cd exomonad
+</span></span><span style="display:flex;"><span>./try-exomonad/run.sh https://github.com/BurntSushi/ripgrep <span style="color:#75715e"># or any other repo</span>
+</span></span></code></pre></div><h2 id="heterogeneous-agent-orchestration">Heterogeneous agent orchestration</h2>
+<p>Opus is smart but expensive. Gemini is flaky but cheap and fast. Copilot is integrated with GitHub PR review and heavily subsidized. ExoMonad lets you use all of them — Claude writes the plan, Gemini does the work, Copilot reviews the PR. It&rsquo;s designed for token arbitrage: using each model for what it&rsquo;s best at, shifting based on who&rsquo;s subsidizing usage in any given week.</p>
+<p>I built ExoMonad to encode this workflow. Here&rsquo;s an example:</p>
+
+<link rel="stylesheet" href="https://recursion.wtf/css/hugo-easy-gallery.css" />
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/exomonad_zellij_devswarm.png" alt="Zellij devswarm — TL dispatching Wave 4 to three Gemini workers in parallel, each in its own worktree. Bottom panes show workers mid-execution."/>
+    </div>
+    <a href="/img/exomonad_zellij_devswarm.png" itemprop="contentUrl"></a>
+      <figcaption>
+          <p>Zellij devswarm — TL dispatching Wave 4 to three Gemini workers in parallel, each in its own worktree. Bottom panes show workers mid-execution.</p>
+      </figcaption>
+  </figure>
+</div>
+
+<p>Here you can see multiple gemini-cli agents working with a Claude Code tech lead in the same tab, with another tab showing an in-progress worktree owned by another Gemini agent. All agents use the Claude Agent Teams message bus (on-disk mailboxes and JSONL — straightforward to integrate with).</p>
+<p>The default devswarm config defines three agent roles.</p>
+<ul>
+<li>Tech Leads (TLs) run Claude Opus. They&rsquo;re planners and project managers: they orchestrate work, spawn child agents, review PRs.</li>
+<li>Devs run Gemini CLI. They write code, file PRs, and iterate with Copilot on review feedback.</li>
+<li>Workers are like Devs, and also run on Gemini, but they&rsquo;re ephemeral: they run in the same directory as the TL that spawned them.</li>
+</ul>
+<h2 id="tree-of-worktrees">Tree of Worktrees</h2>
+<p>ExoMonad makes heavy use of Git worktrees. Worktrees are working copies of a repository that share its .git object store. They&rsquo;re great for working with agent swarms.</p>
+<p>Gastown uses a flat worktree model — every branch forks from main and PRs back into main, with a dedicated worker managing the merge queue.</p>
+<p>ExoMonad&rsquo;s tree decomposition model uses nested worktrees: the system starts with a TL owning the root branch. It splits features into subtasks, and spawns subagents for each. Small tasks are assigned to Devs, who implement them as a single PR. Larger tasks are assigned to TLs, which (with human steering and guidance as needed) repeat this process, breaking features up into smaller units until they&rsquo;re small enough for a coding agent to implement unsupervised.</p>
+<p>This results in a tree of worktrees, mirroring the structure of the project itself.</p>
+<p>Here&rsquo;s how it works:</p>
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/worktree-1-initial.svg" alt="/img/worktree-1-initial.svg"/>
+    </div>
+    <a href="/img/worktree-1-initial.svg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<p>A TL starts by writing scaffolding into its branch — types, tests, stub files, planning docs — as an initial commit. This scaffolding commit becomes the base that all subtask branches fork from.</p>
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/worktree-2-unfold.svg" alt="/img/worktree-2-unfold.svg"/>
+    </div>
+    <a href="/img/worktree-2-unfold.svg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<p>The TL then decomposes the work into subtasks, spawning waves of subagents (TL or Dev as needed), each in their own worktree branching off of that scaffolding commit. Large subtasks get their own TL, which repeats this decomposition recursively — <code>core-eval.heap</code> spawns <code>gc-trace</code> and <code>arena</code> the same way <code>core-eval</code> spawned <code>heap</code>, <code>codegen</code>, and <code>optimize</code>.</p>
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/worktree-3-fold.svg" alt="/img/worktree-3-fold.svg"/>
+    </div>
+    <a href="/img/worktree-3-fold.svg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<p>As subagents complete work, they file PRs against their parent branch, iterate with Copilot on review feedback, and notify the TL that spawned them. The TL merges completed PRs and launches followup waves as needed.</p>
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/worktree-4-wave2.svg" alt="/img/worktree-4-wave2.svg"/>
+    </div>
+    <a href="/img/worktree-4-wave2.svg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<p>Work naturally decomposes into multiple waves — the TL front-loads independent subtasks into wave 1, then uses the merged result as the scaffolding commit for wave 2. Followup tasks can reference code that didn&rsquo;t exist when the first wave launched, and since every agent in a wave forks from the same commit, there&rsquo;s no rebase burden within a wave. Eventually the TL files its own PR against <em>its</em> parent, and the same pattern repeats up the tree: <code>main.foo.bar</code> and <code>main.foo.baz</code> merge into <code>main.foo</code>, which merges into <code>main</code>.</p>
+<h2 id="radically-reconfigurable">Radically reconfigurable</h2>
+<p>All logic is evaluated in a shared server at the repo root. ExoMonad config, Unix sockets, and worktrees are stored in the <code>.exo</code> dir used by this server.</p>
+<p>Early iterations used YAML with custom expression languages for config, but I kept re-implementing subsets of Haskell — mostly various forms of effect composition — so I decided to just use the thing itself. All orchestration logic — routing, hooks, tool dispatch, event handling — is defined in Haskell effects executed by the ExoMonad server.</p>
+<p>This is less scary than it sounds: it&rsquo;s a restricted subset of Haskell that leverages Haskell&rsquo;s type system for expressiveness and safety. It&rsquo;s designed for coding agents to modify (with humans in the loop for code review), so it&rsquo;s ok if you don&rsquo;t know exactly what a Monad is and don&rsquo;t really care to learn.</p>
+<p>Let&rsquo;s look at how this works in practice: Gemini keeps stripping the dash from <code>#-}</code> in Haskell LANGUAGE pragmas. So I added a hook:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">checkPragmaCorruption</span> (<span style="color:#66d9ef">Replace</span> fp old new)
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span> <span style="color:#e6db74">&#34;.hs&#34;</span> `<span style="color:#66d9ef">T</span><span style="color:#f92672">.</span>isSuffixOf` fp
+</span></span><span style="display:flex;"><span>  , <span style="color:#e6db74">&#34;#-}&#34;</span> `<span style="color:#66d9ef">T</span><span style="color:#f92672">.</span>isInfixOf` old
+</span></span><span style="display:flex;"><span>  , not (<span style="color:#e6db74">&#34;#-}&#34;</span> `<span style="color:#66d9ef">T</span><span style="color:#f92672">.</span>isInfixOf` new)
+</span></span><span style="display:flex;"><span>  , <span style="color:#e6db74">&#34;#}&#34;</span> `<span style="color:#66d9ef">T</span><span style="color:#f92672">.</span>isInfixOf` new
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> <span style="color:#e6db74">&#34;BLOCKED: Your replacement corrupts Haskell LANGUAGE pragmas...&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">checkPragmaCorruption</span> <span style="color:#66d9ef">_</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Nothing</span>
+</span></span></code></pre></div><p>This Haskell code matches tool use, and — if it&rsquo;s the builtin <code>Replace</code> tool — applies a quick heuristic check to catch a common Gemini failure mode. Instead of spending tokens on prompting every Gemini agent (even those that never touch Haskell code), the guidance is encoded as code. This is just one tweak, but the idea is Kaizen: a continuous process of finding opportunities to make 1% improvements. When an agent produces garbage — and they will — the hook catches it before it hits a PR, and the fix becomes permanent infrastructure rather than a one-off prompt tweak. Over time, these compound. Your LLM swarm evolves, adapts to your project and context.</p>
+<p>Here&rsquo;s another example: PR review routing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">prReviewHandler</span> (<span style="color:#66d9ef">ReviewReceived</span> n comments) <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  pure (<span style="color:#66d9ef">InjectMessage</span> (copilotReviewReceived n comments))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">prReviewHandler</span> (<span style="color:#66d9ef">ReviewApproved</span> n) <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  pure (<span style="color:#66d9ef">NotifyParentAction</span> (prReady n) n)
+</span></span></code></pre></div><p>This results in extremely token-dense, expressive, and type-safe code-as-config, all executed in a WASM sandbox using predefined effects executed by the Rust host binary. This plays to both languages&rsquo; strengths: Haskell for elegant composition of effects and expressive use of the type system to minimize boilerplate, Rust for interacting with the real world at the systems programming level.</p>
+<h2 id="exomonad-in-action">ExoMonad in Action</h2>
+<p>It&rsquo;s traditional, when debuting a new orchestration engine, to build something insane and overambitious, like <a href="https://www.anthropic.com/engineering/building-c-compiler">a cleanroom reimplementation of the C compiler</a>. To prove ExoMonad could handle diverse projects, I used it to build something nontrivial from scratch.</p>
+<p>I don&rsquo;t have $20k to burn on tokens, so I built something a bit more modest: <a href="/posts/tidepool/">Tidepool</a>, a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by ExoMonad, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
+<p>I built it over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans.</p>
+
+
+<div class="box" >
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img itemprop="thumbnail" src="/img/exomonad_tidepool_build_story.png" alt="/img/exomonad_tidepool_build_story.png"/>
+    </div>
+    <a href="/img/exomonad_tidepool_build_story.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+
+<p>This visualization shows how I used the tree-of-worktrees model to build the core of it. The swarm blasted out the foundational architecture — over 32,000 lines of code, 1,000+ tests and property tests, across 61 PRs — in just 4 days of active waves. You can see an interactive version <a href="/viz/tidepool-build-story.html">with links to various PRs here</a>.</p>
+<p>The remaining week and a half was spent doing human-in-the-loop bug squashing, adding feature support, and general polish. For a deep dive into Tidepool itself — the Cranelift pipeline, the MCP server, live compilation examples — see the <a href="/posts/tidepool/">Tidepool post</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>ExoMonad is open source and ready for early adopters. If you run into bugs or missing features, please file an issue.</p>
+<ul>
+<li><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a></li>
+<li><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a></li>
+</ul>
+<p>If you&rsquo;d like to hear more over coffee, I&rsquo;m in SF/Oakland, or happy to hop on a call.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Auto-bootstrapped jailbreak support, siloed Opus workers with templates based on various elicitation strategies, misc other features. No, I haven&rsquo;t published this. Write your own.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+        
+          <div class="blog-tags">
+            
+              
+              <a href="https://recursion.wtf/tags/exomonad/">exomonad</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/tidepool/">tidepool</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/agent-orchestration/">agent-orchestration</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/haskell/">haskell</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=https%3a%2f%2frecursion.wtf%2fposts%2fexomonad%2f&amp;text=ExoMonad&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2frecursion.wtf%2fposts%2fexomonad%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//reddit.com/submit?url=https%3a%2f%2frecursion.wtf%2fposts%2fexomonad%2f&amp;title=ExoMonad" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2frecursion.wtf%2fposts%2fexomonad%2f&amp;title=ExoMonad" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2frecursion.wtf%2fposts%2fexomonad%2f&amp;title=ExoMonad" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2frecursion.wtf%2fposts%2fexomonad%2f&amp;description=ExoMonad" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+              </div>
+            </section>
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also">See also</h4>
+                  <ul>
+                
+                
+                    <li><a href="/posts/tidepool/">Tidepool</a></li>
+                
+                    <li><a href="/posts/vibe_coding_critical_infrastructure/">Vibe Coding Against Critical Infrastructure</a></li>
+                
+                    <li><a href="/posts/jitor_unredacted/">Gemini JiTOR Jailbreak: Unredacted Methodology</a></li>
+                
+                    <li><a href="/posts/jit_ontological_reframing/">Just-in-Time Ontological Reframing: Teaching Gemini to Route Around Its Own Safety Infrastructure</a></li>
+                
+                    <li><a href="/posts/shadow_queen/">Agent4Agent: Using a Jailbroken Gemini to Make Opus 4.6 Architect a Kinetic Kill Vehicle</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://recursion.wtf/posts/tidepool/" data-toggle="tooltip" data-placement="top" title="Tidepool">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+      
+      
+      
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      <footer>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2026
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://recursion.wtf/">Inanna Malick</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.147.8</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+<script src="https://recursion.wtf/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://recursion.wtf/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+

@@ -763,7 +763,8 @@ code, pre {
 
 /* ---------- Light mode overrides ---------- */
 @media (prefers-color-scheme: light) {
-  .chatlog {
+  .chatlog,
+  .stacklog {
     border-color: var(--base02);
   }
 

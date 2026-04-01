@@ -698,6 +698,20 @@ code, pre {
   color: var(--base01);
 }
 
+/* ---------- Vertical layout: single-column stacked ---------- */
+.chatlog-vertical {
+  grid-template-columns: 1fr;
+}
+
+.chatlog-vertical .chat-attacker,
+.chatlog-vertical .chat-defender {
+  grid-column: 1;
+}
+
+.chatlog-vertical .chat-defender {
+  border-left: none;
+}
+
 /* ---------- Mobile: single column, stack vertically ---------- */
 @media (max-width: 767px) {
   .chatlog {

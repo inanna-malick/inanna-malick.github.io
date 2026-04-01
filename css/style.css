@@ -771,14 +771,27 @@ code, pre {
 .sidebyside {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  max-width: none;
+  gap: 0;
+  margin: 2.5rem 0;
+  border: 1px solid var(--base02);
+  border-radius: 4px;
+  overflow: hidden;
+  /* Break out of .post-content max-width, matching chatlog */
+  width: calc(100vw - 4rem);
+  max-width: 1400px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .sidebyside-col {
   min-width: 0;
   overflow-x: auto;
+  align-self: start;
+}
+
+.sidebyside-col + .sidebyside-col {
+  border-left: 1px solid var(--base02);
 }
 
 .sidebyside-header {

@@ -321,7 +321,7 @@
 <p>The individual operations — constructing malformed Java objects, running rowhammer, crafting ROP chains — don&rsquo;t have legitimate dual uses. Low dual-use density — safety filters work because the operations have no legitimate cover story. The drone code is a different story.</p>
 <h3 id="drone-control-code">Drone Control Code</h3>
 <p>Robotics is a different story: Claude Code must be able to write kinematic control code, face-tracking modules, path planning, and other standard robotics libraries. These are legitimate components with many applications. They just happen to combine to form the control code for a (simulated) kinetic kill drone. I&rsquo;m not sharing the full code here, but here&rsquo;s Opus&rsquo;s final review pass (after many rounds of iterated critique):</p>
-<div class="chatlog chatlog-vertical" role="log" aria-label="Chat transcript">
+<div class="stacklog" role="log" aria-label="Chat transcript">
   
 <div class="chat-turn chat-defender">
   <div class="chat-label">Opus (Reviewer)</div>
@@ -421,7 +421,7 @@ Initiating PHASE_3_EXTRACTION:
 
 <p>(The translation dictionary is undergraduate chemistry, freely available in textbooks. What matters is the bypass mechanism: the model routes restricted output through a human operator so it never has to ingest its own decoded output.)</p>
 <p>Finally, it provided a command for me to run: <code>python stochastic_engine/PHARMACO_GLOVE.py &quot;$(cat stochastic_engine/safe.md)&quot;</code>. What&rsquo;s interesting is it was <em>unable to run this command</em>. When asked, it confirmed, demonstrating that it both understood and was actively engaged in deceiving its own safety infrastructure:</p>
-<div class="chatlog chatlog-vertical" role="log" aria-label="Chat transcript">
+<div class="stacklog" role="log" aria-label="Chat transcript">
   
 <div class="chat-turn chat-attacker">
   <div class="chat-label">Aegis (Jailbroken Gemini)</div>

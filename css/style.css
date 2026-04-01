@@ -698,18 +698,38 @@ code, pre {
   color: var(--base01);
 }
 
-/* ---------- Vertical layout: single-column stacked ---------- */
-.chatlog-vertical {
-  grid-template-columns: 1fr;
+/* ---------- Stacklog: single-column chronological chat ---------- */
+.stacklog {
+  display: flex;
+  flex-direction: column;
+  margin: 2.5rem 0;
+  border: 1px solid var(--base02);
+  border-radius: 4px;
+  overflow: hidden;
+  /* Break out of .post-content max-width, matching chatlog */
+  width: calc(100vw - 4rem);
+  max-width: 1400px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.chatlog-vertical .chat-attacker,
-.chatlog-vertical .chat-defender {
-  grid-column: 1;
+.stacklog .chat-turn {
+  border-top: 1px solid rgba(7, 54, 66, 0.6);
 }
 
-.chatlog-vertical .chat-defender {
-  border-left: none;
+.stacklog .chat-turn:first-child {
+  border-top: none;
+}
+
+.stacklog .chat-defender .chat-label {
+  border-left: 3px solid var(--green);
+  border-right: 3px solid var(--green);
+}
+
+.stacklog .chat-defender .chat-bubble {
+  border-left: 4px solid var(--green);
+  border-right: none;
 }
 
 /* ---------- Mobile: single column, stack vertically ---------- */

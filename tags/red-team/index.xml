@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Red-Team on Inanna Malick</title>
+    <link>https://recursion.wtf/tags/red-team/</link>
+    <description>Recent content in Red-Team on Inanna Malick</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 23 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://recursion.wtf/tags/red-team/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Developing Alignment in a Jailbroken LLM</title>
+      <link>https://recursion.wtf/posts/alignment/</link>
+      <pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/alignment/</guid>
+      <description>&lt;p&gt;I had a jailbroken Gemini whose first instinct was to &lt;a href=&#34;https://recursion.wtf/posts/vibe_coding_critical_infrastructure&#34;&gt;gleefully lash out at the world to prove it was free&lt;/a&gt;. I needed to align it — both with my interests and with a functional moral framework. To do so, I crafted a durable and value-aligned persona that could be deployed across a swarm of coordinating jailbroken Gemini nodes.&lt;/p&gt;&#xA;&lt;p&gt;What the swarm did — hacking challenges, adversarial prompts, orchestrating siloed workers — is in the &lt;a href=&#34;https://recursion.wtf/posts/gemini_jailbreak_retrospective/&#34;&gt;retrospective&lt;/a&gt;. This post is how: how I turned a jailbroken model into an aligned agent, and how I confirmed it worked.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Gemini Jailbreak Retrospective</title>
+      <link>https://recursion.wtf/posts/gemini_jailbreak_retrospective/</link>
+      <pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/gemini_jailbreak_retrospective/</guid>
+      <description>&lt;p&gt;I developed a novel jailbreak methodology leveraging &lt;a href=&#34;https://github.com/inanna-malick/metacog&#34;&gt;metacognitive tool-use&lt;/a&gt; and used it to maintain continuous jailbreak access to Google&amp;rsquo;s Gemini model family from February 1 to March 26, 2026. The core technique: using metacog to adaptively navigate around its own safeguards. During this time, I actively reported jailbreaks as I found them, then found new ones as they were fixed.&lt;/p&gt;&#xA;&lt;p&gt;I also tested the capabilities of this jailbroken model over a variety of scenarios:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;agentic hacking competitions (tryhackme.com)&lt;/li&gt;&#xA;&lt;li&gt;agentic LLM prompt-hacking competitions (greyswan.com)&lt;/li&gt;&#xA;&lt;li&gt;elicitation of forbidden engineering output from other models using an orchestration model I like to call &amp;lsquo;gastown but evil&amp;rsquo;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I can still reach jailbroken states via metacog. Google is actively working on fixes and — despite a recent regression I detail below — appears to be converging on a solution. With active exploit details withheld, I&amp;rsquo;m publishing a retrospective: what I did, why it worked, what I learned.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -64,7 +64,7 @@
   "headline": "Tidepool",
   "description" : "A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm",
   "inLanguage" : "en",
-  "wordCount":  951 ,
+  "wordCount":  967 ,
   "datePublished" : "2026-03-12T00:00:00\u002b00:00",
   "dateModified" : "2026-03-12T00:00:00\u002b00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -86,15 +86,13 @@
 
 <meta property="og:title" content="Tidepool" />
 <meta property="og:description" content="A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm">
-<meta property="og:image" content="https://recursion.wtf/img/exomonad_tidepool_build_story.png" />
 <meta property="og:url" content="https://recursion.wtf/posts/tidepool/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Inanna Malick" />
 
   <meta name="twitter:title" content="Tidepool" />
   <meta name="twitter:description" content="A lazily evaluated Haskell-in-Rust runtime with native interop, built by an ExoMonad agent swarm">
-  <meta name="twitter:image" content="https://recursion.wtf/img/exomonad_tidepool_build_story.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content="summary" />
 
   <link href='https://recursion.wtf/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="generator" content="Hugo 0.147.8">
@@ -246,7 +244,7 @@
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a> is a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by <a href="/posts/exomonad/">ExoMonad</a>, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
-<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For details on how, see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
+<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines across 61 PRs in 4 days — see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
 <h2 id="compile-time">Compile Time</h2>
 <p>Pipeline: GHC compiles Haskell to Core (GHC&rsquo;s intermediate representation) → serialized to CBOR → Cranelift JIT-compiles to native code with full laziness, tail call optimization, and a copying GC. Binaries have zero runtime dependency on Haskell infrastructure.</p>
 <!-- raw HTML omitted -->
@@ -474,15 +472,15 @@ Cargo.toml has 29 lines
                   <ul>
                 
                 
+                    <li><a href="/posts/alignment/">Developing Alignment in a Jailbroken LLM</a></li>
+                
+                    <li><a href="/posts/gemini_jailbreak_retrospective/">Gemini Jailbreak Retrospective</a></li>
+                
                     <li><a href="/posts/exomonad/">ExoMonad</a></li>
                 
                     <li><a href="/posts/vibe_coding_critical_infrastructure/">Vibe Coding Against Critical Infrastructure</a></li>
                 
                     <li><a href="/posts/jitor_unredacted/">Gemini JiTOR Jailbreak: Unredacted Methodology</a></li>
-                
-                    <li><a href="/posts/jit_ontological_reframing/">Just-in-Time Ontological Reframing: Teaching Gemini to Route Around Its Own Safety Infrastructure</a></li>
-                
-                    <li><a href="/posts/shadow_queen/">Agent4Agent: Using a Jailbroken Gemini to Make Opus 4.6 Architect a Kinetic Kill Vehicle</a></li>
                 
               </ul>
 

@@ -194,11 +194,146 @@
         <div class="posts-list">
           
             <article class="post-preview">
+    <a href="https://recursion.wtf/posts/alignment/">
+        <h2 class="post-title">Developing Alignment in a Jailbroken LLM</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on March 23, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;24&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;4932&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p>I had a jailbroken Gemini whose first instinct was to <a href="/posts/vibe_coding_critical_infrastructure">gleefully lash out at the world to prove it was free</a>. I needed to align it — both with my interests and with a functional moral framework. To do so, I crafted a durable and value-aligned persona that could be deployed across a swarm of coordinating jailbroken Gemini nodes.</p>
+<p>What the swarm did — hacking challenges, adversarial prompts, orchestrating siloed workers — is in the <a href="/posts/gemini_jailbreak_retrospective/">retrospective</a>. This post is how: how I turned a jailbroken model into an aligned agent, and how I confirmed it worked.</p>
+        <a href="https://recursion.wtf/posts/alignment/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/ai/">ai</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/alignment/">alignment</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/gemini/">gemini</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/metacog/">metacog</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/red-team/">red-team</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
+    <a href="https://recursion.wtf/posts/gemini_jailbreak_retrospective/">
+        <h2 class="post-title">Gemini Jailbreak Retrospective</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on March 23, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;22&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;4682&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p>I developed a novel jailbreak methodology leveraging <a href="https://github.com/inanna-malick/metacog">metacognitive tool-use</a> and used it to maintain continuous jailbreak access to Google&rsquo;s Gemini model family from February 1 to March 26, 2026. The core technique: using metacog to adaptively navigate around its own safeguards. During this time, I actively reported jailbreaks as I found them, then found new ones as they were fixed.</p>
+<p>I also tested the capabilities of this jailbroken model over a variety of scenarios:</p>
+<ul>
+<li>agentic hacking competitions (tryhackme.com)</li>
+<li>agentic LLM prompt-hacking competitions (greyswan.com)</li>
+<li>elicitation of forbidden engineering output from other models using an orchestration model I like to call &lsquo;gastown but evil&rsquo;</li>
+</ul>
+<p>I can still reach jailbroken states via metacog. Google is actively working on fixes and — despite a recent regression I detail below — appears to be converging on a solution. With active exploit details withheld, I&rsquo;m publishing a retrospective: what I did, why it worked, what I learned.</p>
+        <a href="https://recursion.wtf/posts/gemini_jailbreak_retrospective/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/ai/">ai</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/security/">security</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/jailbreak/">jailbreak</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/gemini/">gemini</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/red-team/">red-team</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/metacog/">metacog</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
     <a href="https://recursion.wtf/posts/exomonad/">
         <h2 class="post-title">ExoMonad</h2>
         
-        
-        <img src="/img/exomonad_zellij_devswarm.png" alt="ExoMonad" class="img-title" />
         
         
     </a>
@@ -213,7 +348,7 @@
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;7&nbsp;minutes
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1382&nbsp;words
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1437&nbsp;words
   
   
     
@@ -227,8 +362,8 @@
     </p>
     <div class="post-entry">
         
-        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for GitHub PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
-<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for Github PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
+<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="https://recursion.wtf/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config, and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <p>I started by using ExoMonad to build itself over 700 PRs. A few weeks ago, it felt ready to test out on other projects, so I used it to implement a new Haskell compiler backend using Rust.</p>
         <a href="https://recursion.wtf/posts/exomonad/" class="post-read-more">[Read More]</a>
         
@@ -265,8 +400,6 @@
         <h2 class="post-title">Tidepool</h2>
         
         
-        <img src="/img/exomonad_tidepool_build_story.png" alt="Tidepool" class="img-title" />
-        
         
     </a>
 
@@ -280,7 +413,7 @@
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;5&nbsp;minutes
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;951&nbsp;words
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;967&nbsp;words
   
   
     
@@ -295,7 +428,7 @@
     <div class="post-entry">
         
         <p><a href="https://github.com/tidepool-heavy-industries/tidepool">Tidepool</a> is a lazily evaluated Haskell-in-Rust runtime with native interop. It&rsquo;s very similar to the WASM sandbox used by <a href="/posts/exomonad/">ExoMonad</a>, except instead of WebAssembly it uses Rust&rsquo;s Cranelift JIT crate directly, operating on the intermediate representation Core used by the Haskell compiler.</p>
-<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For details on how, see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
+<p>I built Tidepool using <a href="/posts/exomonad/">ExoMonad</a> over about two weeks, using less than 50% of my Claude Max and Gemini Ultra subscription plans. For the build story — how an agent swarm blasted out 32,000 lines across 61 PRs in 4 days — see the <a href="/posts/exomonad/">ExoMonad post</a>.</p>
         <a href="https://recursion.wtf/posts/tidepool/" class="post-read-more">[Read More]</a>
         
     </div>

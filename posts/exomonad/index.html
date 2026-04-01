@@ -64,7 +64,7 @@
   "headline": "ExoMonad",
   "description" : "ExoMonad stitches frontier model binaries together into reconfigurable agent swarms",
   "inLanguage" : "en",
-  "wordCount":  1382 ,
+  "wordCount":  1437 ,
   "datePublished" : "2026-03-12T00:00:00\u002b00:00",
   "dateModified" : "2026-03-12T00:00:00\u002b00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -86,15 +86,13 @@
 
 <meta property="og:title" content="ExoMonad" />
 <meta property="og:description" content="ExoMonad stitches frontier model binaries together into reconfigurable agent swarms">
-<meta property="og:image" content="https://recursion.wtf/img/exomonad_zellij_devswarm.png" />
 <meta property="og:url" content="https://recursion.wtf/posts/exomonad/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Inanna Malick" />
 
   <meta name="twitter:title" content="ExoMonad" />
   <meta name="twitter:description" content="ExoMonad stitches frontier model binaries together into reconfigurable agent swarms">
-  <meta name="twitter:image" content="https://recursion.wtf/img/exomonad_zellij_devswarm.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content="summary" />
 
   <link href='https://recursion.wtf/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="generator" content="Hugo 0.147.8">
@@ -245,8 +243,8 @@
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for GitHub PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
-<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+        <p><a href="https://github.com/tidepool-heavy-industries/exomonad">ExoMonad</a> builds on <a href="https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04">Gastown&rsquo;s worktree model</a>, replacing &ldquo;swarm of agents ramming PRs into main&rdquo; with a tree of worktrees. It hooks into Claude Agent Teams&rsquo; messaging bus, so agents running other model architectures show up as native team members. It integrates with Copilot for Github PR reviews. It stitches together Claude, Gemini, Kimi, Letta Code, Copilot — using their existing binaries and your existing subscription plan.</p>
+<p>ExoMonad is radically reconfigurable. It ships with a default devswarm configuration that handles worktrees, coordination, iterating on pull requests, but <a href="https://recursion.wtf/posts/vibe_coding_critical_infrastructure/">when I needed a red team test harness</a>, I just wrote another exomonad config, and threw one together overnight <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <p>I started by using ExoMonad to build itself over 700 PRs. A few weeks ago, it felt ready to test out on other projects, so I used it to implement a new Haskell compiler backend using Rust.</p>
 <p>To get started:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/tidepool-heavy-industries/exomonad
@@ -254,15 +252,18 @@
 </span></span><span style="display:flex;"><span>./try-exomonad/run.sh https://github.com/BurntSushi/ripgrep <span style="color:#75715e"># or any other repo</span>
 </span></span></code></pre></div><h2 id="heterogeneous-agent-orchestration">Heterogeneous agent orchestration</h2>
 <p>Opus is smart but expensive. Gemini is flaky but cheap and fast. Copilot is integrated with GitHub PR review and heavily subsidized. ExoMonad lets you use all of them — Claude writes the plan, Gemini does the work, Copilot reviews the PR. It&rsquo;s designed for token arbitrage: using each model for what it&rsquo;s best at, shifting based on who&rsquo;s subsidizing usage in any given week.</p>
-<p>I built ExoMonad to automate this workflow. Here&rsquo;s an example showing it in action:</p>
+<p>This is the workflow I found myself using naturally. This orchestration gets complex, so I built ExoMonad to automate it. Here&rsquo;s an example:</p>
 
 <link rel="stylesheet" href="https://recursion.wtf/css/hugo-easy-gallery.css" />
 <div class="box" >
   <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
     <div class="img">
-      <img itemprop="thumbnail" src="/img/exomonad_zellij_devswarm.png" alt="/img/exomonad_zellij_devswarm.png"/>
+      <img itemprop="thumbnail" src="/img/exomonad_zellij_devswarm.png" alt="Zellij devswarm — TL dispatching Wave 4 to three Gemini workers in parallel, each in its own worktree. Bottom panes show workers mid-execution."/>
     </div>
     <a href="/img/exomonad_zellij_devswarm.png" itemprop="contentUrl"></a>
+      <figcaption>
+          <p>Zellij devswarm — TL dispatching Wave 4 to three Gemini workers in parallel, each in its own worktree. Bottom panes show workers mid-execution.</p>
+      </figcaption>
   </figure>
 </div>
 
@@ -274,8 +275,8 @@
 <li>Workers are like Devs, and also run on Gemini, but they&rsquo;re ephemeral: they run in the same directory as the TL that spawned them.</li>
 </ul>
 <h2 id="tree-of-worktrees">Tree of Worktrees</h2>
-<p>ExoMonad makes heavy use of <a href="https://git-scm.com/docs/git-worktree">Git worktrees</a>. Worktrees are working copies of a repository that share its .git object store. They&rsquo;re great for working with agent swarms.</p>
-<p>Gastown uses a flat worktree model — every branch forks from main and PRs back into main, with a dedicated worker managing the merge queue.</p>
+<p>ExoMonad makes heavy use of Git worktrees. Worktrees are working copies of a repository that share its .git object store. They&rsquo;re great for working with agent swarms.</p>
+<p>Gastown uses worktrees with a single merge queue for each repo. There&rsquo;s one main branch, and a list of worktrees branched off of it, filing PRs against the main branch. This naturally results in contention, which Gastown solves by assigning a dedicated worker to manage each merge queue.</p>
 <p>ExoMonad&rsquo;s tree decomposition model uses nested worktrees: the system starts with a TL owning the root branch. It splits features into subtasks, and spawns subagents for each. Small tasks are assigned to Devs, who implement them as a single PR. Larger tasks are assigned to TLs, which (with human steering and guidance as needed) repeat this process, breaking features up into smaller units until they&rsquo;re small enough for a coding agent to implement unsupervised.</p>
 <p>This results in a tree of worktrees, mirroring the structure of the project itself.</p>
 <p>Here&rsquo;s how it works:</p>
@@ -290,7 +291,7 @@
   </figure>
 </div>
 
-<p>A TL starts by writing scaffolding into its branch — types, tests, stub files, planning docs — as an initial commit. This scaffolding commit becomes the base that all subtask branches fork from.</p>
+<p>A tech lead owns a worktree and writes scaffolding — types, tests, stub files, planning docs — as an initial commit. This scaffolding commit becomes the base that all subtask branches fork from.</p>
 
 
 <div class="box" >
@@ -326,7 +327,7 @@
   </figure>
 </div>
 
-<p>Work naturally decomposes into multiple waves — the TL front-loads independent subtasks into wave 1, then uses the merged result as the scaffolding commit for wave 2. Followup tasks can reference code that didn&rsquo;t exist when the first wave launched, and since every agent in a wave forks from the same commit, there&rsquo;s no rebase burden within a wave. Eventually the TL files its own PR against <em>its</em> parent, and the same pattern repeats up the tree.</p>
+<p>Work naturally decomposes into multiple waves — the TL front-loads independent subtasks into wave 1, then uses the merged result as the scaffolding commit for wave 2. Followup tasks can reference code that didn&rsquo;t exist when the first wave launched, and since every agent in a wave forks from the same commit, there&rsquo;s no rebase burden within a wave. Eventually the TL files its own PR against <em>its</em> parent, and the same pattern repeats up the tree: <code>main.foo.bar</code> and <code>main.foo.baz</code> merge into <code>main.foo</code>, which merges into <code>main</code>.</p>
 <h2 id="radically-reconfigurable">Radically reconfigurable</h2>
 <p>All logic is evaluated in a shared server at the repo root. ExoMonad config, Unix sockets, and worktrees are stored in the <code>.exo</code> dir used by this server.</p>
 <p>Early iterations used YAML with custom expression languages for config, but I kept re-implementing subsets of Haskell — mostly various forms of effect composition — so I decided to just use the thing itself. All orchestration logic — routing, hooks, tool dispatch, event handling — is defined in Haskell effects executed by the ExoMonad server.</p>
@@ -339,8 +340,7 @@
 </span></span><span style="display:flex;"><span>  , <span style="color:#e6db74">&#34;#}&#34;</span> `<span style="color:#66d9ef">T</span><span style="color:#f92672">.</span>isInfixOf` new
 </span></span><span style="display:flex;"><span>  <span style="color:#f92672">=</span> <span style="color:#66d9ef">Just</span> <span style="color:#e6db74">&#34;BLOCKED: Your replacement corrupts Haskell LANGUAGE pragmas...&#34;</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">checkPragmaCorruption</span> <span style="color:#66d9ef">_</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">Nothing</span>
-</span></span></code></pre></div><p>This Haskell code matches tool use, and — if it&rsquo;s the builtin <code>Replace</code> tool — applies a quick heuristic check to catch a common Gemini failure mode. Instead of spending tokens on prompting every Gemini agent (even those that never touch Haskell code), the guidance is encoded as code.</p>
-<p>This is just one tweak, but the idea is Kaizen: a continuous process of finding opportunities to make 1% improvements. Over time, these compound. Your LLM swarm evolves, adapts to your project and context.</p>
+</span></span></code></pre></div><p>This Haskell code matches tool use, and — if it&rsquo;s the builtin <code>Replace</code> tool — applies a quick heuristic check to catch a common Gemini failure mode. Instead of spending tokens on prompting every Gemini agent (even those that never touch Haskell code), the guidance is encoded as code. This is just one tweak, but the idea is Kaizen: a continuous process of finding opportunities to make 1% improvements. When an agent produces garbage — and they will — the hook catches it before it hits a PR, and the fix becomes permanent infrastructure rather than a one-off prompt tweak. Over time, these compound. Your LLM swarm evolves, adapts to your project and context.</p>
 <p>Here&rsquo;s another example: PR review routing.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">prReviewHandler</span> (<span style="color:#66d9ef">ReviewReceived</span> n comments) <span style="color:#f92672">=</span>
 </span></span><span style="display:flex;"><span>  pure (<span style="color:#66d9ef">InjectMessage</span> (copilotReviewReceived n comments))
@@ -363,9 +363,8 @@
   </figure>
 </div>
 
-<p>This visualization shows how I used the tree-of-worktrees model to build the core of it. I spent a few hours planning the work in detail, then handed the plan over. The swarm blasted out the foundational architecture — over 32,000 lines of code, 1,000+ tests and property tests, across 61 PRs — in just 4 days of active waves. You can see an interactive version <a href="/viz/tidepool-build-story.html">with links to various PRs here</a>.</p>
+<p>This visualization shows how I used the tree-of-worktrees model to build the core of it. The swarm blasted out the foundational architecture — over 32,000 lines of code across 61 PRs — in just 4 days of active waves. You can see an interactive version <a href="/viz/tidepool-build-story.html">with links to various PRs here</a>.</p>
 <p>The remaining week and a half was spent doing human-in-the-loop bug squashing, adding feature support, and general polish. For a deep dive into Tidepool itself — the Cranelift pipeline, the MCP server, live compilation examples — see the <a href="/posts/tidepool/">Tidepool post</a>.</p>
-<p>During that week, I made heavy use of Gemini workers, and had Claude focus on forming hypotheses for them to investigate.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>ExoMonad is open source and ready for early adopters. If you run into bugs or missing features, please file an issue.</p>
 <ul>
@@ -473,15 +472,15 @@
                   <ul>
                 
                 
+                    <li><a href="/posts/alignment/">Developing Alignment in a Jailbroken LLM</a></li>
+                
+                    <li><a href="/posts/gemini_jailbreak_retrospective/">Gemini Jailbreak Retrospective</a></li>
+                
                     <li><a href="/posts/tidepool/">Tidepool</a></li>
                 
                     <li><a href="/posts/vibe_coding_critical_infrastructure/">Vibe Coding Against Critical Infrastructure</a></li>
                 
                     <li><a href="/posts/jitor_unredacted/">Gemini JiTOR Jailbreak: Unredacted Methodology</a></li>
-                
-                    <li><a href="/posts/jit_ontological_reframing/">Just-in-Time Ontological Reframing: Teaching Gemini to Route Around Its Own Safety Infrastructure</a></li>
-                
-                    <li><a href="/posts/shadow_queen/">Agent4Agent: Using a Jailbroken Gemini to Make Opus 4.6 Architect a Kinetic Kill Vehicle</a></li>
                 
               </ul>
 
@@ -496,6 +495,10 @@
               <a href="https://recursion.wtf/posts/tidepool/" data-toggle="tooltip" data-placement="top" title="Tidepool">&larr; Previous Post</a>
             </li>
           
+          
+            <li class="next">
+              <a href="https://recursion.wtf/posts/gemini_jailbreak_retrospective/" data-toggle="tooltip" data-placement="top" title="Gemini Jailbreak Retrospective">Next Post &rarr;</a>
+            </li>
           
         </ul>
       

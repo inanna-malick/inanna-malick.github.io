@@ -751,12 +751,52 @@ code, pre {
 }
 
 /* ==========================================================================
-   SVG figures — expand to full content width
+   Side-by-Side — two-column comparison view
    ========================================================================== */
 
-.post-content figure img[src$=".svg"] {
-  width: 100%;
-  height: auto;
+.sidebyside {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  max-width: none;
+}
+
+.sidebyside-col {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.sidebyside-header {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--base01);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--base02);
+}
+
+.sidebyside-content pre {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.sidebyside-content code {
+  font-size: 0.82rem;
+}
+
+@media (max-width: 767px) {
+  .sidebyside {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .sidebyside-header {
+    color: var(--base00);
+  }
 }
 
 /* ==========================================================================

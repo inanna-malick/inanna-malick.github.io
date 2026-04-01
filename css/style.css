@@ -854,11 +854,11 @@ code, pre {
 
 .sidebyside-content pre {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.95em;
 }
 
 .sidebyside-content code {
-  font-size: 0.82rem;
+  font-size: 0.95em;
 }
 
 @media (max-width: 767px) {

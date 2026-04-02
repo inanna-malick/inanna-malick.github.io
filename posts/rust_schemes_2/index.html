@@ -64,7 +64,7 @@
   "headline": "Fully generic recursion in Rust",
   "description" : "Previously, we introduced a method for writing performant stack safe recursion in Rust for a single recursive data structure. This post uses the same ideas to implement a single recursion backend that can collapse or expand any recursive data structure.\n",
   "inLanguage" : "en",
-  "wordCount":  1502 ,
+  "wordCount":  1586 ,
   "datePublished" : "2022-07-28T00:00:00\u002b00:00",
   "dateModified" : "2022-07-28T00:00:00\u002b00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -389,8 +389,23 @@
 </span></span></code></pre></div><p>Cool, right?</p>
 <h1 id="async-io">Async IO</h1>
 <p>I&rsquo;ve also used my crate to implement a small but fully functional filetree reader/file contents search tool example. It&rsquo;s fully async, with all the bells and whistles one might expect. <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. <a href="https://github.com/inanna-malick/recursion/blob/main/examples/grep.rs">You can find the source code here.</a>.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre><font color="#A6CC70"><b>➜ </b></font>./my_grep -- --regex &quot;Expr.*Sub&quot; --paths-to-ignore .git -p target
+<font color="#95E6CB">sparse filetree depth:</font> 4
+<font color="#95E6CB">file:</font> &quot;/home/inanna/dev/rust-schemes/src/examples/expr.rs&quot;
+<font color="#95E6CB">permissions</font> Permissions(FilePermissions { mode: 33204 })
+<font color="#95E6CB">modified</font> Ok(SystemTime { tv_sec: 1658530322, tv_nsec: 155879740 })
+<font color="#B48EAD">29::</font>	            Expr::Sub(a, b) =&gt; Expr::Sub(f(a), f(b)),
+<font color="#B48EAD">45::</font>	            Expr::Sub(a, b) =&gt; Expr::Sub(f(*a), f(*b)),
+
+
+<font color="#95E6CB">file:</font> &quot;/home/inanna/dev/rust-schemes/src/examples/expr/eval.rs&quot;
+<font color="#95E6CB">permissions</font> Permissions(FilePermissions { mode: 33204 })
+<font color="#95E6CB">modified</font> Ok(SystemTime { tv_sec: 1658527781, tv_nsec: 256109881 })
+<font color="#B48EAD">54::</font>	        Expr::Sub(a, b) =&gt; Ok(CompiledExpr::Sub(a, b)),
+<font color="#B48EAD">70::</font>	        CompiledExpr::Sub(a, b) =&gt; a - b,
+<font color="#B48EAD">80::</font>	        Expr::Sub(a, b) =&gt; a - b,
+<font color="#B48EAD">89::</font>	        ExprAST::Sub(a, b) =&gt; naive_eval(a) - naive_eval(b),
+</pre>
 <h1 id="to-be-continued">To be continued</h1>
 <p>My next post will show how to implement different recursion backends (yes, this is where we finally get to see stack machines in action), along with some cool stuff with fused <code>expand_layers</code> and <code>collapse_layers</code> operations such that we can construct a recursive data structure and consume it at the same time, without having to allocate a <code>RecursiveTree</code>.</p>
 <h1 id="thank-you">Thank you</h1>

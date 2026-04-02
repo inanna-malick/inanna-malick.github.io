@@ -75,7 +75,7 @@ In this post we will see how to combine these two things - expanding a structure
   "headline": "Single Pass Recursion in Rust",
   "description" : "This is the third post in a three-post series. In the first post we developed a stack-safe, ergonomic, and concise method for working with recursive data structures (using a simple expression language as an example). In the second post we made it fully generic, providing a set of generic tools for expanding and collapsing any recursive data structure in Rust.\nIn this post we will see how to combine these two things - expanding a structure and collapsing it at the same time, performing both operations in a single pass. In the process, we will gain the ability to write arbitrary recursive functions over traditional boxed-pointer recursive structures (instead of the novel RecursiveTree type introduced in my previous post) while retaining stack safety.\n",
   "inLanguage" : "en",
-  "wordCount":  1517 ,
+  "wordCount":  1532 ,
   "datePublished" : "2022-10-05T00:00:00\u002b00:00",
   "dateModified" : "2022-10-05T00:00:00\u002b00:00",
   "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
@@ -351,7 +351,8 @@ In this post we will see how to combine these two things - expanding a structure
 </div>
 
 <p>You can see the implementation of <code>expand_layers</code> for this structure below, if you&rsquo;re curious, but the important thing is <em>that</em> we have an implementation of <code>Expand</code> provided by the <code>recursion</code> crate, not <em>how</em> its implemented. The whole point of having a crate is not having to examine every implementation detail!</p>
-<!-- raw HTML omitted -->
+<details>
+      <summary>Click to expand code sample</summary>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, Underlying, O: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>StackMarker, Unwrapped <span style="color:#f92672">=</span> A, To <span style="color:#f92672">=</span> U<span style="color:#f92672">&gt;&gt;</span> Expand<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>{
@@ -381,7 +382,7 @@ In this post we will see how to combine these two things - expanding a structure
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><!-- raw HTML omitted -->
+</span></span></code></pre></div></details>
 <p>Let&rsquo;s see what expanding a boxed-pointer expression into a <code>RecursiveTree</code> looks like. Since it&rsquo;s already made up of <code>ExprLayer</code> layers, we can just dereference the boxed value using the <code>*</code> operator.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> expr_tree <span style="color:#f92672">=</span> RecursiveTree::expand_layers(expr, <span style="color:#f92672">|</span>ExprBoxed(boxed)<span style="color:#f92672">|</span> <span style="color:#f92672">*</span>boxed)
 </span></span></code></pre></div><h1 id="collapse">Collapse</h1>
@@ -397,7 +398,8 @@ In this post we will see how to combine these two things - expanding a structure
   </figure>
 </div>
 
-<!-- raw HTML omitted -->
+<details>
+      <summary>Click to expand code sample</summary>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span><span style="color:#f92672">&lt;</span>A, O, U: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>A, To <span style="color:#f92672">=</span> O, Unwrapped <span style="color:#f92672">=</span> StackMarker<span style="color:#f92672">&gt;&gt;</span> Collapse<span style="color:#f92672">&lt;</span>A, O<span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> RecursiveTree<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>{
@@ -413,7 +415,7 @@ In this post we will see how to combine these two things - expanding a structure
 </span></span><span style="display:flex;"><span>        result_stack.pop().unwrap()
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><!-- raw HTML omitted -->
+</span></span></code></pre></div></details>
 <p>Here&rsquo;s how we can use this to collapse expressions represented in the <code>RecursiveTree</code> format. Nothing complex, just some simple arithmatic:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> recursive_tree.collapse_layers(<span style="color:#f92672">|</span>expr<span style="color:#f92672">|</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">use</span> ExprLayer::<span style="color:#f92672">*</span>;
@@ -471,7 +473,8 @@ In this post we will see how to combine these two things - expanding a structure
 </span></span><span style="display:flex;"><span>    Expandable: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>(), Unwrapped <span style="color:#f92672">=</span> Seed<span style="color:#f92672">&gt;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;</span>Expandable <span style="color:#66d9ef">as</span> MapLayer<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;&gt;</span>::To: <span style="color:#a6e22e">MapLayer</span><span style="color:#f92672">&lt;</span>Out, Unwrapped <span style="color:#f92672">=</span> (), To <span style="color:#f92672">=</span> Collapsable<span style="color:#f92672">&gt;</span>,
 </span></span></code></pre></div><p>The full implementation is below, if you&rsquo;re curious.</p>
-<!-- raw HTML omitted -->
+<details>
+      <summary>Click to expand code sample</summary>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">expand_and_collapse</span><span style="color:#f92672">&lt;</span>Seed, Out, Expandable, Collapsable<span style="color:#f92672">&gt;</span>(
 </span></span><span style="display:flex;"><span>    seed: <span style="color:#a6e22e">Seed</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">mut</span> expand_layer: <span style="color:#a6e22e">impl</span> FnMut(Seed) -&gt; <span style="color:#a6e22e">Expandable</span>,
@@ -509,7 +512,7 @@ In this post we will see how to combine these two things - expanding a structure
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    vals.pop().unwrap()
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><!-- raw HTML omitted -->
+</span></span></code></pre></div></details>
 <p>Here&rsquo;s how we can use this function to evaluate a traditional boxed-pointer recursive expression tree, without constructing an intermediate <code>RecursiveTree</code> - thus saving on both conceptual overhead and memory-usage overhead:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">eval</span>(expr: <span style="color:#a6e22e">ExprBoxed</span>) -&gt; <span style="color:#a6e22e">i63</span> {
 </span></span><span style="display:flex;"><span>    expand_and_collapse(

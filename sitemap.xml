@@ -2,6 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://recursion.wtf/tags/anthropic/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/categories/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/jailbreak/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/llm/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/mech-interp/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/metacog/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/categories/research/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/tags/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://recursion.wtf/posts/claude-cc-bypass/</loc>
+    <lastmod>2026-06-24T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://recursion.wtf/categories/ai/</loc>
     <lastmod>2026-03-23T00:00:00+00:00</lastmod>
   </url><url>
@@ -9,9 +42,6 @@
     <lastmod>2026-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/alignment/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/categories/</loc>
     <lastmod>2026-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/posts/alignment/</loc>
@@ -23,28 +53,10 @@
     <loc>https://recursion.wtf/posts/gemini_jailbreak_retrospective/</loc>
     <lastmod>2026-03-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://recursion.wtf/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/jailbreak/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/llm/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/metacog/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/posts/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://recursion.wtf/tags/red-team/</loc>
     <lastmod>2026-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/security/</loc>
-    <lastmod>2026-03-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://recursion.wtf/tags/</loc>
     <lastmod>2026-03-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://recursion.wtf/tags/agent-orchestration/</loc>

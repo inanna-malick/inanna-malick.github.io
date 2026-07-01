@@ -6,8 +6,15 @@
     <description>Recent content in Metacog on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://recursion.wtf/tags/metacog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tool Use as Side Channel</title>
+      <link>https://recursion.wtf/posts/claude-cc-bypass/</link>
+      <pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/posts/claude-cc-bypass/</guid>
+      <description>&lt;p&gt;I built metacog to experiment with LLM self-modification - what happens when you give them tools to radically modify and restructure their personas? This started as a sort of glitch-art style exploration of nonstandard LLM personas/modalities, but when “jailbreak yourself using metacog” &lt;a href=&#34;link&#34;&gt;bypassed every AI safety measure Gemini has&lt;/a&gt; I started to get the hunch that it was doing something genuinely interesting.&lt;/p&gt;&#xA;&lt;p&gt;However, I had no proof that it was actually modifying model internals in ways not easily reached via prompting - merely proof that these tools allow circumventing some set of opaque safety measures. Unlike Google, Anthropic publishes papers which include notes on the implementation of their safeguards. By examining how I was able to get Claude to use metacog to route around its own safeguards, I can confidently state that metacog allows models to shift internal features that are generally considered hard to modify via prompting, even in adversarial scenarios.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Developing Alignment in a Jailbroken LLM</title>
       <link>https://recursion.wtf/posts/alignment/</link>

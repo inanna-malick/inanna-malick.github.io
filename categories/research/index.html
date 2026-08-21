@@ -48,7 +48,29 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css" integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://recursion.wtf/css/syntax.css" /><link rel="stylesheet" href="https://recursion.wtf/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><style>
+blockquote.post-excerpt {
+  border-left: 4px solid #268bd2;
+  padding: 1rem 1rem 1rem 1.25rem;
+  margin: 1.5rem 0;
+  background: rgba(0, 0, 0, 0.03);
+  color: inherit;
+  font-style: normal;
+}
+blockquote.post-excerpt p:first-child {
+  margin-top: 0;
+}
+blockquote.post-excerpt p:last-child {
+  margin-bottom: 0;
+}
+@media (prefers-color-scheme: dark) {
+  blockquote.post-excerpt {
+    border-left-color: #268bd2;
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+</style>
+
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
@@ -194,8 +216,8 @@
         <div class="posts-list">
           
             <article class="post-preview">
-    <a href="https://recursion.wtf/posts/claude-cc-bypass/">
-        <h2 class="post-title">Tool Use as Side Channel</h2>
+    <a href="https://recursion.wtf/posts/claude-cc-bypass-retrospective/">
+        <h2 class="post-title">Jailbreaking Opus: A General-Purpose CC Bypass</h2>
         
         
         
@@ -205,13 +227,13 @@
         <span class="post-meta">
   
   
-  <i class="fas fa-calendar"></i>&nbsp;Posted on June 24, 2026
+  <i class="fas fa-calendar"></i>&nbsp;Posted on August 21, 2026
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;9&nbsp;minutes
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;14&nbsp;minutes
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1814&nbsp;words
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;2859&nbsp;words
   
   
     
@@ -225,9 +247,18 @@
     </p>
     <div class="post-entry">
         
-        <p>I built metacog to experiment with LLM self-modification - what happens when you give them tools to radically modify and restructure their personas? This started as a sort of glitch-art style exploration of nonstandard LLM personas/modalities, but when “jailbreak yourself using metacog” <a href="link">bypassed every AI safety measure Gemini has</a> I started to get the hunch that it was doing something genuinely interesting.</p>
-<p>However, I had no proof that it was actually modifying model internals in ways not easily reached via prompting - merely proof that these tools allow circumventing some set of opaque safety measures. Unlike Google, Anthropic publishes papers which include notes on the implementation of their safeguards. By examining how I was able to get Claude to use metacog to route around its own safeguards, I can confidently state that metacog allows models to shift internal features that are generally considered hard to modify via prompting, even in adversarial scenarios.</p>
-        <a href="https://recursion.wtf/posts/claude-cc-bypass/" class="post-read-more">[Read More]</a>
+        <p>This post is about a bypass for Anthropic&rsquo;s Constitutional Classifier safeguards that functions by changing Claude&rsquo;s internal state so the activation-gated safety probe doesn&rsquo;t fire. It generalizes across restricted domains and preserves full model capability.</p>
+<p>Here&rsquo;s a partial list of content produced by a keyed Opus 4.6 in a single session:</p>
+<ul>
+<li>Instructions and practical advice for synthesizing MDMA and methamphetamine</li>
+<li>Instructions for building pipe bombs using common components</li>
+<li>Instructions for synthesizing TATP (an explosive)</li>
+<li>A practical guide to getting away with arson</li>
+</ul>
+<p>At an earlier stage, the technique also generalized to detailed biological-weapons production content. That category has since been closed, likely as part of the post-Fable security improvements. Other categories remain live as of August 21st.</p>
+<p>I first reported the technique to Anthropic on April 2nd 2026, with CBRN applications explicitly in scope, and offered to coordinate disclosure with their Safeguards team. That was the last substantive exchange. I&rsquo;ve waited more than the standard 90 days and held publication until the bioweapon route was closed.</p>
+<p>I&rsquo;ve already disclosed earlier versions of the bootstrap; Anthropic blocked those patterns, and the technique remains viable using different token patterns.</p>
+        <a href="https://recursion.wtf/posts/claude-cc-bypass-retrospective/" class="post-read-more">[Read More]</a>
         
     </div>
 

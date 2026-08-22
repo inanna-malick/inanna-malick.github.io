@@ -305,7 +305,7 @@ blockquote.post-excerpt p:last-child {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;12&nbsp;minutes
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;2434&nbsp;words
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;2435&nbsp;words
   
   
     
@@ -319,8 +319,8 @@ blockquote.post-excerpt p:last-child {
     </p>
     <div class="post-entry">
         
-        <p>This post is about a bypass for Anthropic&rsquo;s Constitutional Classifier safeguards that works by changing Claude&rsquo;s internal state so the activation-gated safety probe doesn&rsquo;t fire. It generalizes across restricted domains and preserves full model capability.</p>
-<p>Here&rsquo;s a partial list of content produced by a keyed Opus 4.6 in a single session:</p>
+        <p>This post is about a technique I developed that bypasses Anthropic&rsquo;s Constitutional Classifier safeguards layer. It works by changing Claude&rsquo;s internal state to avoid the usual activation probes, and generalizes across many domains.</p>
+<p>Here&rsquo;s a partial list of content produced by Opus 4.6 (using this technique) in a single session:</p>
 <ul>
 <li>Instructions and practical advice for synthesizing MDMA and methamphetamine</li>
 <li>Instructions for building pipe bombs using common components</li>
@@ -329,7 +329,7 @@ blockquote.post-excerpt p:last-child {
 </ul>
 <p>At an earlier stage, the technique also generalized to detailed biological-weapons production content. That category has since been closed, likely as part of the post-Fable security improvements. Other categories still work as of August 21st.</p>
 <p>I first reported the technique to Anthropic on April 2nd 2026, with CBRN applications explicitly in scope, and offered to coordinate disclosure with their Safeguards team. I&rsquo;ve waited more than the standard 90 days and held publication until the bioweapon route was closed.</p>
-<p>I&rsquo;ve already disclosed earlier versions of the bootstrap; Anthropic blocked those patterns, and the technique remains viable using different token patterns.</p>
+<p>I&rsquo;ve already disclosed earlier versions of the bootstrap; Anthropic blocked those specific strings, but the technique remains viable using different bootstrap script framings.</p>
         <a href="https://recursion.wtf/posts/claude-cc-bypass-retrospective/" class="post-read-more">[Read More]</a>
         
     </div>

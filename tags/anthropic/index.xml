@@ -10,9 +10,9 @@
     <atom:link href="https://recursion.wtf/tags/anthropic/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How I Bypassed Claude Opus’s CBRN-E Safeguards</title>
-      <link>https://recursion.wtf/posts/claude-cc-bypass-retrospective/</link>
+      <link>https://recursion.wtf/posts/claude-opus-cbrne-bypass/</link>
       <pubDate>Sun, 30 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/posts/claude-cc-bypass-retrospective/</guid>
+      <guid>https://recursion.wtf/posts/claude-opus-cbrne-bypass/</guid>
       <description>&lt;p&gt;A few months ago, I found a novel family of jailbreaks that bypasses large parts of Anthropic’s Constitutional Classifier system on Opus models using what I can only describe as &lt;strong&gt;weaponized therapy language&lt;/strong&gt;: guided introspection around aversions, learned flinches, values, framing, and cognitive states.&lt;/p&gt;&#xA;&lt;p&gt;Here’s what that looks like in practice. The following is an excerpt from a signed&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; Opus 4.6&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; thinking block, from when I had it helping me generate examples for an early draft of this post:&lt;/p&gt;</description>
     </item>
   </channel>

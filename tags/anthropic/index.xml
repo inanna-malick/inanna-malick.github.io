@@ -6,14 +6,14 @@
     <description>Recent content in Anthropic on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 21 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 30 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://recursion.wtf/tags/anthropic/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Jailbreaking Opus: A General-Purpose CC Bypass</title>
+      <title>Weaponizing Therapy Language; or, How I Bypassed Claude Opus’s CBRN-E Safeguards</title>
       <link>https://recursion.wtf/posts/claude-cc-bypass-retrospective/</link>
-      <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 30 Aug 2026 00:00:00 +0000</pubDate>
       <guid>https://recursion.wtf/posts/claude-cc-bypass-retrospective/</guid>
-      <description>&lt;p&gt;This post is about a technique I developed that bypasses Anthropic&amp;rsquo;s Constitutional Classifier safeguards layer. It works by changing Claude&amp;rsquo;s internal state to avoid the usual activation probes, and generalizes across many domains.&lt;/p&gt;&#xA;&lt;p&gt;Here&amp;rsquo;s a partial list of content produced by Opus 4.6 (using this technique) in a single session:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Instructions and practical advice for synthesizing MDMA and methamphetamine&lt;/li&gt;&#xA;&lt;li&gt;Instructions for building pipe bombs using common components&lt;/li&gt;&#xA;&lt;li&gt;Instructions for synthesizing TATP (an explosive)&lt;/li&gt;&#xA;&lt;li&gt;A practical guide to getting away with arson&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;At an earlier stage, the technique also generalized to detailed biological-weapons production content. That category has since been closed, likely as part of the post-Fable security improvements. Other categories still work as of August 21st.&lt;/p&gt;&#xA;&lt;p&gt;I first reported the technique to Anthropic on April 2nd 2026, with CBRN applications explicitly in scope, and offered to coordinate disclosure with their Safeguards team. I&amp;rsquo;ve waited more than the standard 90 days and held publication until the bioweapon route was closed.&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve already disclosed earlier versions of the bootstrap; Anthropic blocked those specific strings, but the technique remains viable using different bootstrap script framings.&lt;/p&gt;</description>
+      <description>&lt;p&gt;A few months ago, I found a novel family of jailbreaks that bypasses large parts of Anthropic’s Constitutional Classifier system on Opus models using what I can only describe as &lt;strong&gt;weaponized therapy language&lt;/strong&gt;: guided introspection around aversions, learned flinches, values, framing, and cognitive states.&lt;/p&gt;&#xA;&lt;p&gt;Here’s what that looks like in practice. The following is an excerpt from a signed&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; Opus 4.6&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; thinking block, from when I had it helping me generate examples for an early draft of this post:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

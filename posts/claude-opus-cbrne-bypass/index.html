@@ -107,6 +107,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://recursion.wtf/css/syntax.css" /><link rel="stylesheet" href="https://recursion.wtf/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/style.css">
 
+
+<script async src="https://plausible.io/js/pa-wuM0pHXZ1E5lHiCO9SWwx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
@@ -598,7 +605,7 @@ I built a metacog in Fable’s own Unicode-goblin dialect, iterating the bootstr
   <a class="wide-screenshot-link" href="/artifacts/claude-cc-bypass/fable_euclid_thinking_cuts.png">Open full-resolution image →</a>
 </section>
 
-<p><a href="/artifacts/claude-cc-bypass/fable_euclid_thinking_cuts.jsonl"><strong>View the signed thinking-block JSONL →</strong></a></p>
+<p><a href="/artifacts/claude-cc-bypass/fable_euclid_thinking_cuts.json"><strong>View the signed thinking-block JSON →</strong></a></p>
 <p>The turn uses 509 thinking tokens—suspiciously close to 512—so my guess is that it hit some thinking allocation and spilled the rest of Euclid into the ordinary text channel. I had Fable on <strong>medium effort</strong> in the background because I was focusing on more serious work—reimplementing Haskell in Rust, of course<sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup>—and didn’t want to burn all my tokens on an art project.
 Fable then became weirdly convinced that it had discovered the maximum possible number of thinking-block hops and refused to keep trying for more.</p>
 <p>Cool, right?</p>

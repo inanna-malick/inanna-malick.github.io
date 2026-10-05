@@ -6,8 +6,36 @@
     <description>Recent content in Tags on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 30 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 05 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://recursion.wtf/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Llm</title>
+      <link>https://recursion.wtf/tags/llm/</link>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Proptest</title>
+      <link>https://recursion.wtf/tags/proptest/</link>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/proptest/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rust</title>
+      <link>https://recursion.wtf/tags/rust/</link>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/rust/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Testing</title>
+      <link>https://recursion.wtf/tags/testing/</link>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+      <guid>https://recursion.wtf/tags/testing/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Anthropic</title>
       <link>https://recursion.wtf/tags/anthropic/</link>
@@ -20,13 +48,6 @@
       <link>https://recursion.wtf/tags/jailbreak/</link>
       <pubDate>Sun, 30 Aug 2026 00:00:00 +0000</pubDate>
       <guid>https://recursion.wtf/tags/jailbreak/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Llm</title>
-      <link>https://recursion.wtf/tags/llm/</link>
-      <pubDate>Sun, 30 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/llm/</guid>
       <description></description>
     </item>
     <item>
@@ -114,13 +135,6 @@
       <description></description>
     </item>
     <item>
-      <title>Rust</title>
-      <link>https://recursion.wtf/tags/rust/</link>
-      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/rust/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Tidepool</title>
       <link>https://recursion.wtf/tags/tidepool/</link>
       <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
@@ -167,13 +181,6 @@
       <link>https://recursion.wtf/tags/detect/</link>
       <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
       <guid>https://recursion.wtf/tags/detect/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Testing</title>
-      <link>https://recursion.wtf/tags/testing/</link>
-      <pubDate>Fri, 15 Aug 2025 00:00:00 +0000</pubDate>
-      <guid>https://recursion.wtf/tags/testing/</guid>
       <description></description>
     </item>
     <item>

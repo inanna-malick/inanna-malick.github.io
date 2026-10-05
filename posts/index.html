@@ -205,6 +205,64 @@
         <div class="posts-list">
           
             <article class="post-preview">
+    <a href="https://recursion.wtf/posts/agents-and-property-tests/">
+        <h2 class="post-title">Property Testing with Agent Swarms</h2>
+        
+        
+        
+    </a>
+
+    <p class="post-meta">
+        <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on October 5, 2026
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;4&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;820&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Inanna Malick
+    
+  
+  
+</span>
+
+
+    </p>
+    <div class="post-entry">
+        
+        <p>Have agents build the machinery to find bugs in your repo, then let that machinery generate and check cases without spending tokens on each one. Writing reference implementations, generators, and assertions for every custom data structure and algorithm is now work you can hand to a swarm.</p>
+<p>Pick a complex repo at work. Ask the people who know it well which parts worry them. Give a strong planning agent <a href="https://gist.github.com/inanna-malick/4e042889df0d8737794a875dda7c8f3c">these starter instructions</a> and those leads. Target custom data structures, query planners, graph algorithms: complicated behavior with a simple way to check correctness.</p>
+        <a href="https://recursion.wtf/posts/agents-and-property-tests/" class="post-read-more">[Read More]</a>
+        
+    </div>
+
+    
+    <div class="blog-tags">
+        
+       
+       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/testing/">testing</a>&nbsp;
+        
+       
+       <a href="https://recursion.wtf/tags/proptest/">proptest</a>&nbsp;
+         
+    </div>
+    
+
+</article>
+          
+            <article class="post-preview">
     <a href="https://recursion.wtf/posts/claude-opus-cbrne-bypass/">
         <h2 class="post-title">How I Bypassed Claude Opus’s CBRN-E Safeguards</h2>
         
@@ -794,80 +852,6 @@
         
        
        <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
-         
-    </div>
-    
-
-</article>
-          
-            <article class="post-preview">
-    <a href="https://recursion.wtf/posts/detect/">
-        <h2 class="post-title">Detect: a readable alternative to find/exec/grep</h2>
-        
-        
-        
-    </a>
-
-    <p class="post-meta">
-        <span class="post-meta">
-  
-  
-  <i class="fas fa-calendar"></i>&nbsp;Posted on November 13, 2025
-  
-  
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;5&nbsp;minutes
-  
-  
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;934&nbsp;words
-  
-  
-    
-      
-        &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Inanna Malick
-      
-    
-  
-  
-</span>
-
-
-    </p>
-    <div class="post-entry">
-        
-        <h1 id="detect">Detect</h1>
-<p>I built <a href="https://crates.io/crates/detect">detect</a> because I was tired of looking up <code>find</code>/<code>grep</code>/<code>xargs</code> syntax on Stack Overflow every time I needed to search my filesystem in any nontrivial way. It&rsquo;s a Rust tool that uses a concise and readable expression language to build queries that output matching file paths.</p>
-<p>If you&rsquo;d like to follow along, run <code>cargo install detect</code> and try it yourself. You&rsquo;ll need the Rust toolchain, which you can install using <a href="https://rustup.rs/">rustup</a>.</p>
-<p>Here are some examples:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># every rust file modified in the last week that imports tokio _and_ serde (mean time: 179ms)</span>
-</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;ext == rs
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &amp;&amp; content contains &#34;use tokio&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &amp;&amp; content contains &#34;use serde&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &amp;&amp; modified &gt; -7d&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Cargo.toml files with package edition 2018 (mean time: 42ms)</span>
-</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;name == &#34;Cargo.toml&#34; &amp;&amp; toml:.package.edition == 2018&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># non-image files with size over 0.5MB (mean time: 303ms)</span>
-</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;size &gt; 0.5mb &amp;&amp; !ext in [png, jpeg, jpg]&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># frontend code referencing JIRA tickets (mean time: 43ms)</span>
-</span></span><span style="display:flex;"><span>detect <span style="color:#e6db74">&#39;ext in [ts, js, css] &amp;&amp; content ~= JIRA-[0-9]+&#39;</span>
-</span></span></code></pre></div>
-        <a href="https://recursion.wtf/posts/detect/" class="post-read-more">[Read More]</a>
-        
-    </div>
-
-    
-    <div class="blog-tags">
-        
-       
-       <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/cli/">cli</a>&nbsp;
-        
-       
-       <a href="https://recursion.wtf/tags/tools/">tools</a>&nbsp;
          
     </div>
     

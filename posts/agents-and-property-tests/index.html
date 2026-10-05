@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>Property Testing with Agent Swarms - Inanna Malick</title>
+
+  <meta name="description" content="Using agents to build property-testing machinery, then turn the findings into small, reviewable fixes.">
+  <meta name="author" content="Inanna Malick"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Inanna Malick",
+    
+    "url": "https:\/\/recursion.wtf\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "Inanna Malick",
+  "url": "https:\/\/recursion.wtf\/"
+  
+  , "logo": "https:\/\/recursion.wtf\/img\/avatar-icon.png"
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/recursion.wtf\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/recursion.wtf\/posts\/agents-and-property-tests\/",
+          "name": "Property testing with agent swarms"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Inanna Malick"
+  },
+  "headline": "Property Testing with Agent Swarms",
+  "description" : "Using agents to build property-testing machinery, then turn the findings into small, reviewable fixes.",
+  "inLanguage" : "en",
+  "wordCount":  820 ,
+  "datePublished" : "2026-10-05T00:00:00\u002b00:00",
+  "dateModified" : "2026-10-05T00:00:00\u002b00:00",
+  "image" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
+  "keywords" : [ "rust, llm, testing, proptest" ],
+  "mainEntityOfPage" : "https:\/\/recursion.wtf\/posts\/agents-and-property-tests\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/recursion.wtf\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/recursion.wtf\/img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+
+<meta property="og:title" content="Property Testing with Agent Swarms" />
+<meta property="og:description" content="Using agents to build property-testing machinery, then turn the findings into small, reviewable fixes.">
+<meta property="og:url" content="https://recursion.wtf/posts/agents-and-property-tests/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inanna Malick" />
+
+  <meta name="twitter:title" content="Property Testing with Agent Swarms" />
+  <meta name="twitter:description" content="Using agents to build property-testing machinery, then turn the findings into small, reviewable fixes.">
+  <meta name="twitter:card" content="summary" />
+
+  <link href='https://recursion.wtf/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.147.8">
+  <link rel="alternate" href="https://recursion.wtf/index.xml" type="application/rss+xml" title="Inanna Malick"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css" integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://recursion.wtf/css/syntax.css" /><link rel="stylesheet" href="https://recursion.wtf/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous"><link rel="stylesheet" href="https://recursion.wtf/css/style.css">
+
+
+<script async src="https://relay.inanna-c38.workers.dev/js/script.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init({
+    endpoint: "https://relay.inanna-c38.workers.dev/api/event"
+  })
+</script>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://recursion.wtf/">Inanna Malick</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Contact Me" href="/page/about/">Contact Me</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Inanna Malick" href="https://recursion.wtf/">
+            <img class="avatar-img" src="https://recursion.wtf/img/avatar-icon.png" alt="Inanna Malick" />
+           
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>Property Testing with Agent Swarms</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Have agents build the machinery to find bugs in your repo, then let that machinery generate and check cases without spending tokens on each one. Writing reference implementations, generators, and assertions for every custom data structure and algorithm is now work you can hand to a swarm.</p>
+<p>Pick a complex repo at work. Ask the people who know it well which parts worry them. Give a strong planning agent <a href="https://gist.github.com/inanna-malick/4e042889df0d8737794a875dda7c8f3c">these starter instructions</a> and those leads. Target custom data structures, query planners, graph algorithms: complicated behavior with a simple way to check correctness.</p>
+<p>I did this at Apollo GraphQL on <a href="https://github.com/apollographql/router">Router</a>, our Rust GraphQL router, used in production by <a href="https://www.apollographql.com/blog/how-intuit-handled-their-busiest-time-of-year-with-apollo-router">Intuit</a> and <a href="https://www.apollographql.com/events/how-wayfair-slashed-costs-simplified-infra-and-cut-latency-in-half-with-apollo-router">Wayfair</a> and already backed by thousands of unit and integration tests plus extensive snapshot testing. About three days of agents running in the background alongside my regular work turned up <a href="https://github.com/apollographql/router/pulls?q=is%3Apr%20author%3Ainanna-apollo%20created%3A2026-09-01..2026-10-02%20-head%3Ainanna%2Fgraph-proptest-coverage">more than 30 correctness bugs</a> in edge cases of internal data structures and algorithms. I supplied initial guidance and occasional nudges.</p>
+<p>Have an agent write a simple reference implementation and assertions comparing it with the real one over generated operation sequences. Rust&rsquo;s property-testing library <code>proptest</code> generates cases, checks assertions, and shrinks failures into smaller reproductions. A Vec and some O(n²) loops may be enough to check a heavily optimized implementation. Once built, this harness can check as many histories as you&rsquo;re willing to run.</p>
+<p>Keep the sprawling discovery suite on its own branch. For each confirmed bug, have the agents produce a standalone PR with a regression test and a minimal fix.</p>
+<h2 id="direct-the-investigation">Direct the investigation</h2>
+<p>I used Astra for planning, Sol to orchestrate, and Sols and Lunas to write proptests in parallel worktrees. Have the planner audit beyond your initial leads.</p>
+<p>Compare cached metadata with recomputation and incremental graph algorithms with fresh traversals. Round-trip generated values through serializers. Have the planner find these opportunities across module boundaries.</p>
+<p>Investigate failures, including the test&rsquo;s assumptions. Clear contract violations get regression tests and fixes; ambiguity comes back for discussion. Bugs found by reading code get regression tests too.</p>
+<p>Expand from each finding. A missed cache invalidation warrants checking every mutation of that state and other caches maintained the same way. Keep harnesses running while agents build new ones; check in occasionally to redirect the search.</p>
+<h2 id="make-operations-interact">Make operations interact</h2>
+<p>Model a store with cached lookups using a plain HashMap. Run generated sequences of <code>Put(key, value)</code>, <code>Get(key)</code>, and <code>Remove(key)</code> against both implementations and compare read results. The reference has no cache to invalidate.</p>
+<p>Use a small key pool: fresh random keys mostly produce unrelated inserts and missing-key lookups. Overwrite with different values so stale results are visible:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Put(&#34;a&#34;, 1)
+</span></span><span style="display:flex;"><span>Get(&#34;a&#34;)       // returns 1; populates the cache
+</span></span><span style="display:flex;"><span>Put(&#34;a&#34;, 2)
+</span></span><span style="display:flex;"><span>Get(&#34;a&#34;)       // must return 2
+</span></span></code></pre></div><p>Have the agent build generators that embed patterns like this in longer histories, alongside repeated removals and reinsertion. Inspect sample traces: a million sequences that barely touch the same key aren&rsquo;t buying you much.</p>
+<p>If a target produces no findings, initially suspect missing coverage. Temporarily remove a cache invalidation: the tests should catch stale results. If they pass, improve the generators or assertions. Revert the deliberate bug.</p>
+<p>Let proptest shrink a failing history by removing operations and simplifying arguments while keeping it failing. Have the agent extract a standalone regression test.</p>
+<h2 id="give-people-something-they-can-review">Give people something they can review</h2>
+<p>Nobody wants a giant agent-generated PR full of test machinery. Give reviewers a unit test they can verify without understanding the generator or trusting the reference implementation.</p>
+<p>Handle potential security issues privately through your company&rsquo;s security process or the project&rsquo;s private reporting channel. Keep repros and fixes out of public issues, PRs, and discovery branches until cleared for disclosure.</p>
+<p>For each bug, branch from main with only the regression test and fix. Verify that the test fails before the fix and passes after. Describe the triggering sequence and violated contract; an end-to-end application crash isn&rsquo;t required.</p>
+<p>Two examples from Router:</p>
+<ul>
+<li><a href="https://github.com/apollographql/router/pull/10288">Stale execution conditions after removing fetch inputs</a>: read the conditions, remove inputs, read again, get the old answer. The existing planner caller avoids this sequence by using a fresh copy.</li>
+<li><a href="https://github.com/apollographql/router/pull/10375">Equal selection maps hashing differently</a>: fields with the same name but different directives exposed insertion-order dependence in the hash. Equal maps must hash equally. In the planner, this caused missed fragment reuse.</li>
+</ul>
+<p>Link the discovery branch for background. After enough useful fixes, coworkers may want the broader suite too.</p>
+<h2 id="cybersecurity-false-positives">Cybersecurity false positives</h2>
+<p>You can do this with ordinary coding agents, without access to a closed cybersecurity program. I occasionally get a &ldquo;This content can&rsquo;t be shown&rdquo; cybersecurity notice while improving proptest generators. Talk to it like a friend who&rsquo;s suddenly panicking over nothing:</p>
+<blockquote>
+<p>what&rsquo;s wrong buddy, this is proptest work not cybersec</p></blockquote>
+<p>That usually gets it moving again. When it hasn&rsquo;t, compacting and continuing has always worked for me. I&rsquo;ve never had to clear the context.</p>
+<h2 id="run-it">Run it</h2>
+<p>Give your planning agent <a href="https://gist.github.com/inanna-malick/4e042889df0d8737794a875dda7c8f3c">the prompt</a>. Have it keep expanding what the machinery can generate and check.</p>
+<!-- Test-suite evidence: inspected Router revision 62674c95564cec66ad6d042a0a02ccc0afb1edc1,
+the parent of the first commit in discovery PR #10182. Static source inventory:
+apollo-router: 3,357 #[test]/#[tokio::test] annotations and 988 .snap files;
+apollo-federation: 2,103 #[test] annotations and 374 .snap files.
+These are source counts, not executed test counts or a code-coverage percentage.
+DEVELOPMENT.md documents unit/integration tests and snapshot tooling;
+.circleci/config.yml runs workspace tests with ci,snapshot features and platform matrices.
+The repo also contains fuzz targets, but the CircleCI fuzz-build step is disabled,
+so the post does not claim active CI fuzzing. -->
+
+
+        
+          <div class="blog-tags">
+            
+              
+              <a href="https://recursion.wtf/tags/rust/">rust</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/llm/">llm</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/testing/">testing</a>&nbsp;
+            
+              
+              <a href="https://recursion.wtf/tags/proptest/">proptest</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=https%3a%2f%2frecursion.wtf%2fposts%2fagents-and-property-tests%2f&amp;text=Property%20Testing%20with%20Agent%20Swarms&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2frecursion.wtf%2fposts%2fagents-and-property-tests%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//reddit.com/submit?url=https%3a%2f%2frecursion.wtf%2fposts%2fagents-and-property-tests%2f&amp;title=Property%20Testing%20with%20Agent%20Swarms" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2frecursion.wtf%2fposts%2fagents-and-property-tests%2f&amp;title=Property%20Testing%20with%20Agent%20Swarms" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2frecursion.wtf%2fposts%2fagents-and-property-tests%2f&amp;title=Property%20Testing%20with%20Agent%20Swarms" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2frecursion.wtf%2fposts%2fagents-and-property-tests%2f&amp;description=Property%20Testing%20with%20Agent%20Swarms" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+              </div>
+            </section>
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also">See also</h4>
+                  <ul>
+                
+                
+                    <li><a href="/posts/claude-opus-cbrne-bypass/">How I Bypassed Claude Opus’s CBRN-E Safeguards</a></li>
+                
+                    <li><a href="/posts/alignment/">Developing Alignment in a Jailbroken LLM</a></li>
+                
+                    <li><a href="/posts/gemini_jailbreak_retrospective/">Gemini Jailbreak Retrospective</a></li>
+                
+                    <li><a href="/posts/exomonad/">ExoMonad</a></li>
+                
+                    <li><a href="/posts/tidepool/">Tidepool</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://recursion.wtf/posts/claude-opus-cbrne-bypass/" data-toggle="tooltip" data-placement="top" title="How I Bypassed Claude Opus’s CBRN-E Safeguards">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+      
+      
+      
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      <footer>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://recursion.wtf/">Inanna Malick</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2026
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://recursion.wtf/">Inanna Malick</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.147.8</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+<script src="https://recursion.wtf/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://recursion.wtf/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+

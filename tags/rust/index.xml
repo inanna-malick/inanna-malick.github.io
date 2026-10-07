@@ -6,14 +6,14 @@
     <description>Recent content in Rust on Inanna Malick</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 05 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://recursion.wtf/tags/rust/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Property Testing with Agent Swarms</title>
       <link>https://recursion.wtf/posts/agents-and-property-tests/</link>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <guid>https://recursion.wtf/posts/agents-and-property-tests/</guid>
-      <description>&lt;p&gt;Have agents build the machinery to find bugs in your repo, then let that machinery generate and check cases without spending tokens on each one. You can do this with ordinary coding agents, without access to a closed cybersecurity program. Writing reference implementations, generators, and assertions for every custom data structure and algorithm is now work you can hand to a swarm.&lt;/p&gt;&#xA;&lt;p&gt;Pick a complex repo at work. Ask the people who know it well which parts worry them. Give a strong planning agent &lt;a href=&#34;https://gist.github.com/inanna-malick/4e042889df0d8737794a875dda7c8f3c&#34;&gt;these starter instructions&lt;/a&gt; and those leads. Target custom data structures, query planners, graph algorithms: complicated behavior with a simple way to check correctness.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Have agents build the machinery to find bugs in your repo, then let that machinery generate and check cases without spending tokens on each one. You can do this with ordinary coding agents, without access to a closed cybersecurity program. Writing reference implementations, generators, and assertions for every custom data structure and algorithm is now work you can hand to a swarm.&lt;/p&gt;&#xA;&lt;p&gt;Pick a complex repo at work. Ask the people who know it well which parts worry them. Give a strong planning agent &lt;a href=&#34;https://github.com/inanna-malick/agent-skills/blob/main/skills/proptest-praxis/SKILL.md&#34;&gt;the property-testing skill&lt;/a&gt; from my &lt;a href=&#34;https://github.com/inanna-malick/agent-skills&#34;&gt;agent-skills repo&lt;/a&gt; and those leads. It gives the agent methods for choosing targets, building reference models and generators, and turning failures into reviewable fixes. Target custom data structures, query planners, graph algorithms: complicated behavior with a simple way to check correctness.&lt;/p&gt;</description>
     </item>
     <item>
       <title>ExoMonad</title>
